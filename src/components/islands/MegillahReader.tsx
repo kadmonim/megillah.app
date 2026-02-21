@@ -467,13 +467,7 @@ export default function MegillahReader({ standalone = false, showTitle = false }
   const needsMotionPermission = typeof DeviceMotionEvent !== 'undefined'
     && typeof (DeviceMotionEvent as any).requestPermission === 'function';
 
-  useEffect(() => {
-    if (typeof DeviceMotionEvent === 'undefined') return;
-    // On Android (no permission needed), auto-enable
-    if (!needsMotionPermission) {
-      setShakeEnabled(true);
-    }
-  }, []);
+  const hasMotionSupport = typeof DeviceMotionEvent !== 'undefined';
 
   useEffect(() => {
     if (!shakeEnabled) return;
@@ -570,21 +564,21 @@ export default function MegillahReader({ standalone = false, showTitle = false }
         </span>
         <button
           class="time-edit-btn"
-          onClick={() => setShowTimeEdit(!showTimeEdit)}
+          onClick={() => {
+            if (optionsCollapsed) {
+              setOptionsCollapsed(false);
+            } else {
+              setShowTimeEdit(!showTimeEdit);
+            }
+          }}
           title={t.changeReadingTime}
         >
-          <span class="material-icons">settings</span>
+          <span class="material-icons">{optionsCollapsed ? 'tune' : 'settings'}</span>
         </button>
       </div>
       {/* Options bar */}
-      <div class={`options-bar${optionsCollapsed ? ' collapsed' : ''}`} dir={lang === 'he' ? 'rtl' : 'ltr'}>
-        {optionsCollapsed && (
-          <button class="options-expand-btn" onClick={() => setOptionsCollapsed(false)}>
-            <span class="material-icons">tune</span>
-          </button>
-        )}
-        {!optionsCollapsed && (
-          <>
+      {!optionsCollapsed && (
+      <div class="options-bar" dir={lang === 'he' ? 'rtl' : 'ltr'}>
         <label class="option-toggle">
           <input
             type="checkbox"
@@ -653,15 +647,19 @@ export default function MegillahReader({ standalone = false, showTitle = false }
             </button>
           </div>
         )}
-        {showTimeEdit && needsMotionPermission && (
+        {showTimeEdit && hasMotionSupport && (
           <div class="time-edit-row">
             <label class="option-toggle">
               <input
                 type="checkbox"
                 checked={shakeEnabled}
                 onChange={() => {
-                  if (!shakeEnabled) enableShakeIOS();
-                  else setShakeEnabled(false);
+                  if (!shakeEnabled) {
+                    if (needsMotionPermission) enableShakeIOS();
+                    else setShakeEnabled(true);
+                  } else {
+                    setShakeEnabled(false);
+                  }
                 }}
               />
               <span class="toggle-switch"></span>
@@ -695,9 +693,8 @@ export default function MegillahReader({ standalone = false, showTitle = false }
         <button class="options-collapse-btn" onClick={() => setOptionsCollapsed(true)}>
           <span class="material-icons">expand_less</span>
         </button>
-          </>
-        )}
       </div>
+      )}
 
       <p class="hint-text">
         <span class="material-icons hint-icon">touch_app</span>
@@ -810,7 +807,7 @@ export default function MegillahReader({ standalone = false, showTitle = false }
           padding: 14px 0;
           text-align: center;
           box-shadow: 0 2px 8px rgba(102, 10, 35, 0.3);
-          margin: -8px -16px 0;
+          margin: 0 -16px 0;
         }
 
         .reader-header .logo-main {
@@ -947,27 +944,6 @@ export default function MegillahReader({ standalone = false, showTitle = false }
           position: sticky;
           top: 20px;
           z-index: 50;
-        }
-
-        .options-bar.collapsed {
-          padding: 0;
-          gap: 0;
-        }
-
-        .options-expand-btn {
-          width: 100%;
-          background: none;
-          border: none;
-          cursor: pointer;
-          padding: 4px 0;
-          color: var(--color-text-light);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-
-        .options-expand-btn .material-icons {
-          font-size: 20px;
         }
 
         .options-collapse-btn {
