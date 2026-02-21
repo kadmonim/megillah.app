@@ -310,7 +310,6 @@ export default function MegillahReader({ standalone = false, showTitle = false }
   const [scrollProgress, setScrollProgress] = useState(0);
   const [totalMinutes, setTotalMinutes] = useState(DEFAULT_READING_MINUTES);
   const [draftMinutes, setDraftMinutes] = useState(DEFAULT_READING_MINUTES);
-  const [showTimeEdit, setShowTimeEdit] = useState(false);
   const [optionsCollapsed, setOptionsCollapsed] = useState(false);
   const hasAutoCollapsed = useRef(false);
   const [lang, setLang] = useState<Lang>('he');
@@ -564,16 +563,10 @@ export default function MegillahReader({ standalone = false, showTitle = false }
         </span>
         <button
           class="time-edit-btn"
-          onClick={() => {
-            if (optionsCollapsed) {
-              setOptionsCollapsed(false);
-            } else {
-              setShowTimeEdit(!showTimeEdit);
-            }
-          }}
+          onClick={() => setOptionsCollapsed(!optionsCollapsed)}
           title={t.changeReadingTime}
         >
-          <span class="material-icons">{optionsCollapsed ? 'tune' : 'settings'}</span>
+          <span class="material-icons">{optionsCollapsed ? 'tune' : 'expand_less'}</span>
         </button>
       </div>
       {/* Options bar */}
@@ -619,35 +612,32 @@ export default function MegillahReader({ standalone = false, showTitle = false }
           />
           <span class="size-label">{t.fontSize}</span>
         </div>
-        {showTimeEdit && (
-          <div class="time-edit-row">
-            <label>
-              {t.readingTime}
-              <input
-                type="number"
-                min="10"
-                max="90"
-                value={draftMinutes}
-                onInput={(e) => {
-                  const val = parseInt((e.target as HTMLInputElement).value, 10);
-                  if (val >= 10 && val <= 90) setDraftMinutes(val);
-                }}
-                class="time-input"
-              />
-            </label>
-            <button
-              class="save-time-btn"
-              onClick={() => {
-                setTotalMinutes(draftMinutes);
-                sessionStorage.setItem('megillah-reading-minutes', String(draftMinutes));
-                setShowTimeEdit(false);
+        <div class="time-edit-row">
+          <label>
+            {t.readingTime}
+            <input
+              type="number"
+              min="10"
+              max="90"
+              value={draftMinutes}
+              onInput={(e) => {
+                const val = parseInt((e.target as HTMLInputElement).value, 10);
+                if (val >= 10 && val <= 90) setDraftMinutes(val);
               }}
-            >
-              {t.save}
-            </button>
-          </div>
-        )}
-        {showTimeEdit && hasMotionSupport && (
+              class="time-input"
+            />
+          </label>
+          <button
+            class="save-time-btn"
+            onClick={() => {
+              setTotalMinutes(draftMinutes);
+              sessionStorage.setItem('megillah-reading-minutes', String(draftMinutes));
+            }}
+          >
+            {t.save}
+          </button>
+        </div>
+        {hasMotionSupport && (
           <div class="time-edit-row">
             <label class="option-toggle">
               <input
@@ -670,10 +660,9 @@ export default function MegillahReader({ standalone = false, showTitle = false }
             </label>
           </div>
         )}
-        {showTimeEdit && (
-          <div class="time-edit-row">
-            <label>
-              {t.language}
+        <div class="time-edit-row">
+          <label>
+            {t.language}
               <select
                 class="lang-select"
                 value={lang}
@@ -689,10 +678,6 @@ export default function MegillahReader({ standalone = false, showTitle = false }
               </select>
             </label>
           </div>
-        )}
-        <button class="options-collapse-btn" onClick={() => setOptionsCollapsed(true)}>
-          <span class="material-icons">expand_less</span>
-        </button>
       </div>
       )}
 
@@ -946,22 +931,6 @@ export default function MegillahReader({ standalone = false, showTitle = false }
           z-index: 50;
         }
 
-        .options-collapse-btn {
-          width: 100%;
-          background: none;
-          border: none;
-          cursor: pointer;
-          padding: 2px 0 0;
-          color: var(--color-text-light);
-          opacity: 0.5;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-
-        .options-collapse-btn .material-icons {
-          font-size: 18px;
-        }
 
         .option-toggle {
           display: flex;
