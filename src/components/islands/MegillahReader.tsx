@@ -664,6 +664,15 @@ export default function MegillahReader({ standalone = false, showTitle = false }
       </p>
 
       <div class="scroll-text" dir="rtl" ref={scrollTextRef}>
+        <div class="blessings-block">
+          <h2 class="chapter-heading">{lang === 'he' ? 'ברכות לפני קריאת המגילה' : 'Blessings Before the Reading'}</h2>
+          <div class="blessing-text">
+            <p>בָּרוּךְ אַתָּה אֲ-דוֹנָי אֱ-לֹהֵינוּ מֶלֶךְ הָעוֹלָם, אֲשֶׁר קִדְּשָׁנוּ בְּמִצְוֹתָיו וְצִוָּנוּ עַל מִקְרָא מְגִלָּה.</p>
+            <p>בָּרוּךְ אַתָּה אֲ-דוֹנָי אֱ-לֹהֵינוּ מֶלֶךְ הָעוֹלָם, שֶׁעָשָׂה נִסִּים לַאֲבוֹתֵינוּ בַּיָּמִים הָהֵם בַּזְּמַן הַזֶּה.</p>
+            <p>בָּרוּךְ אַתָּה אֲ-דוֹנָי אֱ-לֹהֵינוּ מֶלֶךְ הָעוֹלָם, שֶׁהֶחֱיָנוּ וְקִיְּמָנוּ וְהִגִּיעָנוּ לַזְּמַן הַזֶּה.</p>
+          </div>
+        </div>
+
         {megillahText.map((ch) => (
           <div key={ch.chapter} class="chapter-block">
             <h2 class="chapter-heading">{t.chapter} {lang === 'he' ? toHebrew(ch.chapter) : ch.chapter}</h2>
@@ -716,6 +725,26 @@ export default function MegillahReader({ standalone = false, showTitle = false }
             </div>
           </div>
         ))}
+
+        <div class="blessings-block">
+          <h2 class="chapter-heading">{lang === 'he' ? 'ברכה לאחר קריאת המגילה' : 'Blessing After the Reading'}</h2>
+          <div class="blessing-text">
+            <p>בָּרוּךְ אַתָּה אֲ-דוֹנָי אֱ-לֹהֵינוּ מֶלֶךְ הָעוֹלָם, הָרָב אֶת רִיבֵנוּ, וְהַדָּן אֶת דִּינֵנוּ, וְהַנּוֹקֵם אֶת נִקְמָתֵנוּ, וְהַנִּפְרָע לָנוּ מִצָּרֵינוּ, וְהַמְשַׁלֵּם גְּמוּל לְכָל אוֹיְבֵי נַפְשֵׁנוּ, בָּרוּךְ אַתָּה אֲ-דוֹנָי, הַנִּפְרָע לְעַמּוֹ יִשְׂרָאֵל מִכָּל צָרֵיהֶם, הָאֵ-ל הַמּוֹשִׁיעַ.</p>
+          </div>
+        </div>
+
+        <div class="blessings-block">
+          <h2 class="chapter-heading">{lang === 'he' ? 'שׁוֹשַׁנַּת יַעֲקֹב' : 'Shoshanat Yaakov'}</h2>
+          <div class="blessing-text shoshanat-yaakov">
+            <p>שׁוֹשַׁנַּת יַעֲקֹב צָהֲלָה וְשָׂמֵחָה, בִּרְאוֹתָם יַחַד תְּכֵלֶת מָרְדְּכָי,</p>
+            <p>תְּשׁוּעָתָם הָיִיתָ לָנֶצַח, וְתִקְוָתָם בְּכָל דּוֹר וָדוֹר.</p>
+            <p>לְהוֹדִיעַ שֶׁכָּל קֹוֶיךָ לֹא יֵבֹשׁוּ וְלֹא יִכָּלְמוּ לָנֶצַח כָּל הַחוֹסִים בָּךְ.</p>
+            <p>אָרוּר הָמָן אֲשֶׁר בִּקֵשׁ לְאַבְּדִי, בָּרוּךְ מָרְדְּכַי הַיְּהוּדִי.</p>
+            <p>אֲרוּרָה זֶרֶשׁ אֵשֶׁת מַפְחִידִי, בְּרוּכָה אֶסְתֵּר בַּעֲדִי.</p>
+            <p>אֲרוּרִים כָּל הָרְשָׁעִים, בְּרוּכִים כָּל הַצַּדִּיקִים,</p>
+            <p>וְגַם חַרְבוֹנָה זָכוּר לַטּוֹב.</p>
+          </div>
+        </div>
       </div>
 
       {(soundActive || muted) && (
@@ -1089,6 +1118,26 @@ export default function MegillahReader({ standalone = false, showTitle = false }
             opacity: 0;
             transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(0.2);
           }
+        }
+
+        .blessings-block {
+          margin-bottom: 36px;
+          text-align: center;
+        }
+
+        .blessing-text {
+          font-family: Arial, 'Heebo', sans-serif;
+          font-size: 1.15rem;
+          font-weight: 700;
+          line-height: 2.2;
+        }
+
+        .blessing-text p {
+          margin-bottom: 12px;
+        }
+
+        .shoshanat-yaakov p {
+          margin-bottom: 4px;
         }
 
         .confetti-piece {
