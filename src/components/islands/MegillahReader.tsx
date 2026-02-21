@@ -22,7 +22,7 @@ const DEFAULT_READING_MINUTES = 35;
 const translations = {
   he: {
     showCantillation: 'הצג טעמים',
-    chabadCustom: 'מנהג חב״ד',
+    chabadCustom: 'הדגש המן לפי מנהג חב״ד',
     showTranslation: 'הצג תרגום',
     fontSize: 'גודל גופן',
     minLeft: 'דק׳ נותרו',
@@ -42,21 +42,21 @@ const translations = {
   en: {
     showCantillation: 'Show cantillation signs',
     chabadCustom: 'Highlight fewer Hamans',
-    showTranslation: 'Show translation',
+    showTranslation: 'Display translation',
     fontSize: 'Font size',
     minLeft: 'min left',
     readingTime: 'Reading time (min):',
     save: 'Save',
     changeReadingTime: 'Change reading time',
     chabadHint: 'Chabad custom — Haman highlighted only with a title',
-    tapHint: "Don't have a gragger? Just click Haman's name!",
+    tapHint: <>Don't have a gragger?<br class="mobile-only"/> Just click Haman's name!</>,
     chapter: 'Chapter',
     loudLabel: 'Everyone reads this together:',
     bneiHamanLabel: 'In some communities, everyone says this together.',
     headerTitle: 'The Megillah App',
-    headerSub: 'Built-in gragger and reading progress bar',
+    headerSub: <a href="https://www.chabad.org/purim" target="_blank" rel="noopener noreferrer" class="header-link">Learn more about Purim</a>,
     language: 'Language',
-    shakeToPlay: 'Shake to play gragger',
+    shakeToPlay: 'Shake phone to boo Haman',
   },
   es: {
     showCantillation: 'Mostrar signos de cantilación',
@@ -310,8 +310,8 @@ export default function MegillahReader({ standalone = false, showTitle = false }
   const [scrollProgress, setScrollProgress] = useState(0);
   const [totalMinutes, setTotalMinutes] = useState(DEFAULT_READING_MINUTES);
   const [draftMinutes, setDraftMinutes] = useState(DEFAULT_READING_MINUTES);
-  const [optionsCollapsed, setOptionsCollapsed] = useState(false);
-  const hasAutoCollapsed = useRef(false);
+  const [showTimeEdit, setShowTimeEdit] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [lang, setLang] = useState<Lang>('he');
   const [showTranslation, setShowTranslation] = useState(false);
   const [loadedTranslations, setLoadedTranslations] = useState<TranslationMap | null>(null);
@@ -390,10 +390,6 @@ export default function MegillahReader({ standalone = false, showTitle = false }
       if (scrollable <= 0) { setScrollProgress(1); return; }
       const progress = Math.min(1, Math.max(0, scrolled / scrollable));
       setScrollProgress(progress);
-      if (progress > 0.02 && !hasAutoCollapsed.current) {
-        hasAutoCollapsed.current = true;
-        setOptionsCollapsed(true);
-      }
       if (progress >= 0.99 && !confettiFired.current) {
         confettiFired.current = true;
         spawnConfetti();
@@ -561,45 +557,10 @@ export default function MegillahReader({ standalone = false, showTitle = false }
           {`${Math.round(scrollProgress * 100)}%`}
           {scrollProgress < 1 && ` · ~${Math.ceil((1 - scrollProgress) * totalMinutes)} ${t.minLeft}`}
         </span>
-        <button
-          class="time-edit-btn"
-          onClick={() => setOptionsCollapsed(!optionsCollapsed)}
-          title={t.changeReadingTime}
-        >
-          <span class="material-icons">{optionsCollapsed ? 'tune' : 'expand_less'}</span>
-        </button>
       </div>
-      {/* Options bar */}
-      {!optionsCollapsed && (
-      <div class="options-bar" dir={lang === 'he' ? 'rtl' : 'ltr'}>
-        <label class="option-toggle">
-          <input
-            type="checkbox"
-            checked={showCantillation}
-            onChange={() => setShowCantillation(!showCantillation)}
-          />
-          <span class="toggle-switch"></span>
-          <span class="option-label">{t.showCantillation}</span>
-        </label>
-        <label class="option-toggle">
-          <input
-            type="checkbox"
-            checked={chabadMode}
-            onChange={() => setChabadMode(!chabadMode)}
-          />
-          <span class="toggle-switch"></span>
-          <span class="option-label">{t.chabadCustom}</span>
-        </label>
-        <label class="option-toggle">
-          <input
-            type="checkbox"
-            checked={showTranslation}
-            onChange={() => setShowTranslation(!showTranslation)}
-          />
-          <span class="toggle-switch"></span>
-          <span class="option-label">{t.showTranslation}</span>
-        </label>
-        <div class="font-size-control">
+      {/* Inline toolbar */}
+      <div class="inline-toolbar" dir={lang === 'he' ? 'rtl' : 'ltr'}>
+        <div class="toolbar-left">
           <span class="material-icons size-icon">text_fields</span>
           <input
             type="range"
@@ -610,9 +571,27 @@ export default function MegillahReader({ standalone = false, showTitle = false }
             onInput={(e) => setFontSize(parseFloat((e.target as HTMLInputElement).value))}
             class="size-slider"
           />
-          <span class="size-label">{t.fontSize}</span>
         </div>
-        <div class="time-edit-row">
+        <div class="toolbar-right">
+          <button
+            class="toolbar-icon-btn"
+            onClick={() => { setShowTimeEdit(!showTimeEdit); setMenuOpen(false); }}
+            title={t.changeReadingTime}
+          >
+            <span class="material-icons">timer</span>
+          </button>
+          <button
+            class="toolbar-icon-btn"
+            onClick={() => { setMenuOpen(!menuOpen); setShowTimeEdit(false); }}
+            title="Settings"
+          >
+            <span class="material-icons">{menuOpen ? 'close' : 'menu'}</span>
+          </button>
+        </div>
+      </div>
+      {/* Reading time popover */}
+      {showTimeEdit && (
+        <div class="time-popover" dir={lang === 'he' ? 'rtl' : 'ltr'}>
           <label>
             {t.readingTime}
             <input
@@ -632,13 +611,44 @@ export default function MegillahReader({ standalone = false, showTitle = false }
             onClick={() => {
               setTotalMinutes(draftMinutes);
               sessionStorage.setItem('megillah-reading-minutes', String(draftMinutes));
+              setShowTimeEdit(false);
             }}
           >
             {t.save}
           </button>
         </div>
-        {hasMotionSupport && (
-          <div class="time-edit-row">
+      )}
+      {/* Settings menu */}
+      {menuOpen && (
+        <div class="settings-menu" dir={lang === 'he' ? 'rtl' : 'ltr'}>
+          <label class="option-toggle">
+            <input
+              type="checkbox"
+              checked={showTranslation}
+              onChange={() => setShowTranslation(!showTranslation)}
+            />
+            <span class="toggle-switch"></span>
+            <span class="option-label">{t.showTranslation}</span>
+          </label>
+          <label class="option-toggle">
+            <input
+              type="checkbox"
+              checked={showCantillation}
+              onChange={() => setShowCantillation(!showCantillation)}
+            />
+            <span class="toggle-switch"></span>
+            <span class="option-label">{t.showCantillation}</span>
+          </label>
+          <label class="option-toggle">
+            <input
+              type="checkbox"
+              checked={chabadMode}
+              onChange={() => setChabadMode(!chabadMode)}
+            />
+            <span class="toggle-switch"></span>
+            <span class="option-label">{t.chabadCustom}</span>
+          </label>
+          {hasMotionSupport && (
             <label class="option-toggle">
               <input
                 type="checkbox"
@@ -653,16 +663,12 @@ export default function MegillahReader({ standalone = false, showTitle = false }
                 }}
               />
               <span class="toggle-switch"></span>
-              <span class="option-label">
-                <span class="material-icons" style="font-size: 18px; vertical-align: middle; margin-inline-end: 4px;">vibration</span>
-                {t.shakeToPlay}
-              </span>
+              <span class="option-label">{t.shakeToPlay}</span>
             </label>
-          </div>
-        )}
-        <div class="time-edit-row">
-          <label>
-            {t.language}
+          )}
+          <div class="menu-row">
+            <label>
+              {t.language}
               <select
                 class="lang-select"
                 value={lang}
@@ -678,7 +684,7 @@ export default function MegillahReader({ standalone = false, showTitle = false }
               </select>
             </label>
           </div>
-      </div>
+        </div>
       )}
 
       <p class="hint-text">
@@ -810,6 +816,12 @@ export default function MegillahReader({ standalone = false, showTitle = false }
           margin-top: 2px;
         }
 
+        .header-link {
+          color: inherit;
+          text-decoration: underline;
+          text-underline-offset: 2px;
+        }
+
         .page-title-block {
           margin-bottom: 20px;
         }
@@ -855,49 +867,66 @@ export default function MegillahReader({ standalone = false, showTitle = false }
           text-shadow: 0 0 3px var(--color-white), 0 0 3px var(--color-white);
         }
 
-        .time-edit-btn {
-          position: absolute;
-          inset-inline-end: 4px;
-          top: 50%;
-          transform: translateY(-50%);
+        .inline-toolbar {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+          background: var(--color-white);
+          border-radius: 0 0 12px 12px;
+          padding: 8px 14px;
+          margin-bottom: 14px;
+          box-shadow: 0 2px 8px rgba(102, 10, 35, 0.08);
+          position: sticky;
+          top: 20px;
+          z-index: 50;
+        }
+
+        .toolbar-left {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+        }
+
+        .toolbar-right {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+        }
+
+        .toolbar-icon-btn {
           background: none;
           border: none;
           cursor: pointer;
-          padding: 0;
+          padding: 4px;
           line-height: 1;
           color: var(--color-text-light);
-          opacity: 0.5;
-          transition: opacity 0.2s;
+          border-radius: 50%;
+          transition: background 0.2s, color 0.2s;
         }
 
-        .time-edit-btn:hover {
-          opacity: 1;
+        .toolbar-icon-btn:hover {
+          background: var(--color-cream-dark);
+          color: var(--color-text);
         }
 
-        .time-edit-btn .material-icons {
-          font-size: 14px;
+        .toolbar-icon-btn .material-icons {
+          font-size: 22px;
         }
 
-        .lang-select {
-          margin-inline-start: 8px;
-          padding: 2px 6px;
-          border: 1px solid var(--color-cream-dark);
-          border-radius: 4px;
-          font-size: 0.8rem;
-        }
-
-        .time-edit-row {
-          width: 100%;
-          padding-top: 8px;
-          border-top: 1px solid var(--color-cream-dark);
-          margin-top: 4px;
+        .time-popover {
+          background: var(--color-white);
+          border-radius: 10px;
+          padding: 12px 16px;
+          margin-bottom: 10px;
+          box-shadow: 0 2px 12px rgba(102, 10, 35, 0.12);
           text-align: center;
           font-size: 0.85rem;
         }
 
         .time-input {
           width: 50px;
-          margin-right: 8px;
+          margin: 0 8px;
           padding: 2px 6px;
           border: 1px solid var(--color-cream-dark);
           border-radius: 4px;
@@ -906,7 +935,6 @@ export default function MegillahReader({ standalone = false, showTitle = false }
         }
 
         .save-time-btn {
-          margin-right: 8px;
           padding: 3px 12px;
           background: var(--color-burgundy);
           color: var(--color-white);
@@ -916,19 +944,27 @@ export default function MegillahReader({ standalone = false, showTitle = false }
           cursor: pointer;
         }
 
-        .options-bar {
-          display: flex;
-          gap: 16px;
-          justify-content: center;
-          flex-wrap: wrap;
+        .settings-menu {
           background: var(--color-white);
-          border-radius: 0 0 12px 12px;
-          padding: 14px 16px;
+          border-radius: 10px;
+          padding: 16px;
           margin-bottom: 14px;
-          box-shadow: 0 2px 8px rgba(102, 10, 35, 0.08);
-          position: sticky;
-          top: 20px;
-          z-index: 50;
+          box-shadow: 0 2px 12px rgba(102, 10, 35, 0.12);
+          display: flex;
+          flex-direction: column;
+          gap: 14px;
+        }
+
+        .menu-row {
+          font-size: 0.85rem;
+        }
+
+        .lang-select {
+          margin-inline-start: 8px;
+          padding: 2px 6px;
+          border: 1px solid var(--color-cream-dark);
+          border-radius: 4px;
+          font-size: 0.8rem;
         }
 
 
@@ -981,26 +1017,9 @@ export default function MegillahReader({ standalone = false, showTitle = false }
           color: var(--color-text);
         }
 
-        .font-size-control {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          width: 100%;
-          justify-content: center;
-          padding-top: 8px;
-          border-top: 1px solid var(--color-cream-dark);
-          margin-top: 4px;
-        }
-
         .size-icon {
           font-size: 20px;
           color: var(--color-burgundy);
-        }
-
-        .size-label {
-          font-size: 0.85rem;
-          color: var(--color-text-light);
-          white-space: nowrap;
         }
 
         .size-slider {
@@ -1092,19 +1111,17 @@ export default function MegillahReader({ standalone = false, showTitle = false }
         }
 
         .haman-name {
-          background: linear-gradient(135deg, rgba(232, 150, 46, 0.2), rgba(232, 150, 46, 0.3));
-          color: var(--color-text);
+          color: #a02020;
           padding: 2px 5px;
           border-radius: 4px;
           cursor: pointer;
-          border-bottom: 2px solid var(--color-gold);
-          transition: background 0.15s;
+          transition: color 0.15s;
           user-select: none;
           display: inline;
         }
 
         .haman-name:hover {
-          background: rgba(232, 150, 46, 0.4);
+          color: #cc2222;
         }
 
         .haman-name.shake {
@@ -1256,7 +1273,10 @@ export default function MegillahReader({ standalone = false, showTitle = false }
           50% { transform: scale(1.15); box-shadow: 0 4px 20px rgba(102, 10, 35, 0.5); }
         }
 
+        .mobile-only { display: inline; }
+
         @media (min-width: 768px) {
+          .mobile-only { display: none; }
           .scroll-text {
             padding: 36px 32px;
           }

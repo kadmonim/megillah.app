@@ -2,7 +2,7 @@
 import '../styles/global.css';
 import MegillahReader from '../components/islands/MegillahReader';
 
-const title = 'The Megillah App — Built-in gragger and reading progress bar';
+const title = 'The Megillah App — Follow along with the Megillah reading';
 const description = "Follow along with the Megillah reading — tap Haman's name for a gragger sound, track your progress, and more!";
 ---
 
@@ -36,9 +36,26 @@ const description = "Follow along with the Megillah reading — tap Haman's name
 
     <footer class="footer">
       <div class="container">
-        <p class="credit">Powered by <a href="https://purim.karmiel.co.il" class="credit-link">Chabad of Karmiel</a></p>
+        <button class="credits-btn" id="credits-btn">Credits</button>
+        <div class="credits-popover" id="credits-popover">
+          <p>Powered by <a href="https://purim.karmiel.co.il" class="credit-link" target="_blank" rel="noopener noreferrer">Chabad of Karmiel</a></p>
+          <p>Texts: <a href="https://www.sefaria.org" class="credit-link" target="_blank" rel="noopener noreferrer">Sefaria</a></p>
+        </div>
       </div>
     </footer>
+
+    <script>
+      const btn = document.getElementById('credits-btn')!;
+      const popover = document.getElementById('credits-popover')!;
+      btn.addEventListener('click', () => {
+        popover.classList.toggle('open');
+      });
+      document.addEventListener('click', (e) => {
+        if (!btn.contains(e.target as Node) && !popover.contains(e.target as Node)) {
+          popover.classList.remove('open');
+        }
+      });
+    </script>
   </body>
 </html>
 
@@ -57,6 +74,39 @@ const description = "Follow along with the Megillah reading — tap Haman's name
     padding: 20px 0;
     color: var(--color-text-light);
     font-size: 0.8rem;
+    position: relative;
+  }
+
+  .credits-btn {
+    background: none;
+    border: none;
+    color: var(--color-text-light);
+    font-size: 0.8rem;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .credits-popover {
+    display: none;
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    border-radius: 10px;
+    padding: 12px 20px;
+    box-shadow: 0 2px 12px rgba(102, 10, 35, 0.15);
+    white-space: nowrap;
+    margin-bottom: 6px;
+  }
+
+  .credits-popover.open {
+    display: block;
+  }
+
+  .credits-popover p {
+    margin: 4px 0;
   }
 
   .credit-link {
