@@ -15,6 +15,8 @@ export interface Session {
   role: SessionRole;
   /** Call to broadcast current position (admin only) */
   broadcast: (pos: ScrollPosition) => void;
+  /** Call to broadcast reading time change (admin only) */
+  broadcastTime: (minutes: number) => void;
   /** Call to leave/end the session */
   leave: () => void;
 }
@@ -33,6 +35,7 @@ function generateCode(): string {
 
 export function useSession(
   onRemoteScroll?: (pos: ScrollPosition) => void,
+  onRemoteTime?: (minutes: number) => void,
 ): UseSessionReturn {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(false);
@@ -65,6 +68,12 @@ export function useSession(
         }
       });
 
+      channel.on('broadcast', { event: 'reading-time' }, (payload) => {
+        if (role === 'follower' && onRemoteTime) {
+          onRemoteTime(payload.payload.minutes);
+        }
+      });
+
       channel.subscribe();
       channelRef.current = channel;
 
@@ -80,11 +89,20 @@ export function useSession(
         });
       };
 
+      const broadcastTime = (minutes: number) => {
+        if (role !== 'admin') return;
+        channel.send({
+          type: 'broadcast',
+          event: 'reading-time',
+          payload: { minutes },
+        });
+      };
+
       const leave = () => cleanup();
 
-      setSession({ code, role, broadcast, leave });
+      setSession({ code, role, broadcast, broadcastTime, leave });
     },
-    [cleanup, onRemoteScroll],
+    [cleanup, onRemoteScroll, onRemoteTime],
   );
 
   const createSession = useCallback(

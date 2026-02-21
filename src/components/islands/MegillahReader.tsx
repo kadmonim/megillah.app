@@ -304,7 +304,7 @@ function renderVerse(
   return verseContent;
 }
 
-export default function MegillahReader({ standalone = false, showTitle = false, session }: { standalone?: boolean; showTitle?: boolean; session?: Session }) {
+export default function MegillahReader({ standalone = false, showTitle = false, session, remoteMinutes }: { standalone?: boolean; showTitle?: boolean; session?: Session; remoteMinutes?: number | null }) {
   const [showCantillation, setShowCantillation] = useState(false);
   const [chabadMode, setChabadMode] = useState(false);
   const [fontSize, setFontSize] = useState(1.35);
@@ -378,6 +378,14 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
       setDraftMinutes(val);
     }
   }, []);
+
+  // Follower: apply reading time from admin
+  useEffect(() => {
+    if (remoteMinutes != null) {
+      setTotalMinutes(remoteMinutes);
+      setDraftMinutes(remoteMinutes);
+    }
+  }, [remoteMinutes]);
 
   const sessionRef = useRef(session);
   sessionRef.current = session;
@@ -658,6 +666,9 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
               setTotalMinutes(draftMinutes);
               sessionStorage.setItem('megillah-reading-minutes', String(draftMinutes));
               setShowTimeEdit(false);
+              if (session?.role === 'admin') {
+                session.broadcastTime(draftMinutes);
+              }
             }}
           >
             {t.save}

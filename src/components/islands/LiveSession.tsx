@@ -5,6 +5,7 @@ import MegillahReader from './MegillahReader';
 
 export default function LiveSession({ initialCode }: { initialCode?: string }) {
   const lastVerse = useRef<string | null>(null);
+  const [remoteMinutes, setRemoteMinutes] = useState<number | null>(null);
 
   const handleRemoteScroll = useCallback((pos: ScrollPosition) => {
     if (pos.verse === lastVerse.current) return;
@@ -15,8 +16,12 @@ export default function LiveSession({ initialCode }: { initialCode?: string }) {
     }
   }, []);
 
+  const handleRemoteTime = useCallback((minutes: number) => {
+    setRemoteMinutes(minutes);
+  }, []);
+
   const { session, loading, error, createSession, joinSession } =
-    useSession(handleRemoteScroll);
+    useSession(handleRemoteScroll, handleRemoteTime);
 
   if (!session) {
     return <LobbyScreen
@@ -30,7 +35,7 @@ export default function LiveSession({ initialCode }: { initialCode?: string }) {
 
   return (
     <div class="live-session">
-      <MegillahReader standalone={true} session={session} />
+      <MegillahReader standalone={true} session={session} remoteMinutes={remoteMinutes} />
     </div>
   );
 }
