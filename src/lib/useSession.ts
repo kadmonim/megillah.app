@@ -4,6 +4,8 @@ import type { RealtimeChannel } from '@supabase/supabase-js';
 
 export type SessionRole = 'admin' | 'follower';
 
+const STORAGE_KEY = 'megillah-live-session';
+
 /** A position in the megillah text — either a chapter:verse or a named section */
 export interface ScrollPosition {
   /** e.g. "3:7" or "blessings-before" / "blessings-after" / "shoshanat" */
@@ -31,6 +33,24 @@ interface UseSessionReturn {
 
 function generateCode(): string {
   return String(Math.floor(100000 + Math.random() * 900000));
+}
+
+function saveToStorage(code: string, password?: string) {
+  sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ code, password: password || '' }));
+}
+
+function clearStorage() {
+  sessionStorage.removeItem(STORAGE_KEY);
+}
+
+function loadFromStorage(): { code: string; password: string } | null {
+  try {
+    const raw = sessionStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (parsed.code) return parsed;
+  } catch {}
+  return null;
 }
 
 export function useSession(
@@ -98,7 +118,10 @@ export function useSession(
         });
       };
 
-      const leave = () => cleanup();
+      const leave = () => {
+        clearStorage();
+        cleanup();
+      };
 
       setSession({ code, role, broadcast, broadcastTime, leave });
     },
@@ -116,6 +139,7 @@ export function useSession(
           .from('sessions')
           .insert({ code, password });
         if (insertErr) throw insertErr;
+        saveToStorage(code, password);
         subscribe(code, 'admin');
       } catch (e: any) {
         setError(e.message || 'Failed to create session');
@@ -140,6 +164,7 @@ export function useSession(
         if (fetchErr || !data) throw new Error('Session not found');
         const role: SessionRole =
           password && data.password === password ? 'admin' : 'follower';
+        saveToStorage(code, password);
         subscribe(code, role);
       } catch (e: any) {
         setError(e.message || 'Failed to join session');
@@ -149,6 +174,14 @@ export function useSession(
     },
     [subscribe],
   );
+
+  // Auto-rejoin on mount if session was saved
+  useEffect(() => {
+    const saved = loadFromStorage();
+    if (saved) {
+      joinSession(saved.code, saved.password || undefined);
+    }
+  }, []);
 
   return { session, loading, error, createSession, joinSession };
 }
