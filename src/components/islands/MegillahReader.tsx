@@ -1118,17 +1118,19 @@ export default function MegillahReader({ standalone = false, showTitle = false }
         }
 
         .haman-name {
-          color: #a02020;
+          color: #666;
           padding: 2px 5px;
+          border: 1.5px dotted #999;
           border-radius: 4px;
           cursor: pointer;
-          transition: color 0.15s;
+          transition: color 0.15s, border-color 0.15s;
           user-select: none;
           display: inline;
         }
 
         .haman-name:hover {
-          color: #cc2222;
+          color: #444;
+          border-color: #666;
         }
 
         .haman-name.shake {
