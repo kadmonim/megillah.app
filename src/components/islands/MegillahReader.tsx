@@ -270,7 +270,7 @@ function renderVerse(
           <HamanWord key={`${chapterNum}-${verseNum}-${i}`} text={part} onTap={onHamanTap} />
         );
       })}
-      {translation && <span class="verse-translation" dir="ltr">{translation}</span>}
+      {translation && <span class="verse-translation" dir={lang === 'he' ? 'rtl' : 'ltr'}>{translation}</span>}
       {' '}
     </span>
   );
@@ -300,8 +300,8 @@ export default function MegillahReader({ standalone = false, showTitle = false }
   const t = translations[lang];
 
   // The translation language to use when showTranslation is on
-  // Hebrew users get English translations since Hebrew IS the original text
-  const translationKey: Lang = lang === 'he' ? 'en' : lang;
+  // Hebrew users get Steinsaltz commentary; others get their language's translation
+  const translationKey: Lang = lang;
 
   // Resolve the active translation map
   const activeTranslations: TranslationMap | null =
@@ -678,7 +678,7 @@ export default function MegillahReader({ standalone = false, showTitle = false }
                       {allNames.map((name, i) => (
                         <span key={`son-${i}`} class="haman-son">{name}</span>
                       ))}
-                      {bneiTranslations && <span class="verse-translation" dir="ltr">{bneiTranslations}</span>}
+                      {bneiTranslations && <span class="verse-translation" dir={lang === 'he' ? 'rtl' : 'ltr'}>{bneiTranslations}</span>}
                     </span>,
                   ];
                 }
@@ -1097,7 +1097,7 @@ export default function MegillahReader({ standalone = false, showTitle = false }
           color: var(--color-text-light);
           line-height: 1.6;
           margin-bottom: 4px;
-          text-align: left;
+          text-align: start;
         }
 
         .sound-fab {
