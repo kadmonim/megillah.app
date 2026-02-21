@@ -172,9 +172,9 @@ function hasTitleAfter(textAfter: string): boolean {
   return /(האגגי|הרע|צרר|צורר)/.test(plain);
 }
 
-// Strip cantillation marks (U+0591–U+05AF) but keep nikkud vowels
+// Strip cantillation marks (U+0591–U+05AF) and paseq (U+05C0) but keep nikkud vowels
 function stripCantillation(s: string): string {
-  return s.replace(/[\u0591-\u05AF]/g, '');
+  return s.replace(/[\u0591-\u05AF\u05C0]/g, '');
 }
 
 const SPLAT_COLORS = ['#5c3a1e', '#7a4f2e', '#3e2710', '#8b6914', '#6b4423', '#4a3015'];
