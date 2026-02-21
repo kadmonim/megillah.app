@@ -2,7 +2,7 @@ import { useState, useRef, useCallback, useEffect } from 'preact/hooks';
 import { megillahText } from '../../lib/megillah-text';
 import { translationsEn } from '../../lib/megillah-translations-en';
 
-type Lang = 'he' | 'en' | 'es' | 'ru' | 'fr' | 'pt';
+type Lang = 'he' | 'en' | 'es' | 'ru' | 'fr' | 'pt' | 'it';
 type TranslationMap = Record<string, string>;
 
 function toHebrew(n: number): string {
@@ -133,6 +133,25 @@ const translations = {
     headerSub: 'Matraca embutida e barra de progresso',
     language: 'Idioma',
     shakeToPlay: 'Agitar para tocar matraca',
+  },
+  it: {
+    showCantillation: 'Mostra segni di cantillazione',
+    chabadCustom: 'Evidenzia meno Haman',
+    showTranslation: 'Mostra traduzione',
+    fontSize: 'Dimensione carattere',
+    minLeft: 'min rimasti',
+    readingTime: 'Tempo di lettura (min):',
+    save: 'Salva',
+    changeReadingTime: 'Modifica tempo di lettura',
+    chabadHint: 'Usanza Chabad — Haman evidenziato solo con titolo',
+    tapHint: 'Non hai una raganella? Clicca sul nome di Haman!',
+    chapter: 'Capitolo',
+    loudLabel: 'Tutti leggono questo insieme:',
+    bneiHamanLabel: 'In alcune comunità, tutti dicono questo insieme.',
+    headerTitle: 'La Meghillà',
+    headerSub: 'Raganella integrata e barra di avanzamento',
+    language: 'Lingua',
+    shakeToPlay: 'Agita per la raganella',
   },
 } as const;
 
@@ -299,6 +318,7 @@ export default function MegillahReader({ standalone = false, showTitle = false }
     else if (navLang.startsWith('ru')) detected = 'ru';
     else if (navLang.startsWith('fr')) detected = 'fr';
     else if (navLang.startsWith('pt')) detected = 'pt';
+    else if (navLang.startsWith('it')) detected = 'it';
     deviceLang.current = detected;
     setLang(detected);
   }, []);
@@ -603,6 +623,7 @@ export default function MegillahReader({ standalone = false, showTitle = false }
                 <option value="ru">Русский</option>
                 <option value="fr">Français</option>
                 <option value="pt">Português</option>
+                <option value="it">Italiano</option>
               </select>
             </label>
           </div>
