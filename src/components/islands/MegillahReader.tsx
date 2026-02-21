@@ -438,18 +438,26 @@ export default function MegillahReader({ standalone = false, showTitle = false }
     });
   }, []);
 
-  // Unlock audio on first user interaction (needed for Android shake-to-play)
+  // Unlock audio on first user interaction (needed for shake-to-play on iOS/Android)
   useEffect(() => {
+    let unlocked = false;
     const unlockAudio = () => {
-      const silent = new Audio();
-      silent.play().catch(() => {});
+      if (unlocked) return;
+      unlocked = true;
+      // Play a real sound file at zero volume to fully unlock iOS audio
+      const audio = new Audio('/sounds/gragger1.mp3');
+      audio.volume = 0;
+      audio.play().then(() => { audio.pause(); audio.currentTime = 0; }).catch(() => {});
       document.removeEventListener('touchstart', unlockAudio);
+      document.removeEventListener('touchend', unlockAudio);
       document.removeEventListener('click', unlockAudio);
     };
-    document.addEventListener('touchstart', unlockAudio, { once: true });
-    document.addEventListener('click', unlockAudio, { once: true });
+    document.addEventListener('touchstart', unlockAudio);
+    document.addEventListener('touchend', unlockAudio);
+    document.addEventListener('click', unlockAudio);
     return () => {
       document.removeEventListener('touchstart', unlockAudio);
+      document.removeEventListener('touchend', unlockAudio);
       document.removeEventListener('click', unlockAudio);
     };
   }, []);
