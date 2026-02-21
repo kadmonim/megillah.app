@@ -178,6 +178,31 @@ function stripCantillation(s: string): string {
 }
 
 const SPLAT_COLORS = ['#5c3a1e', '#7a4f2e', '#3e2710', '#8b6914', '#6b4423', '#4a3015'];
+const CONFETTI_COLORS = ['#660a23', '#E8962E', '#f0b054', '#8a1e3c', '#2e7d32', '#1565c0', '#e91e63', '#ff9800'];
+
+function spawnConfetti() {
+  const count = 80;
+  for (let i = 0; i < count; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    const size = 6 + Math.random() * 8;
+    const x = Math.random() * window.innerWidth;
+    const dx = (Math.random() - 0.5) * 300;
+    const duration = 1.5 + Math.random() * 2;
+    const delay = Math.random() * 600;
+    const rotation = Math.random() * 720 - 360;
+    piece.style.cssText = `
+      left:${x}px;top:-10px;
+      width:${size}px;height:${size * (0.5 + Math.random() * 0.8)}px;
+      background:${CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)]};
+      --dx:${dx}px;--rot:${rotation}deg;
+      animation-delay:${delay}ms;
+      animation-duration:${duration}s;
+    `;
+    document.body.appendChild(piece);
+    piece.addEventListener('animationend', () => piece.remove());
+  }
+}
 
 function spawnSplats(el: HTMLElement) {
   const rect = el.getBoundingClientRect();
@@ -296,6 +321,7 @@ export default function MegillahReader({ standalone = false, showTitle = false }
   const audioPool = useRef<HTMLAudioElement[]>([]);
   const soundTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const scrollTextRef = useRef<HTMLDivElement>(null);
+  const confettiFired = useRef(false);
 
   const t = translations[lang];
 
@@ -363,6 +389,10 @@ export default function MegillahReader({ standalone = false, showTitle = false }
       if (scrollable <= 0) { setScrollProgress(1); return; }
       const progress = Math.min(1, Math.max(0, scrolled / scrollable));
       setScrollProgress(progress);
+      if (progress >= 0.99 && !confettiFired.current) {
+        confettiFired.current = true;
+        spawnConfetti();
+      }
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
@@ -1060,6 +1090,25 @@ export default function MegillahReader({ standalone = false, showTitle = false }
           100% {
             opacity: 0;
             transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(0.2);
+          }
+        }
+
+        .confetti-piece {
+          position: fixed;
+          pointer-events: none;
+          z-index: 9999;
+          border-radius: 2px;
+          animation: confetti-fall 2s ease-out forwards;
+        }
+
+        @keyframes confetti-fall {
+          0% {
+            opacity: 1;
+            transform: translateY(0) translateX(0) rotate(0deg);
+          }
+          100% {
+            opacity: 0;
+            transform: translateY(100vh) translateX(var(--dx)) rotate(var(--rot));
           }
         }
 
