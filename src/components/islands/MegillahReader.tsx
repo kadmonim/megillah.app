@@ -478,7 +478,7 @@ export default function MegillahReader({ standalone = false, showTitle = false }
   useEffect(() => {
     if (!shakeEnabled) return;
 
-    const SHAKE_THRESHOLD = 30;
+    const SHAKE_THRESHOLD = 10;
     const STOP_DELAY = 1000;
     let lastX = 0, lastY = 0, lastZ = 0;
     let hasReading = false;
@@ -504,7 +504,7 @@ export default function MegillahReader({ standalone = false, showTitle = false }
     };
 
     const handleMotion = (e: DeviceMotionEvent) => {
-      const acc = e.accelerationIncludingGravity;
+      const acc = e.acceleration;
       if (!acc || acc.x == null || acc.y == null || acc.z == null) return;
 
       if (!hasReading) {
