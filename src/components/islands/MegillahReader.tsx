@@ -362,7 +362,7 @@ export default function MegillahReader({ standalone = false, showTitle = false }
     });
     setSoundActive(true);
     if (soundTimer.current) clearTimeout(soundTimer.current);
-    soundTimer.current = setTimeout(() => setSoundActive(false), 2000);
+    soundTimer.current = setTimeout(() => setSoundActive(false), 5000);
   }, [muted]);
 
   // Ref so shake effect can read current mute state
@@ -398,9 +398,9 @@ export default function MegillahReader({ standalone = false, showTitle = false }
   useEffect(() => {
     if (!shakeEnabled) return;
 
-    const SHAKE_THRESHOLD = 25;
+    const SHAKE_THRESHOLD = 15;
     const SHAKE_COOLDOWN = 600;
-    const STOP_DELAY = 400;
+    const STOP_DELAY = 2000;
     let lastShake = 0;
     let lastX = 0, lastY = 0, lastZ = 0;
     let hasReading = false;
@@ -423,7 +423,7 @@ export default function MegillahReader({ standalone = false, showTitle = false }
       });
       setSoundActive(true);
       if (soundTimer.current) clearTimeout(soundTimer.current);
-      soundTimer.current = setTimeout(() => setSoundActive(false), 2000);
+      soundTimer.current = setTimeout(() => setSoundActive(false), 5000);
     };
 
     const handleMotion = (e: DeviceMotionEvent) => {
