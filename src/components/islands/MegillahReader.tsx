@@ -311,6 +311,8 @@ export default function MegillahReader({ standalone = false, showTitle = false }
   const [totalMinutes, setTotalMinutes] = useState(DEFAULT_READING_MINUTES);
   const [draftMinutes, setDraftMinutes] = useState(DEFAULT_READING_MINUTES);
   const [showTimeEdit, setShowTimeEdit] = useState(false);
+  const [optionsCollapsed, setOptionsCollapsed] = useState(false);
+  const hasAutoCollapsed = useRef(false);
   const [lang, setLang] = useState<Lang>('he');
   const [showTranslation, setShowTranslation] = useState(false);
   const [loadedTranslations, setLoadedTranslations] = useState<TranslationMap | null>(null);
@@ -389,6 +391,10 @@ export default function MegillahReader({ standalone = false, showTitle = false }
       if (scrollable <= 0) { setScrollProgress(1); return; }
       const progress = Math.min(1, Math.max(0, scrolled / scrollable));
       setScrollProgress(progress);
+      if (progress > 0.02 && !hasAutoCollapsed.current) {
+        hasAutoCollapsed.current = true;
+        setOptionsCollapsed(true);
+      }
       if (progress >= 0.99 && !confettiFired.current) {
         confettiFired.current = true;
         spawnConfetti();
@@ -430,6 +436,22 @@ export default function MegillahReader({ standalone = false, showTitle = false }
       }
       return !prev;
     });
+  }, []);
+
+  // Unlock audio on first user interaction (needed for Android shake-to-play)
+  useEffect(() => {
+    const unlockAudio = () => {
+      const silent = new Audio();
+      silent.play().catch(() => {});
+      document.removeEventListener('touchstart', unlockAudio);
+      document.removeEventListener('click', unlockAudio);
+    };
+    document.addEventListener('touchstart', unlockAudio, { once: true });
+    document.addEventListener('click', unlockAudio, { once: true });
+    return () => {
+      document.removeEventListener('touchstart', unlockAudio);
+      document.removeEventListener('click', unlockAudio);
+    };
   }, []);
 
   // Shake detection for mobile devices
@@ -548,7 +570,14 @@ export default function MegillahReader({ standalone = false, showTitle = false }
         </button>
       </div>
       {/* Options bar */}
-      <div class="options-bar" dir={lang === 'he' ? 'rtl' : 'ltr'}>
+      <div class={`options-bar${optionsCollapsed ? ' collapsed' : ''}`} dir={lang === 'he' ? 'rtl' : 'ltr'}>
+        {optionsCollapsed && (
+          <button class="options-expand-btn" onClick={() => setOptionsCollapsed(false)}>
+            <span class="material-icons">tune</span>
+          </button>
+        )}
+        {!optionsCollapsed && (
+          <>
         <label class="option-toggle">
           <input
             type="checkbox"
@@ -655,6 +684,11 @@ export default function MegillahReader({ standalone = false, showTitle = false }
               </select>
             </label>
           </div>
+        )}
+        <button class="options-collapse-btn" onClick={() => setOptionsCollapsed(true)}>
+          <span class="material-icons">expand_less</span>
+        </button>
+          </>
         )}
       </div>
 
@@ -906,6 +940,44 @@ export default function MegillahReader({ standalone = false, showTitle = false }
           position: sticky;
           top: 20px;
           z-index: 50;
+        }
+
+        .options-bar.collapsed {
+          padding: 0;
+          gap: 0;
+        }
+
+        .options-expand-btn {
+          width: 100%;
+          background: none;
+          border: none;
+          cursor: pointer;
+          padding: 4px 0;
+          color: var(--color-text-light);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .options-expand-btn .material-icons {
+          font-size: 20px;
+        }
+
+        .options-collapse-btn {
+          width: 100%;
+          background: none;
+          border: none;
+          cursor: pointer;
+          padding: 2px 0 0;
+          color: var(--color-text-light);
+          opacity: 0.5;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .options-collapse-btn .material-icons {
+          font-size: 18px;
         }
 
         .option-toggle {
