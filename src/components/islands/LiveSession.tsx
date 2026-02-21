@@ -1,7 +1,121 @@
-import { useState, useCallback, useRef } from 'preact/hooks';
+import { useState, useCallback, useRef, useEffect } from 'preact/hooks';
 import { useSession } from '../../lib/useSession';
 import type { Session, ScrollPosition } from '../../lib/useSession';
 import MegillahReader from './MegillahReader';
+
+type Lang = 'he' | 'en' | 'es' | 'ru' | 'fr' | 'pt' | 'it';
+
+const lobbyText = {
+  he: {
+    title: 'מגילה לייב',
+    subtitle: 'עקבו אחרי קריאת מגילה בזמן אמת',
+    createSession: 'צור סשן',
+    joinSession: 'הצטרף לסשן',
+    adminPassword: 'סיסמת מנהל',
+    choosePassword: 'בחר סיסמה...',
+    creating: 'יוצר...',
+    sessionCode: 'קוד סשן',
+    passwordAdmins: 'סיסמה (למנהלים בלבד)',
+    optional: 'אופציונלי...',
+    joining: 'מצטרף...',
+    back: 'חזרה',
+  },
+  en: {
+    title: 'Megillah Live',
+    subtitle: 'Follow along with a live Megillah reading',
+    createSession: 'Create Session',
+    joinSession: 'Join Session',
+    adminPassword: 'Admin Password',
+    choosePassword: 'Choose a password...',
+    creating: 'Creating...',
+    sessionCode: 'Session Code',
+    passwordAdmins: 'Password (admins only)',
+    optional: 'Optional...',
+    joining: 'Joining...',
+    back: 'Back',
+  },
+  es: {
+    title: 'Meguilá en Vivo',
+    subtitle: 'Sigue una lectura en vivo de la Meguilá',
+    createSession: 'Crear sesión',
+    joinSession: 'Unirse a sesión',
+    adminPassword: 'Contraseña de admin',
+    choosePassword: 'Elige una contraseña...',
+    creating: 'Creando...',
+    sessionCode: 'Código de sesión',
+    passwordAdmins: 'Contraseña (solo admins)',
+    optional: 'Opcional...',
+    joining: 'Uniéndose...',
+    back: 'Volver',
+  },
+  ru: {
+    title: 'Мегила Лайв',
+    subtitle: 'Следите за чтением Мегилы в реальном времени',
+    createSession: 'Создать сессию',
+    joinSession: 'Присоединиться',
+    adminPassword: 'Пароль администратора',
+    choosePassword: 'Выберите пароль...',
+    creating: 'Создание...',
+    sessionCode: 'Код сессии',
+    passwordAdmins: 'Пароль (только для админов)',
+    optional: 'Необязательно...',
+    joining: 'Подключение...',
+    back: 'Назад',
+  },
+  fr: {
+    title: 'Méguila en Direct',
+    subtitle: 'Suivez une lecture en direct de la Méguila',
+    createSession: 'Créer une session',
+    joinSession: 'Rejoindre une session',
+    adminPassword: 'Mot de passe admin',
+    choosePassword: 'Choisissez un mot de passe...',
+    creating: 'Création...',
+    sessionCode: 'Code de session',
+    passwordAdmins: 'Mot de passe (admins uniquement)',
+    optional: 'Facultatif...',
+    joining: 'Connexion...',
+    back: 'Retour',
+  },
+  pt: {
+    title: 'Meguilá ao Vivo',
+    subtitle: 'Acompanhe uma leitura ao vivo da Meguilá',
+    createSession: 'Criar sessão',
+    joinSession: 'Entrar na sessão',
+    adminPassword: 'Senha de admin',
+    choosePassword: 'Escolha uma senha...',
+    creating: 'Criando...',
+    sessionCode: 'Código da sessão',
+    passwordAdmins: 'Senha (apenas admins)',
+    optional: 'Opcional...',
+    joining: 'Entrando...',
+    back: 'Voltar',
+  },
+  it: {
+    title: 'Meghillà dal Vivo',
+    subtitle: 'Segui una lettura dal vivo della Meghillà',
+    createSession: 'Crea sessione',
+    joinSession: 'Unisciti alla sessione',
+    adminPassword: 'Password admin',
+    choosePassword: 'Scegli una password...',
+    creating: 'Creazione...',
+    sessionCode: 'Codice sessione',
+    passwordAdmins: 'Password (solo admin)',
+    optional: 'Facoltativo...',
+    joining: 'Connessione...',
+    back: 'Indietro',
+  },
+} as const;
+
+function detectLang(): Lang {
+  const navLang = navigator.language;
+  if (navLang.startsWith('he')) return 'he';
+  if (navLang.startsWith('es')) return 'es';
+  if (navLang.startsWith('ru')) return 'ru';
+  if (navLang.startsWith('fr')) return 'fr';
+  if (navLang.startsWith('pt')) return 'pt';
+  if (navLang.startsWith('it')) return 'it';
+  return 'en';
+}
 
 export default function LiveSession({ initialCode }: { initialCode?: string }) {
   const lastVerse = useRef<string | null>(null);
@@ -23,6 +137,9 @@ export default function LiveSession({ initialCode }: { initialCode?: string }) {
   const { session, loading, error, createSession, joinSession } =
     useSession(handleRemoteScroll, handleRemoteTime);
 
+  const [lang, setLang] = useState<Lang>('en');
+  useEffect(() => { setLang(detectLang()); }, []);
+
   if (!session) {
     return <LobbyScreen
       initialCode={initialCode}
@@ -30,6 +147,7 @@ export default function LiveSession({ initialCode }: { initialCode?: string }) {
       error={error}
       onCreateSession={createSession}
       onJoinSession={joinSession}
+      lang={lang}
     />;
   }
 
@@ -46,24 +164,28 @@ function LobbyScreen({
   error,
   onCreateSession,
   onJoinSession,
+  lang,
 }: {
   initialCode?: string;
   loading: boolean;
   error: string | null;
   onCreateSession: (password: string) => Promise<void>;
   onJoinSession: (code: string, password?: string) => Promise<void>;
+  lang: Lang;
 }) {
   const [mode, setMode] = useState<'choose' | 'create' | 'join'>(
     initialCode ? 'join' : 'choose',
   );
   const [password, setPassword] = useState('');
   const [code, setCode] = useState(initialCode || '');
+  const t = lobbyText[lang];
+  const dir = lang === 'he' ? 'rtl' : 'ltr';
 
   return (
-    <div class="lobby">
+    <div class="lobby" dir={dir}>
       <div class="lobby-card">
-        <h1 class="lobby-title">Megillah Live</h1>
-        <p class="lobby-sub">Follow along with a live Megillah reading</p>
+        <h1 class="lobby-title">{t.title}</h1>
+        <p class="lobby-sub">{t.subtitle}</p>
 
         {error && <div class="lobby-error">{error}</div>}
 
@@ -71,11 +193,11 @@ function LobbyScreen({
           <div class="lobby-choices">
             <button class="lobby-btn create" onClick={() => setMode('create')}>
               <span class="material-icons">add_circle</span>
-              Create Session
+              {t.createSession}
             </button>
             <button class="lobby-btn join" onClick={() => setMode('join')}>
               <span class="material-icons">login</span>
-              Join Session
+              {t.joinSession}
             </button>
           </div>
         )}
@@ -89,26 +211,26 @@ function LobbyScreen({
             }}
           >
             <label class="lobby-label">
-              Admin Password
+              {t.adminPassword}
               <input
                 type="password"
                 class="lobby-input"
                 value={password}
-                placeholder="Choose a password..."
+                placeholder={t.choosePassword}
                 onInput={(e) => setPassword((e.target as HTMLInputElement).value)}
                 required
                 autoFocus
               />
             </label>
             <button class="lobby-btn create" type="submit" disabled={loading}>
-              {loading ? 'Creating...' : 'Create Session'}
+              {loading ? t.creating : t.createSession}
             </button>
             <button
               type="button"
               class="lobby-back"
               onClick={() => setMode('choose')}
             >
-              Back
+              {t.back}
             </button>
           </form>
         )}
@@ -122,7 +244,7 @@ function LobbyScreen({
             }}
           >
             <label class="lobby-label">
-              Session Code
+              {t.sessionCode}
               <input
                 type="text"
                 inputMode="numeric"
@@ -137,24 +259,24 @@ function LobbyScreen({
               />
             </label>
             <label class="lobby-label">
-              Password (admins only)
+              {t.passwordAdmins}
               <input
                 type="password"
                 class="lobby-input"
                 value={password}
-                placeholder="Optional..."
+                placeholder={t.optional}
                 onInput={(e) => setPassword((e.target as HTMLInputElement).value)}
               />
             </label>
             <button class="lobby-btn join" type="submit" disabled={loading}>
-              {loading ? 'Joining...' : 'Join Session'}
+              {loading ? t.joining : t.joinSession}
             </button>
             <button
               type="button"
               class="lobby-back"
               onClick={() => { setMode('choose'); setCode(''); }}
             >
-              Back
+              {t.back}
             </button>
           </form>
         )}
@@ -262,7 +384,7 @@ function LobbyScreen({
           font-size: 0.85rem;
           font-weight: 600;
           color: var(--color-text);
-          text-align: left;
+          text-align: start;
         }
 
         .lobby-input {
