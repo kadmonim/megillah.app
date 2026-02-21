@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from 'preact/hooks';
 import { megillahText } from '../../lib/megillah-text';
 import { translationsEn } from '../../lib/megillah-translations-en';
-import type { Session } from '../../lib/useSession';
+import type { Session, ScrollPosition } from '../../lib/useSession';
 
 type Lang = 'he' | 'en' | 'es' | 'ru' | 'fr' | 'pt' | 'it';
 type TranslationMap = Record<string, string>;
@@ -279,7 +279,7 @@ function renderVerse(
   const translation = translationMap?.[verseKey];
 
   const verseContent = (
-    <span class={`verse${isLoud ? ' loud-verse' : ''}`}>
+    <span class={`verse${isLoud ? ' loud-verse' : ''}`} data-verse={verseKey}>
       {isLoud && <span class="loud-label" dir={lang === 'he' ? 'rtl' : 'ltr'}>{t.loudLabel}</span>}
       <sup class="verse-num">{toHebrew(verseNum)}</sup>
       {parts.map((part, i) => {
@@ -398,9 +398,20 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
         confettiFired.current = true;
         spawnConfetti();
       }
-      // Admin: broadcast scroll progress
+      // Admin: find topmost visible verse and broadcast it
       if (sessionRef.current?.role === 'admin') {
-        sessionRef.current.broadcast(progress);
+        const verseEls = el.querySelectorAll('[data-verse]');
+        let topVerse: string | null = null;
+        for (const v of verseEls) {
+          const r = v.getBoundingClientRect();
+          if (r.top >= -r.height) {
+            topVerse = (v as HTMLElement).dataset.verse || null;
+            break;
+          }
+        }
+        if (topVerse) {
+          sessionRef.current.broadcast({ verse: topVerse });
+        }
       }
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -729,7 +740,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
       </p>
 
       <div class="scroll-text" dir="rtl" ref={scrollTextRef}>
-        <div class="blessings-block">
+        <div class="blessings-block" data-verse="blessings-before">
           <h2 class="chapter-heading">{lang === 'he' ? 'ברכות לפני קריאת המגילה' : 'Blessings Before the Reading'}</h2>
           <div class="blessing-text">
             <p>בָּרוּךְ אַתָּה אֲ-דוֹנָי אֱ-לֹהֵינוּ מֶלֶךְ הָעוֹלָם, אֲשֶׁר קִדְּשָׁנוּ בְּמִצְוֹתָיו וְצִוָּנוּ עַל מִקְרָא מְגִלָּה.</p>
@@ -770,11 +781,11 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
                     : null;
 
                   return [
-                    <span key="9-6-before" class="verse">
+                    <span key="9-6-before" class="verse" data-verse="9:6">
                       <sup class="verse-num">{toHebrew(v.verse)}</sup>
                       {beforeText}
                     </span>,
-                    <span key="bnei-haman-block" class="verse loud-verse bnei-haman">
+                    <span key="bnei-haman-block" class="verse loud-verse bnei-haman" data-verse="9:7">
                       <span class="loud-label" dir={lang === 'he' ? 'rtl' : 'ltr'}>{t.bneiHamanLabel}</span>
                       <span class="haman-son">{splitText}</span>
                       {allNames.map((name, i) => (
@@ -791,14 +802,14 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           </div>
         ))}
 
-        <div class="blessings-block">
+        <div class="blessings-block" data-verse="blessings-after">
           <h2 class="chapter-heading">{lang === 'he' ? 'ברכה לאחר קריאת המגילה' : 'Blessing After the Reading'}</h2>
           <div class="blessing-text">
             <p>בָּרוּךְ אַתָּה אֲ-דוֹנָי אֱ-לֹהֵינוּ מֶלֶךְ הָעוֹלָם, הָרָב אֶת רִיבֵנוּ, וְהַדָּן אֶת דִּינֵנוּ, וְהַנּוֹקֵם אֶת נִקְמָתֵנוּ, וְהַנִּפְרָע לָנוּ מִצָּרֵינוּ, וְהַמְשַׁלֵּם גְּמוּל לְכָל אוֹיְבֵי נַפְשֵׁנוּ, בָּרוּךְ אַתָּה אֲ-דוֹנָי, הַנִּפְרָע לְעַמּוֹ יִשְׂרָאֵל מִכָּל צָרֵיהֶם, הָאֵ-ל הַמּוֹשִׁיעַ.</p>
           </div>
         </div>
 
-        <div class="blessings-block">
+        <div class="blessings-block" data-verse="shoshanat">
           <h2 class="chapter-heading">{lang === 'he' ? 'שׁוֹשַׁנַּת יַעֲקֹב' : 'Shoshanat Yaakov'}</h2>
           <div class="blessing-text shoshanat-yaakov">
             <p>שׁוֹשַׁנַּת יַעֲקֹב צָהֲלָה וְשָׂמֵחָה, בִּרְאוֹתָם יַחַד תְּכֵלֶת מָרְדְּכָי,</p>

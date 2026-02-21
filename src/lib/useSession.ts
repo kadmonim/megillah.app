@@ -4,11 +4,17 @@ import type { RealtimeChannel } from '@supabase/supabase-js';
 
 export type SessionRole = 'admin' | 'follower';
 
+/** A position in the megillah text — either a chapter:verse or a named section */
+export interface ScrollPosition {
+  /** e.g. "3:7" or "blessings-before" / "blessings-after" / "shoshanat" */
+  verse: string;
+}
+
 export interface Session {
   code: string;
   role: SessionRole;
-  /** Call to broadcast scroll progress (admin only) */
-  broadcast: (progress: number) => void;
+  /** Call to broadcast current position (admin only) */
+  broadcast: (pos: ScrollPosition) => void;
   /** Call to leave/end the session */
   leave: () => void;
 }
@@ -19,7 +25,6 @@ interface UseSessionReturn {
   error: string | null;
   createSession: (password: string) => Promise<void>;
   joinSession: (code: string, password?: string) => Promise<void>;
-  onScroll: ((progress: number) => void) | null;
 }
 
 function generateCode(): string {
@@ -27,7 +32,7 @@ function generateCode(): string {
 }
 
 export function useSession(
-  onRemoteScroll?: (progress: number) => void,
+  onRemoteScroll?: (pos: ScrollPosition) => void,
 ): UseSessionReturn {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(false);
@@ -56,14 +61,14 @@ export function useSession(
 
       channel.on('broadcast', { event: 'scroll' }, (payload) => {
         if (role === 'follower' && onRemoteScroll) {
-          onRemoteScroll(payload.payload.progress);
+          onRemoteScroll(payload.payload as ScrollPosition);
         }
       });
 
       channel.subscribe();
       channelRef.current = channel;
 
-      const broadcast = (progress: number) => {
+      const broadcast = (pos: ScrollPosition) => {
         if (role !== 'admin') return;
         const now = Date.now();
         if (now - lastBroadcast.current < 200) return;
@@ -71,7 +76,7 @@ export function useSession(
         channel.send({
           type: 'broadcast',
           event: 'scroll',
-          payload: { progress },
+          payload: pos,
         });
       };
 
@@ -127,7 +132,5 @@ export function useSession(
     [subscribe],
   );
 
-  const onScroll = session?.role === 'admin' ? session.broadcast : null;
-
-  return { session, loading, error, createSession, joinSession, onScroll };
+  return { session, loading, error, createSession, joinSession };
 }

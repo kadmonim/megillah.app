@@ -1,25 +1,22 @@
-import { useState, useCallback, useEffect } from 'preact/hooks';
+import { useState, useCallback, useRef } from 'preact/hooks';
 import { useSession } from '../../lib/useSession';
-import type { Session } from '../../lib/useSession';
+import type { Session, ScrollPosition } from '../../lib/useSession';
 import MegillahReader from './MegillahReader';
 
 export default function LiveSession({ initialCode }: { initialCode?: string }) {
-  const [remoteProgress, setRemoteProgress] = useState<number | null>(null);
+  const lastVerse = useRef<string | null>(null);
 
-  const handleRemoteScroll = useCallback((progress: number) => {
-    setRemoteProgress(progress);
+  const handleRemoteScroll = useCallback((pos: ScrollPosition) => {
+    if (pos.verse === lastVerse.current) return;
+    lastVerse.current = pos.verse;
+    const el = document.querySelector(`[data-verse="${pos.verse}"]`);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }, []);
 
   const { session, loading, error, createSession, joinSession } =
     useSession(handleRemoteScroll);
-
-  // Auto-scroll followers
-  useEffect(() => {
-    if (!session || session.role !== 'follower' || remoteProgress === null) return;
-    const scrollable = document.documentElement.scrollHeight - window.innerHeight;
-    if (scrollable <= 0) return;
-    window.scrollTo({ top: remoteProgress * scrollable, behavior: 'smooth' });
-  }, [remoteProgress, session]);
 
   if (!session) {
     return <LobbyScreen
