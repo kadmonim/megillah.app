@@ -478,7 +478,7 @@ export default function MegillahReader({ standalone = false, showTitle = false }
   useEffect(() => {
     if (!shakeEnabled) return;
 
-    const SHAKE_THRESHOLD = 10;
+    const SHAKE_THRESHOLD = 15;
     const STOP_DELAY = 1000;
     let lastX = 0, lastY = 0, lastZ = 0;
     let hasReading = false;
