@@ -479,26 +479,25 @@ export default function MegillahReader({ standalone = false, showTitle = false }
     if (!shakeEnabled) return;
 
     const SHAKE_THRESHOLD = 15;
-    const STOP_DELAY = 1000;
+    const STOP_DELAY = 100;
     let lastX = 0, lastY = 0, lastZ = 0;
     let hasReading = false;
     let stopTimer: ReturnType<typeof setTimeout> | null = null;
-    let shakeAudio: HTMLAudioElement | null = null;
+    const shakeIdx = Math.floor(Math.random() * 22) + 1;
+    const shakeAudio = new Audio(`/sounds/gragger${shakeIdx}.mp3`);
+    shakeAudio.loop = true;
     let isShaking = false;
 
     const stopShakeSounds = () => {
-      if (shakeAudio) { shakeAudio.pause(); shakeAudio.currentTime = 0; shakeAudio = null; }
+      shakeAudio.pause();
+      shakeAudio.currentTime = 0;
       isShaking = false;
     };
 
     const startShakeGragger = () => {
       if (mutedRef.current || isShaking) return;
       isShaking = true;
-      const idx = Math.floor(Math.random() * 22) + 1;
-      const audio = new Audio(`/sounds/gragger${idx}.mp3`);
-      audio.loop = true;
-      shakeAudio = audio;
-      audio.play().catch(() => {});
+      shakeAudio.play().catch(() => {});
       setSoundActive(true);
       if (soundTimer.current) clearTimeout(soundTimer.current);
     };
