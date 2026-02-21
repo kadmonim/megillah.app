@@ -1,0 +1,70 @@
+/* Megillah App — Global Styles */
+
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+:root {
+  --color-burgundy: #660a23;
+  --color-burgundy-light: #8a1e3c;
+  --color-gold: #E8962E;
+  --color-gold-light: #f0b054;
+  --color-cream: #fdf6f0;
+  --color-cream-dark: #f5e6d8;
+  --color-text: #2d1a10;
+  --color-text-light: #6b5545;
+  --color-white: #ffffff;
+
+  --font-family: 'Heebo', sans-serif;
+  --max-width: 600px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: var(--font-family);
+  background: var(--color-cream);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+a {
+  color: var(--color-burgundy);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button {
+  font-family: var(--font-family);
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+input, select, textarea {
+  font-family: var(--font-family);
+  font-size: 1rem;
+}
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --max-width: 720px;
+  }
+}
