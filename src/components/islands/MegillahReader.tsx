@@ -559,6 +559,7 @@ export default function MegillahReader({ standalone = false, showTitle = false }
         </span>
       </div>
       {/* Inline toolbar */}
+      <div class="toolbar-sticky">
       <div class="inline-toolbar" dir={lang === 'he' ? 'rtl' : 'ltr'}>
         <div class="toolbar-left">
           <span class="material-icons size-icon">text_fields</span>
@@ -686,6 +687,7 @@ export default function MegillahReader({ standalone = false, showTitle = false }
           </div>
         </div>
       )}
+      </div>
 
       <p class="hint-text">
         <span class="material-icons hint-icon">touch_app</span>
@@ -867,6 +869,13 @@ export default function MegillahReader({ standalone = false, showTitle = false }
           text-shadow: 0 0 3px var(--color-white), 0 0 3px var(--color-white);
         }
 
+        .toolbar-sticky {
+          position: sticky;
+          top: 20px;
+          z-index: 50;
+          margin-bottom: 14px;
+        }
+
         .inline-toolbar {
           display: flex;
           align-items: center;
@@ -875,11 +884,7 @@ export default function MegillahReader({ standalone = false, showTitle = false }
           background: var(--color-white);
           border-radius: 0 0 12px 12px;
           padding: 8px 14px;
-          margin-bottom: 14px;
           box-shadow: 0 2px 8px rgba(102, 10, 35, 0.08);
-          position: sticky;
-          top: 20px;
-          z-index: 50;
         }
 
         .toolbar-left {
@@ -1075,6 +1080,8 @@ export default function MegillahReader({ standalone = false, showTitle = false }
           border-radius: 16px;
           padding: 28px 24px;
           box-shadow: 0 2px 12px rgba(102, 10, 35, 0.1);
+          position: relative;
+          z-index: 1;
         }
 
         .chapter-block {
