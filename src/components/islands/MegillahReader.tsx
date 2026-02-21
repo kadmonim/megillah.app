@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from 'preact/hooks';
 import { megillahText } from '../../lib/megillah-text';
 import { translationsEn } from '../../lib/megillah-translations-en';
+import type { Session } from '../../lib/useSession';
 
 type Lang = 'he' | 'en' | 'es' | 'ru' | 'fr' | 'pt' | 'it';
 type TranslationMap = Record<string, string>;
@@ -303,7 +304,7 @@ function renderVerse(
   return verseContent;
 }
 
-export default function MegillahReader({ standalone = false, showTitle = false }: { standalone?: boolean; showTitle?: boolean }) {
+export default function MegillahReader({ standalone = false, showTitle = false, session }: { standalone?: boolean; showTitle?: boolean; session?: Session }) {
   const [showCantillation, setShowCantillation] = useState(false);
   const [chabadMode, setChabadMode] = useState(false);
   const [fontSize, setFontSize] = useState(1.35);
@@ -378,6 +379,9 @@ export default function MegillahReader({ standalone = false, showTitle = false }
     }
   }, []);
 
+  const sessionRef = useRef(session);
+  sessionRef.current = session;
+
   useEffect(() => {
     const handleScroll = () => {
       const el = scrollTextRef.current;
@@ -393,6 +397,10 @@ export default function MegillahReader({ standalone = false, showTitle = false }
       if (progress >= 0.99 && !confettiFired.current) {
         confettiFired.current = true;
         spawnConfetti();
+      }
+      // Admin: broadcast scroll progress
+      if (sessionRef.current?.role === 'admin') {
+        sessionRef.current.broadcast(progress);
       }
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -548,6 +556,32 @@ export default function MegillahReader({ standalone = false, showTitle = false }
         <div class="page-title-block">
           <h1 class="page-title">{t.headerTitle}</h1>
           <p class="page-subtitle">{t.headerSub}</p>
+        </div>
+      )}
+      {/* Session info bar */}
+      {session && (
+        <div class="session-bar">
+          <span class="session-code">
+            <span class="material-icons" style="font-size:16px;vertical-align:middle;margin-right:4px">
+              {session.role === 'admin' ? 'cast' : 'cast_connected'}
+            </span>
+            Code: {session.code}
+          </span>
+          <span class="session-role">
+            {session.role === 'admin' ? 'Broadcasting' : 'Following'}
+          </span>
+          <button class="session-leave" onClick={session.leave}>
+            <span class="material-icons" style="font-size:16px;vertical-align:middle;margin-right:2px">
+              {session.role === 'admin' ? 'stop_circle' : 'logout'}
+            </span>
+            {session.role === 'admin' ? 'End' : 'Leave'}
+          </button>
+        </div>
+      )}
+      {session?.role === 'follower' && (
+        <div class="following-banner">
+          <span class="material-icons" style="font-size:18px;vertical-align:middle;margin-right:4px">sync</span>
+          Following live — auto-scrolling
         </div>
       )}
       {/* Progress bar */}
@@ -1280,6 +1314,55 @@ export default function MegillahReader({ standalone = false, showTitle = false }
         @keyframes fab-pulse {
           0%, 100% { transform: scale(1); box-shadow: 0 3px 12px rgba(102, 10, 35, 0.35); }
           50% { transform: scale(1.15); box-shadow: 0 4px 20px rgba(102, 10, 35, 0.5); }
+        }
+
+        .session-bar {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 12px;
+          background: var(--color-burgundy);
+          color: var(--color-white);
+          padding: 8px 16px;
+          font-size: 0.85rem;
+          font-weight: 500;
+          margin: 0 -16px;
+        }
+
+        .session-code {
+          font-weight: 700;
+          letter-spacing: 0.05em;
+        }
+
+        .session-role {
+          opacity: 0.8;
+          font-size: 0.8rem;
+        }
+
+        .session-leave {
+          background: rgba(255,255,255,0.15);
+          color: var(--color-white);
+          border: none;
+          border-radius: 6px;
+          padding: 4px 10px;
+          font-size: 0.8rem;
+          font-weight: 500;
+          cursor: pointer;
+          transition: background 0.2s;
+        }
+
+        .session-leave:hover {
+          background: rgba(255,255,255,0.25);
+        }
+
+        .following-banner {
+          background: linear-gradient(135deg, rgba(232, 150, 46, 0.15), rgba(232, 150, 46, 0.25));
+          color: var(--color-gold);
+          text-align: center;
+          padding: 6px 12px;
+          font-size: 0.8rem;
+          font-weight: 600;
+          margin: 0 -16px;
         }
 
         .mobile-only { display: inline; }
