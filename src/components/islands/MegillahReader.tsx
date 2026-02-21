@@ -448,32 +448,29 @@ export default function MegillahReader({ standalone = false, showTitle = false }
   useEffect(() => {
     if (!shakeEnabled) return;
 
-    const SHAKE_THRESHOLD = 15;
-    const SHAKE_COOLDOWN = 600;
-    const STOP_DELAY = 2000;
-    let lastShake = 0;
+    const SHAKE_THRESHOLD = 20;
+    const STOP_DELAY = 1000;
     let lastX = 0, lastY = 0, lastZ = 0;
     let hasReading = false;
     let stopTimer: ReturnType<typeof setTimeout> | null = null;
-    let shakeAudios: HTMLAudioElement[] = [];
+    let shakeAudio: HTMLAudioElement | null = null;
+    let isShaking = false;
 
     const stopShakeSounds = () => {
-      shakeAudios.forEach(a => { a.pause(); a.currentTime = 0; });
-      shakeAudios = [];
+      if (shakeAudio) { shakeAudio.pause(); shakeAudio.currentTime = 0; shakeAudio = null; }
+      isShaking = false;
     };
 
-    const playShakeGragger = () => {
-      if (mutedRef.current) return;
+    const startShakeGragger = () => {
+      if (mutedRef.current || isShaking) return;
+      isShaking = true;
       const idx = Math.floor(Math.random() * 22) + 1;
       const audio = new Audio(`/sounds/gragger${idx}.mp3`);
-      shakeAudios.push(audio);
+      audio.loop = true;
+      shakeAudio = audio;
       audio.play().catch(() => {});
-      audio.addEventListener('ended', () => {
-        shakeAudios = shakeAudios.filter(a => a !== audio);
-      });
       setSoundActive(true);
       if (soundTimer.current) clearTimeout(soundTimer.current);
-      soundTimer.current = setTimeout(() => setSoundActive(false), 5000);
     };
 
     const handleMotion = (e: DeviceMotionEvent) => {
@@ -492,14 +489,15 @@ export default function MegillahReader({ standalone = false, showTitle = false }
       lastX = acc.x; lastY = acc.y; lastZ = acc.z;
 
       if ((dx + dy + dz) > SHAKE_THRESHOLD) {
-        const now = Date.now();
         // Reset stop timer — still shaking
         if (stopTimer) clearTimeout(stopTimer);
-        stopTimer = setTimeout(stopShakeSounds, STOP_DELAY);
+        stopTimer = setTimeout(() => {
+          stopShakeSounds();
+          soundTimer.current = setTimeout(() => setSoundActive(false), 1000);
+        }, STOP_DELAY);
 
-        if (now - lastShake > SHAKE_COOLDOWN) {
-          lastShake = now;
-          playShakeGragger();
+        if (!isShaking) {
+          startShakeGragger();
         }
       }
     };
