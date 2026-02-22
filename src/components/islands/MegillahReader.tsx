@@ -469,7 +469,20 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
     }
   }, []);
 
-  // Follower: apply reading time from admin
+  // Apply initial settings from DB when session connects
+  useEffect(() => {
+    if (!session?.initialSettings) return;
+    const s = session.initialSettings;
+    if (s.readingMinutes != null) {
+      setTotalMinutes(s.readingMinutes);
+      setDraftMinutes(s.readingMinutes);
+    }
+    if (s.chabadMode !== undefined) {
+      setChabadMode(s.chabadMode);
+    }
+  }, [session]);
+
+  // Follower: apply real-time reading time from admin
   useEffect(() => {
     if (remoteMinutes != null) {
       setTotalMinutes(remoteMinutes);
@@ -477,12 +490,13 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
     }
   }, [remoteMinutes]);
 
-  // Follower: apply settings from admin
+  // Follower: apply real-time settings from admin
   useEffect(() => {
     if (remoteSettings?.chabadMode !== undefined) {
       setChabadMode(remoteSettings.chabadMode as boolean);
     }
   }, [remoteSettings?.chabadMode]);
+
 
   // Sync remote word/verse highlight from follower callback
   useEffect(() => {

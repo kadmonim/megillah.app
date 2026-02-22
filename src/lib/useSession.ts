@@ -13,16 +13,23 @@ export interface ScrollPosition {
   verse: string;
 }
 
+export interface SessionSettings {
+  readingMinutes?: number;
+  chabadMode?: boolean;
+}
+
 export interface Session {
   code: string;
   role: SessionRole;
+  /** Initial settings loaded from DB when joining */
+  initialSettings: SessionSettings;
   /** Call to broadcast current position (admin only) */
   broadcast: (pos: ScrollPosition) => void;
   /** Call to broadcast reading time change (admin only) */
   broadcastTime: (minutes: number) => void;
   /** Call to broadcast a word highlight (admin only) */
   broadcastWord: (wordId: string) => void;
-  /** Call to broadcast a setting change (admin only) */
+  /** Call to broadcast a setting change and persist to DB (admin only) */
   broadcastSetting: (key: string, value: unknown) => void;
   /** Call to leave/end the session */
   leave: () => void;
@@ -102,7 +109,7 @@ export function useSession(
   useEffect(() => cleanup, [cleanup]);
 
   const subscribe = useCallback(
-    (code: string, role: SessionRole) => {
+    (code: string, role: SessionRole, initialSettings: SessionSettings = {}) => {
       const sb = getSupabase();
       const channel = sb.channel(`session:${code}`, {
         config: { broadcast: { self: false } },
@@ -154,6 +161,11 @@ export function useSession(
           event: 'reading-time',
           payload: { minutes },
         });
+        // Persist to DB
+        const sb = getSupabase();
+        sb.from('sessions').update({ settings: { ...initialSettings, readingMinutes: minutes } }).eq('code', code).then(() => {
+          initialSettings.readingMinutes = minutes;
+        });
       };
 
       const broadcastWord = (wordId: string) => {
@@ -172,6 +184,12 @@ export function useSession(
           event: 'setting',
           payload: { key, value },
         });
+        // Persist to DB
+        const updated = { ...initialSettings, [key]: value };
+        const sb = getSupabase();
+        sb.from('sessions').update({ settings: updated }).eq('code', code).then(() => {
+          Object.assign(initialSettings, updated);
+        });
       };
 
       const leave = () => {
@@ -180,7 +198,7 @@ export function useSession(
         cleanup();
       };
 
-      setSession({ code, role, broadcast, broadcastTime, broadcastWord, broadcastSetting, leave });
+      setSession({ code, role, initialSettings, broadcast, broadcastTime, broadcastWord, broadcastSetting, leave });
     },
     [cleanup, onRemoteScroll, onRemoteTime, onRemoteWord, onRemoteSetting],
   );
@@ -215,14 +233,14 @@ export function useSession(
         const sb = getSupabase();
         const { data, error: fetchErr } = await sb
           .from('sessions')
-          .select('password')
+          .select('password, settings')
           .eq('code', code)
           .single();
         if (fetchErr || !data) throw new Error('Session not found');
         const role: SessionRole =
           password && data.password === password ? 'admin' : 'follower';
         saveToStorage(code, password);
-        subscribe(code, role);
+        subscribe(code, role, (data.settings as SessionSettings) || {});
       } catch (e: any) {
         setError(e.message || 'Failed to join session');
       } finally {
