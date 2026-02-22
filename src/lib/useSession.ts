@@ -16,6 +16,8 @@ export interface ScrollPosition {
 export interface SessionSettings {
   readingMinutes?: number;
   chabadMode?: boolean;
+  lang?: string;
+  showTranslation?: boolean;
 }
 
 export interface Session {

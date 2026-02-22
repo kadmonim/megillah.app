@@ -480,6 +480,12 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
     if (s.chabadMode !== undefined) {
       setChabadMode(s.chabadMode);
     }
+    if (s.lang) {
+      setLang(s.lang as Lang);
+    }
+    if (s.showTranslation !== undefined) {
+      setShowTranslation(s.showTranslation);
+    }
   }, [session]);
 
   // Follower: apply real-time reading time from admin
@@ -929,7 +935,11 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
             <input
               type="checkbox"
               checked={showTranslation}
-              onChange={() => setShowTranslation(!showTranslation)}
+              onChange={() => {
+                const next = !showTranslation;
+                setShowTranslation(next);
+                if (session?.role === 'admin') session.broadcastSetting('showTranslation', next);
+              }}
             />
             <span class="toggle-switch"></span>
             <span class="option-label">{t.showTranslation}</span>
@@ -973,7 +983,11 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
               <select
                 class="lang-select"
                 value={lang}
-                onChange={(e) => setLang((e.target as HTMLSelectElement).value as Lang)}
+                onChange={(e) => {
+                  const newLang = (e.target as HTMLSelectElement).value as Lang;
+                  setLang(newLang);
+                  if (session?.role === 'admin') session.broadcastSetting('lang', newLang);
+                }}
               >
                 <option value="he">עברית</option>
                 <option value="en">English</option>
