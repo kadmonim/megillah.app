@@ -825,6 +825,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
               <span class="material-icons">highlight</span>
             </button>
           )}
+          {!(session?.role === 'follower') && (
           <button
             class="toolbar-icon-btn"
             onClick={() => { setShowTimeEdit(!showTimeEdit); setMenuOpen(false); setShowTrackingMenu(false); }}
@@ -832,6 +833,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           >
             <span class="material-icons">timer</span>
           </button>
+          )}
           <button
             class="toolbar-icon-btn"
             onClick={() => { setMenuOpen(!menuOpen); setShowTimeEdit(false); setShowTrackingMenu(false); }}
@@ -920,6 +922,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
             <span class="toggle-switch"></span>
             <span class="option-label">{t.showCantillation}</span>
           </label>
+          {!(session?.role === 'follower') && (
           <label class="option-toggle">
             <input
               type="checkbox"
@@ -929,6 +932,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
             <span class="toggle-switch"></span>
             <span class="option-label">{t.chabadCustom}</span>
           </label>
+          )}
           <label class="option-toggle">
             <input
               type="checkbox"
