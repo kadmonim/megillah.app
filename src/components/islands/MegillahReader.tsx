@@ -63,7 +63,9 @@ const translations = {
     headerTitle: 'מגילת אסתר',
     headerSub: 'הטקסט המלא עם ניקוד וטעמי מקרא',
     language: 'שפה',
-
+    editSubtitle: 'ערוך כותרת משנה',
+    subtitleText: 'טקסט',
+    subtitleUrl: 'קישור (אופציונלי)',
     displayIllustrations: 'הצג איורים',
     sessionCode: 'קוד',
     broadcasting: 'משדר',
@@ -88,7 +90,9 @@ const translations = {
     headerTitle: 'The Megillah App',
     headerSub: <a href="https://www.chabad.org/purim" target="_blank" rel="noopener noreferrer" class="header-link">Learn more about Purim</a>,
     language: 'Language',
-
+    editSubtitle: 'Edit subtitle',
+    subtitleText: 'Text',
+    subtitleUrl: 'Link (optional)',
     displayIllustrations: 'Display illustrations',
     sessionCode: 'Code',
     broadcasting: 'Broadcasting',
@@ -113,6 +117,9 @@ const translations = {
     headerTitle: 'La Meguilá',
     headerSub: 'Matraca incorporada y barra de progreso',
     language: 'Idioma',
+    editSubtitle: 'Editar subtítulo',
+    subtitleText: 'Texto',
+    subtitleUrl: 'Enlace (opcional)',
     displayIllustrations: 'Mostrar ilustraciones',
     sessionCode: 'Código',
     broadcasting: 'Transmitiendo',
@@ -137,6 +144,9 @@ const translations = {
     headerTitle: 'Мегилат Эстер',
     headerSub: 'Встроенная трещотка и индикатор прогресса',
     language: 'Язык',
+    editSubtitle: 'Редактировать подзаголовок',
+    subtitleText: 'Текст',
+    subtitleUrl: 'Ссылка (необязательно)',
     displayIllustrations: 'Показать иллюстрации',
     sessionCode: 'Код',
     broadcasting: 'Трансляция',
@@ -161,6 +171,9 @@ const translations = {
     headerTitle: 'La Méguila',
     headerSub: 'Crécelle intégrée et barre de progression',
     language: 'Langue',
+    editSubtitle: 'Modifier le sous-titre',
+    subtitleText: 'Texte',
+    subtitleUrl: 'Lien (facultatif)',
     displayIllustrations: 'Afficher les illustrations',
     sessionCode: 'Code',
     broadcasting: 'Diffusion',
@@ -185,6 +198,9 @@ const translations = {
     headerTitle: 'A Meguilá',
     headerSub: 'Matraca embutida e barra de progresso',
     language: 'Idioma',
+    editSubtitle: 'Editar subtítulo',
+    subtitleText: 'Texto',
+    subtitleUrl: 'Link (opcional)',
     displayIllustrations: 'Mostrar ilustrações',
     sessionCode: 'Código',
     broadcasting: 'Transmitindo',
@@ -209,6 +225,9 @@ const translations = {
     headerTitle: 'La Meghillà',
     headerSub: 'Raganella integrata e barra di avanzamento',
     language: 'Lingua',
+    editSubtitle: 'Modifica sottotitolo',
+    subtitleText: 'Testo',
+    subtitleUrl: 'Link (facoltativo)',
     displayIllustrations: 'Mostra illustrazioni',
     sessionCode: 'Codice',
     broadcasting: 'Trasmissione',
@@ -443,6 +462,10 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
   const [activeWord, setActiveWord] = useState<string | null>(null);
   const [activeVerse, setActiveVerse] = useState<string | null>(null);
   const [trackingMode, setTrackingMode] = useState<'off' | 'verse' | 'word'>('off');
+  const [customSubtitle, setCustomSubtitle] = useState<{ text: string; url: string } | null>(null);
+  const [showSubtitleEdit, setShowSubtitleEdit] = useState(false);
+  const [draftSubText, setDraftSubText] = useState('');
+  const [draftSubUrl, setDraftSubUrl] = useState('');
   const [muted, setMuted] = useState(false);
   const [soundActive, setSoundActive] = useState(false);
   const audioPool = useRef<HTMLAudioElement[]>([]);
@@ -521,6 +544,9 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
     if (s.showTranslation !== undefined) {
       setShowTranslation(s.showTranslation);
     }
+    if (s.customSubtitle) {
+      setCustomSubtitle(s.customSubtitle);
+    }
   }, [session]);
 
   // Follower: apply real-time reading time from admin
@@ -538,6 +564,11 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
     }
   }, [remoteSettings?.chabadMode]);
 
+  useEffect(() => {
+    if (remoteSettings?.customSubtitle !== undefined) {
+      setCustomSubtitle(remoteSettings.customSubtitle as { text: string; url: string } | null);
+    }
+  }, [remoteSettings?.customSubtitle]);
 
   // Sync remote word/verse highlight from follower callback
   useEffect(() => {
@@ -819,13 +850,60 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
       {standalone && (
         <header class="reader-header">
           <span class="logo-main">{t.headerTitle}</span>
-          <span class="logo-sub">{t.headerSub}</span>
+          <span class="logo-sub">
+            {customSubtitle ? (customSubtitle.url ? <a href={customSubtitle.url} target="_blank" rel="noopener noreferrer" class="header-link">{customSubtitle.text}</a> : customSubtitle.text) : t.headerSub}
+            {session?.role === 'admin' && (
+              <button class="edit-subtitle-btn" onClick={() => { setShowSubtitleEdit(!showSubtitleEdit); setDraftSubText(customSubtitle?.text || ''); setDraftSubUrl(customSubtitle?.url || ''); }} title={t.editSubtitle}>
+                <span class="material-icons" style="font-size:14px;vertical-align:middle;margin:0 4px">edit</span>
+              </button>
+            )}
+          </span>
         </header>
       )}
       {showTitle && (
         <div class="page-title-block">
           <h1 class="page-title">{t.headerTitle}</h1>
-          <p class="page-subtitle">{t.headerSub}</p>
+          <p class="page-subtitle">
+            {customSubtitle ? (customSubtitle.url ? <a href={customSubtitle.url} target="_blank" rel="noopener noreferrer" class="header-link">{customSubtitle.text}</a> : customSubtitle.text) : t.headerSub}
+            {session?.role === 'admin' && (
+              <button class="edit-subtitle-btn" onClick={() => { setShowSubtitleEdit(!showSubtitleEdit); setDraftSubText(customSubtitle?.text || ''); setDraftSubUrl(customSubtitle?.url || ''); }} title={t.editSubtitle}>
+                <span class="material-icons" style="font-size:14px;vertical-align:middle;margin:0 4px">edit</span>
+              </button>
+            )}
+          </p>
+        </div>
+      )}
+      {/* Subtitle edit popover */}
+      {showSubtitleEdit && session?.role === 'admin' && (
+        <div class="time-popover subtitle-popover" dir={lang === 'he' ? 'rtl' : 'ltr'}>
+          <label class="subtitle-field">
+            {t.subtitleText}
+            <input
+              type="text"
+              value={draftSubText}
+              onInput={(e) => setDraftSubText((e.target as HTMLInputElement).value)}
+            />
+          </label>
+          <label class="subtitle-field">
+            {t.subtitleUrl}
+            <input
+              type="url"
+              value={draftSubUrl}
+              onInput={(e) => setDraftSubUrl((e.target as HTMLInputElement).value)}
+              placeholder="https://..."
+            />
+          </label>
+          <button
+            class="save-time-btn"
+            onClick={() => {
+              const val = draftSubText.trim() ? { text: draftSubText.trim(), url: draftSubUrl.trim() } : null;
+              setCustomSubtitle(val);
+              session.broadcastSetting('customSubtitle', val);
+              setShowSubtitleEdit(false);
+            }}
+          >
+            {t.save}
+          </button>
         </div>
       )}
       {/* Session info bar */}
@@ -1308,6 +1386,41 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           border-radius: 4px;
           font-size: 0.8rem;
           cursor: pointer;
+        }
+
+        .edit-subtitle-btn {
+          background: none;
+          border: none;
+          cursor: pointer;
+          opacity: 0.7;
+          padding: 0;
+          vertical-align: middle;
+          color: inherit;
+        }
+        .edit-subtitle-btn:hover {
+          opacity: 1;
+        }
+        .subtitle-popover {
+          text-align: start;
+        }
+        .subtitle-popover .subtitle-field {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+          margin-bottom: 12px;
+          font-size: 0.85rem;
+        }
+        .subtitle-popover .subtitle-field input {
+          width: 100%;
+          box-sizing: border-box;
+          padding: 6px 8px;
+          border: 1px solid var(--color-cream-dark);
+          border-radius: 6px;
+          font-size: 0.85rem;
+          margin: 0;
+        }
+        .subtitle-popover .save-time-btn {
+          width: 100%;
         }
 
         .settings-menu {

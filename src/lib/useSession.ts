@@ -18,6 +18,7 @@ export interface SessionSettings {
   chabadMode?: boolean;
   lang?: string;
   showTranslation?: boolean;
+  customSubtitle?: { text: string; url: string };
 }
 
 export interface Session {
