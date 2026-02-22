@@ -29,13 +29,14 @@ const description = 'Follow along with a live Megillah reading — auto-scroll s
   </head>
   <body>
     <main class="container">
-      <div class="maintenance">
-        <div class="maintenance-card">
-          <span class="material-icons" style="font-size:48px;color:var(--color-burgundy);margin-bottom:12px;">rocket_launch</span>
-          <h1>Upgrading to a faster system</h1>
-          <p>We're moving to a faster server for a better experience. Please check back in 15 minutes.</p>
+      <div class="loading-screen">
+        <div class="loading-card">
+          <h1 class="loading-title">Megillah Live</h1>
+          <div class="loading-spinner"></div>
+          <p class="loading-text">Connecting...</p>
         </div>
       </div>
+      <LiveFollower client:load />
     </main>
   </body>
 </html>
