@@ -72,7 +72,7 @@ const translations = {
     loudLabel: 'הקהל אומר בקול רם',
     bneiHamanLabel: 'יש אומרים שהקהל אומר בקול רם',
     headerTitle: 'מגילת אסתר',
-    headerSub: 'הטקסט המלא עם ניקוד וטעמי מקרא',
+    headerSub: <a href="https://chabadisrael.co.il/purim" target="_blank" rel="noopener noreferrer" class="header-link">למידע נוסף על מצוות החג לחץ כאן</a>,
     language: 'שפה',
     editSubtitle: 'ערוך כותרת משנה',
     subtitleText: 'טקסט',
@@ -88,6 +88,7 @@ const translations = {
     following: 'עוקב',
     endSession: 'סיום',
     leaveSession: 'יציאה',
+    joinLive: 'שידור חי',
   },
   en: {
     showCantillation: 'Show cantillation signs',
@@ -124,6 +125,7 @@ const translations = {
     following: 'Following',
     endSession: 'End',
     leaveSession: 'Leave',
+    joinLive: 'Join Live',
   },
   es: {
     showCantillation: 'Mostrar signos de cantilación',
@@ -160,6 +162,7 @@ const translations = {
     following: 'Siguiendo',
     endSession: 'Finalizar',
     leaveSession: 'Salir',
+    joinLive: 'En vivo',
   },
   ru: {
     showCantillation: 'Показать знаки кантилляции',
@@ -196,6 +199,7 @@ const translations = {
     following: 'Слежение',
     endSession: 'Завершить',
     leaveSession: 'Выйти',
+    joinLive: 'Эфир',
   },
   fr: {
     showCantillation: 'Afficher les signes de cantillation',
@@ -232,6 +236,7 @@ const translations = {
     following: 'Suivi',
     endSession: 'Terminer',
     leaveSession: 'Quitter',
+    joinLive: 'En direct',
   },
   pt: {
     showCantillation: 'Mostrar sinais de cantilação',
@@ -268,6 +273,7 @@ const translations = {
     following: 'Seguindo',
     endSession: 'Encerrar',
     leaveSession: 'Sair',
+    joinLive: 'Ao vivo',
   },
   it: {
     showCantillation: 'Mostra segni di cantillazione',
@@ -304,6 +310,7 @@ const translations = {
     following: 'Seguendo',
     endSession: 'Termina',
     leaveSession: 'Esci',
+    joinLive: 'Dal vivo',
   },
   hu: {
     showCantillation: 'Kantilláció jelzések mutatása',
@@ -340,6 +347,7 @@ const translations = {
     following: 'Követés',
     endSession: 'Befejezés',
     leaveSession: 'Kilépés',
+    joinLive: 'Élő',
   },
 } as const;
 
@@ -1090,6 +1098,12 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
               </button>
             )}
           </span>
+          {!session && (
+            <a href="/live/join" class="join-live-btn">
+              <span class="material-icons" style="font-size:13px;vertical-align:middle;margin-inline-end:3px">cast</span>
+              {t.joinLive}
+            </a>
+          )}
         </header>
       )}
       {showTitle && (
@@ -1601,6 +1615,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           text-align: center;
           box-shadow: 0 2px 8px rgba(102, 10, 35, 0.3);
           margin: 0 -16px 0;
+          position: relative;
         }
 
         .reader-header .logo-main {
@@ -1622,6 +1637,27 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           color: inherit;
           text-decoration: underline;
           text-underline-offset: 2px;
+        }
+
+        .join-live-btn {
+          position: absolute;
+          left: 12px;
+          top: 50%;
+          transform: translateY(-50%);
+          font-size: 0.65rem;
+          font-weight: 500;
+          color: var(--color-white);
+          text-decoration: none;
+          background: rgba(255, 255, 255, 0.15);
+          border: 1px solid rgba(255, 255, 255, 0.3);
+          border-radius: 6px;
+          padding: 4px 8px;
+          white-space: nowrap;
+        }
+
+        [dir="rtl"] .join-live-btn {
+          left: auto;
+          right: 12px;
         }
 
         .page-title-block {

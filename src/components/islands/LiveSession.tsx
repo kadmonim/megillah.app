@@ -706,13 +706,13 @@ function LobbyScreen({
 
         {mode === 'choose' && (
           <div class="lobby-choices">
-            <button class="lobby-btn create" onClick={() => setMode('create')}>
-              <span class="material-icons">add_circle</span>
-              {t.createSession}
-            </button>
             <button class="lobby-btn join" onClick={() => setMode('join')}>
               <span class="material-icons">login</span>
               {t.joinSession}
+            </button>
+            <button class="lobby-btn create" onClick={() => setMode('create')}>
+              <span class="material-icons">add_circle</span>
+              {t.createSession}
             </button>
           </div>
         )}
