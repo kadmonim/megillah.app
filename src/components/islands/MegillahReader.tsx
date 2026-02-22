@@ -570,13 +570,15 @@ function renderVerse(
 
   const translationContent = showTrans && (
     <span class="verse-translation" dir={lang === 'he' ? 'rtl' : 'ltr'}>{
-      (chabadMode ? HAMAN_TITLED_VERSES : HAMAN_VERSES).has(verseKey)
-        ? translation.split(/(Haman)/gi).map((seg, j) =>
-            /^haman$/i.test(seg)
-              ? <HamanWord key={`tr-${chapterNum}-${verseNum}-${j}`} text={seg} onTap={onHamanTap} />
-              : seg
-          )
-        : translation
+      lang === 'he'
+        ? boldVowelized(translation)
+        : (chabadMode ? HAMAN_TITLED_VERSES : HAMAN_VERSES).has(verseKey)
+          ? translation.split(/(Haman)/gi).map((seg, j) =>
+              /^haman$/i.test(seg)
+                ? <HamanWord key={`tr-${chapterNum}-${verseNum}-${j}`} text={seg} onTap={onHamanTap} />
+                : seg
+            )
+          : translation
     }</span>
   );
 
@@ -1643,7 +1645,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
         .progress-bar-container {
           position: sticky;
           top: 0;
-          height: 20px;
+          height: 28px;
           background: var(--color-cream-dark);
           overflow: hidden;
           z-index: 51;
@@ -1660,7 +1662,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
-          font-size: 0.7rem;
+          font-size: 0.8rem;
           font-weight: 700;
           color: var(--color-text);
           white-space: nowrap;
