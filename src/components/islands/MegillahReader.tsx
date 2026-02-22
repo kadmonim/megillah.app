@@ -788,7 +788,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
         {megillahText.map((ch) => (
           <div key={ch.chapter} class="chapter-block">
             <h2 class="chapter-heading">{t.chapter} {lang === 'he' ? toHebrew(ch.chapter) : ch.chapter}</h2>
-            <div class="verses-container" style={{ fontSize: `${fontSize}rem` }}>
+            <div class={`verses-container${showTranslation ? ' with-translation' : ''}`} style={{ fontSize: `${fontSize}rem` }}>
               {ch.verses.flatMap((v) => {
                 const verseKey = `${ch.chapter}:${v.verse}`;
 
@@ -1199,6 +1199,12 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           text-align: justify;
         }
 
+        .verses-container.with-translation {
+          line-height: 1.8;
+          font-weight: 500;
+          font-size: 0.85em;
+        }
+
         .verse-num {
           color: var(--color-gold);
           font-size: 0.55em;
@@ -1328,11 +1334,11 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
 
         .verse-translation {
           display: block;
-          font-size: 0.75em;
+          font-size: 0.95em;
           font-weight: 400;
           color: var(--color-text-light);
-          line-height: 1.6;
-          margin-bottom: 4px;
+          line-height: 1.5;
+          margin: 6px 0 12px;
           text-align: start;
         }
 
