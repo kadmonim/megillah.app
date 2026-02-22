@@ -467,6 +467,7 @@ function renderVerse(
 
   const verseContent = sideBySide ? (
     <div class={`verse verse-row${isLoud ? ' loud-verse' : ''}${isVerseActive ? ' verse-active' : ''}`} data-verse={verseKey}>
+      {isLoud && <span class="loud-label">{t.loudLabel}</span>}
       <div class="verse-col verse-col-translation" dir="ltr">
         <sup class="verse-num">{verseNum}</sup>
         {translationContent}
@@ -1606,11 +1607,16 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
 
         .side-by-side .verse-row {
           display: flex;
+          flex-wrap: wrap;
           direction: ltr;
           gap: 16px;
           margin-bottom: 12px;
           align-items: flex-start;
           font-size: 0.85em;
+        }
+
+        .side-by-side .verse-row > .loud-label {
+          flex-basis: 100%;
         }
 
         .side-by-side .verse-col {
