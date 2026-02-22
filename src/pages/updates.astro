@@ -34,7 +34,7 @@ import '../styles/global.css';
             <p>Readers can now create a <strong>live session</strong> and share a 6-digit code with their audience. Followers join with the code and see the reader's scroll position, highlighted verses, and word-by-word tracking in real time.</p>
             <p>Several settings are controlled by the broadcaster and automatically apply to all followers:</p>
             <ul>
-              <li><strong>Reading time</strong> — only the broadcaster can set the countdown timer. Followers see it but can't change it.</li>
+              <li><strong>Reading time</strong> — the broadcaster sets an estimate of how long the reading will take (in minutes). Based on this and how far you've scrolled, a progress bar at the top shows viewers the estimated time remaining. Only the broadcaster can set or change this.</li>
               <li><strong>Language</strong> — the default language that loads for followers is set by the broadcaster.</li>
               <li><strong>Haman highlighting mode</strong> — whether all Hamans or only titled ones are highlighted is controlled by the broadcaster.</li>
               <li><strong>Translation mode</strong> — the broadcaster's choice of Hebrew only / side-by-side / translation only applies to followers.</li>
@@ -44,7 +44,8 @@ import '../styles/global.css';
               <h3>How to use</h3>
               <ol>
                 <li>Go to <a href="/live">/live</a> and create a session — all you need is a password.</li>
-                <li>Once broadcasting, configure your settings (language, reading time, Haman mode, etc.). All settings are saved and will be there when you come back later.</li>
+                <li>Once broadcasting, configure your settings (language, Haman mode, etc.). All settings are saved and will be there when you come back later.</li>
+                <li>Set the reading time by tapping the clock icon in the toolbar. Enter your estimated reading duration in minutes (e.g. 30 for a typical reading). The progress bar will then show viewers how much time is left based on your scroll position.</li>
                 <li>Share the 6-digit code (or QR link) with your audience.</li>
                 <li>Followers open <a href="/live">/live</a> and enter the code to follow along.</li>
               </ol>
@@ -112,7 +113,7 @@ import '../styles/global.css';
 
           <section class="update-section">
             <h2>Editable Announcement Area</h2>
-            <p>Broadcasters can replace the default "click Haman's name" hint with a custom announcement using a rich text editor. Add formatted text, links, lists, and more.</p>
+            <p>Broadcasters can replace the default "click Haman's name" hint with a custom announcement using a rich text editor. Add formatted text, links, lists, and more. For example, you can use this spot to add links for Matanos La'evyonim or any other announcements.</p>
             <div class="mockup">
               <div class="mockup-label">Announcement area with edit button</div>
               <div class="mock-hint-area">
@@ -174,7 +175,7 @@ import '../styles/global.css';
             <p>בעלי קריאה יכולים כעת ליצור <strong>שידור חי</strong> ולשתף קוד בן 6 ספרות עם הקהל. העוקבים מצטרפים עם הקוד ורואים את מיקום הגלילה, פסוקים מודגשים ומעקב מילה-אחר-מילה בזמן אמת.</p>
             <p>מספר הגדרות נשלטות על ידי המשדר וחלות אוטומטית על כל העוקבים:</p>
             <ul>
-              <li><strong>זמן קריאה</strong> — רק המשדר יכול להגדיר את טיימר הספירה לאחור. העוקבים רואים אותו אך לא יכולים לשנותו.</li>
+              <li><strong>זמן קריאה</strong> — המשדר מגדיר הערכה של כמה זמן תימשך הקריאה (בדקות). על סמך זה וכמה התקדמתם בגלילה, סרגל ההתקדמות בראש העמוד מראה לצופים את הזמן המשוער שנותר. רק המשדר יכול להגדיר או לשנות את זה.</li>
               <li><strong>שפה</strong> — שפת ברירת המחדל שנטענת לעוקבים נקבעת על ידי המשדר.</li>
               <li><strong>מצב הדגשת המן</strong> — האם כל ההמנים מודגשים או רק אלה עם תואר נשלט על ידי המשדר.</li>
               <li><strong>מצב תרגום</strong> — בחירת המשדר בין מקור בלבד / מקור וביאור / ביאור בלבד חלה על העוקבים.</li>
@@ -184,7 +185,8 @@ import '../styles/global.css';
               <h3>איך להשתמש</h3>
               <ol>
                 <li>היכנסו ל-<a href="/live">/live</a> וצרו שידור — כל מה שצריך זה סיסמה.</li>
-                <li>לאחר תחילת השידור, הגדירו את ההעדפות שלכם (שפה, זמן קריאה, מצב המן וכו׳). כל ההגדרות נשמרות ויהיו שם כשתחזרו מאוחר יותר.</li>
+                <li>לאחר תחילת השידור, הגדירו את ההעדפות שלכם (שפה, מצב המן וכו׳). כל ההגדרות נשמרות ויהיו שם כשתחזרו מאוחר יותר.</li>
+                <li>הגדירו את זמן הקריאה בלחיצה על סמל השעון בסרגל הכלים. הזינו את משך הקריאה המשוער בדקות (למשל 30 לקריאה רגילה). סרגל ההתקדמות יראה לצופים כמה זמן נשאר על סמך מיקום הגלילה שלכם.</li>
                 <li>שתפו את הקוד בן 6 הספרות (או קישור QR) עם הקהל.</li>
                 <li>העוקבים פותחים את <a href="/live">/live</a> ומזינים את הקוד כדי לעקוב.</li>
               </ol>
@@ -252,7 +254,7 @@ import '../styles/global.css';
 
           <section class="update-section">
             <h2>אזור הודעות מותאם</h2>
-            <p>משדרים יכולים להחליף את הטקסט "לחצו על שמו של המן" בהודעה מותאמת באמצעות עורך טקסט עשיר. ניתן להוסיף טקסט מעוצב, קישורים, רשימות ועוד.</p>
+            <p>משדרים יכולים להחליף את הטקסט "לחצו על שמו של המן" בהודעה מותאמת באמצעות עורך טקסט עשיר. ניתן להוסיף טקסט מעוצב, קישורים, רשימות ועוד. לדוגמה, אפשר להשתמש במקום הזה כדי להוסיף קישורים למתנות לאביונים או כל הודעה אחרת.</p>
             <div class="mockup">
               <div class="mockup-label">אזור הודעה עם כפתור עריכה</div>
               <div class="mock-hint-area">
