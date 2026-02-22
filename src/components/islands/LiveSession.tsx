@@ -159,6 +159,7 @@ function generateCode(): string {
 
 export default function LiveSession() {
   const lastVerse = useRef<string | null>(null);
+  const lastHighlightTime = useRef(0);
   const [remoteMinutes, setRemoteMinutes] = useState<number | null>(null);
   const [remoteWord, setRemoteWord] = useState<string | null>(null);
   const [remoteActiveVerse, setRemoteActiveVerse] = useState<string | null>(null);
@@ -166,6 +167,8 @@ export default function LiveSession() {
   const [createLoading, setCreateLoading] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
   const handleRemoteScroll = useCallback((pos: ScrollPosition) => {
+    // Suppress scroll broadcasts while word/verse highlighting is active
+    if (Date.now() - lastHighlightTime.current < 3000) return;
     if (pos.verse === lastVerse.current) return;
     lastVerse.current = pos.verse;
     const el = document.querySelector(`[data-verse="${pos.verse}"]`);
@@ -179,6 +182,7 @@ export default function LiveSession() {
   }, []);
 
   const handleRemoteWord = useCallback((wordId: string) => {
+    lastHighlightTime.current = Date.now();
     let verseKey: string | null = null;
     if (wordId.startsWith('v:')) {
       const verse = wordId.slice(2);
@@ -194,7 +198,7 @@ export default function LiveSession() {
     }
     if (verseKey) {
       const el = document.querySelector(`[data-verse="${verseKey}"]`);
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }, []);
 
