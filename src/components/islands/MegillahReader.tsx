@@ -4,7 +4,7 @@ import { megillahText } from '../../lib/megillah-text';
 import { translationsEn } from '../../lib/megillah-translations-en';
 import type { Session, ScrollPosition } from '../../lib/useSession';
 
-type Lang = 'he' | 'en' | 'es' | 'ru' | 'fr' | 'pt' | 'it';
+type Lang = 'he' | 'en' | 'es' | 'ru' | 'fr' | 'pt' | 'it' | 'hu';
 type TranslationMap = Record<string, string>;
 
 function toHebrew(n: number): string {
@@ -16,6 +16,13 @@ function toHebrew(n: number): string {
 }
 
 const LOUD_VERSES = new Set(['2:5', '8:15', '8:16', '10:3']);
+
+const LOUD_TRANSLITERATIONS: Record<string, string> = {
+  '2:5': 'Ish Yehudi haya b\'Shushan habirah, ush\'mo Mordechai ben Ya\'ir ben Shim\'i ben Kish, ish Y\'mini.',
+  '8:15': 'U\'Mordechai yatza milifnei hamelech bil\'vush malchut t\'chelet vachur, va\'ateret zahav g\'dolah, v\'tachrich butz v\'argaman, v\'ha\'ir Shushan tzahalah v\'sameicha.',
+  '8:16': 'LaYehudim hayta orah v\'simcha v\'sasson vikar.',
+  '10:3': 'Ki Mordechai haYehudi mishneh lamelech Achashveirosh, v\'gadol laYehudim v\'ratzui l\'rov echav, doreish tov l\'amo v\'doveir shalom l\'chol zar\'o.',
+};
 const BNEI_HAMAN_VERSES = new Set(['9:7', '9:8', '9:9']);
 const BNEI_HAMAN_SPLIT_VERSE = '9:6';
 const BNEI_HAMAN_SPLIT_RE = /(חֲמֵ[\u0591-\u05C7]*שׁ מֵא[\u0591-\u05C7]*וֹת אִ[\u0591-\u05C7]*י[\u0591-\u05C7]*שׁ׃)/;
@@ -284,6 +291,40 @@ const translations = {
     endSession: 'Termina',
     leaveSession: 'Esci',
   },
+  hu: {
+    showCantillation: 'Kantilláció jelzések mutatása',
+    chabadCustom: 'Kevesebb Hámán kiemelése',
+    showTranslation: 'Fordítás',
+    hebrewOnly: 'Csak héber',
+    langName: 'Magyar',
+    hebrewName: 'Héber',
+    only: 'Csak',
+    fontSize: 'Betűméret',
+    minLeft: 'perc van hátra',
+    readingTime: 'Olvasási idő (perc):',
+    save: 'Mentés',
+    changeReadingTime: 'Olvasási idő módosítása',
+    chabadHint: 'Chabad szokás — Hámán csak címmel kiemelve',
+    tapHint: 'Nincs kereplőd? Kattints Hámán nevére!',
+    chapter: 'Fejezet',
+    loudLabel: 'Mindenki együtt olvassa:',
+    bneiHamanLabel: 'Egyes közösségekben mindenki együtt mondja.',
+    headerTitle: 'A Megilla',
+    headerSub: 'Beépített kereplő és haladásjelző',
+    language: 'Nyelv',
+    editSubtitle: 'Alcím szerkesztése',
+    subtitleText: 'Szöveg',
+    subtitleUrl: 'Link (opcionális)',
+    displayIllustrations: 'Illusztrációk megjelenítése',
+    trackScrolling: 'Csak görgetés, kiemelés nélkül',
+    trackVerse: 'Az érintett versek kijelölődnek a nézők számára (ajánlott)',
+    trackWord: 'Az érintett szavak kijelölődnek a nézők számára',
+    sessionCode: 'Kód',
+    broadcasting: 'Közvetítés',
+    following: 'Követés',
+    endSession: 'Befejezés',
+    leaveSession: 'Kilépés',
+  },
 } as const;
 
 type Translations = typeof translations[keyof typeof translations];
@@ -486,9 +527,12 @@ function renderVerse(
     }</span>
   );
 
+  const transliteration = isLoud && lang === 'en' ? LOUD_TRANSLITERATIONS[verseKey] : null;
+
   const verseContent = sideBySide ? (
     <div class={`verse verse-row${isLoud ? ' loud-verse' : ''}${isVerseActive ? ' verse-active' : ''}`} data-verse={verseKey}>
       {isLoud && <span class="loud-label">{t.loudLabel}</span>}
+      {transliteration && <div class="transliteration-box" dir="ltr">{transliteration}</div>}
       <div class="verse-col verse-col-translation" dir="ltr">
         <sup class="verse-num">{verseNum}</sup>
         {translationContent}
@@ -501,6 +545,7 @@ function renderVerse(
   ) : (
     <span class={`verse${isLoud ? ' loud-verse' : ''}${isVerseActive ? ' verse-active' : ''}`} data-verse={verseKey}>
       {isLoud && <span class="loud-label" dir={lang === 'he' ? 'rtl' : 'ltr'}>{t.loudLabel}</span>}
+      {transliteration && <span class="transliteration-box" dir="ltr">{transliteration}</span>}
       <sup class="verse-num">{lang === 'he' ? toHebrew(verseNum) : verseNum}</sup>
       {hebrewContent}
       {translationContent}
@@ -568,6 +613,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
     else if (navLang.startsWith('fr')) detected = 'fr';
     else if (navLang.startsWith('pt')) detected = 'pt';
     else if (navLang.startsWith('it')) detected = 'it';
+    else if (navLang.startsWith('hu')) detected = 'hu';
     deviceLang.current = detected;
     setLang(detected);
   }, []);
@@ -1197,6 +1243,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
                 <option value="fr">Français</option>
                 <option value="pt">Português</option>
                 <option value="it">Italiano</option>
+                <option value="hu">Magyar</option>
               </select>
             </label>
           </div>
@@ -1236,34 +1283,87 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
                   const beforeText = splitParts[0] || '';
                   const splitText = splitParts[1] || '';
 
-                  // Collect all sons' names from 9:7-9:9
+                  // Collect all sons' verses from 9:7-9:9
                   const sonsVerses = ch.verses.filter(sv => BNEI_HAMAN_VERSES.has(`${ch.chapter}:${sv.verse}`));
-                  const allNames = sonsVerses.flatMap(sv => {
-                    const t = !showCantillation ? stripCantillation(sv.text) : sv.text;
-                    return t.split(/\s{2,}/).map(n => n.trim()).filter(Boolean);
-                  });
+
+                  // Split 9:6 translation: before = "And in Shushan...destroyed", loud = "five hundred men."
+                  const trans96 = activeTranslations?.['9:6'] || '';
+                  const trans96Match = trans96.match(/^(.*?destroyed\s*)(five hundred men\..*)$/i);
+                  const trans96Before = trans96Match ? trans96Match[1] : trans96;
+                  const trans96Loud = trans96Match ? trans96Match[2] : '';
+
+                  // Compute v10 first word early so we can integrate it into the blocks
+                  const v10 = ch.verses.find(sv => sv.verse === 10);
+                  const v10text = v10 ? (!showCantillation ? stripCantillation(v10.text) : v10.text) : '';
+                  const v10firstSpace = v10text.indexOf(' ');
+                  const v10firstWord = v10firstSpace > 0 ? v10text.slice(0, v10firstSpace) : v10text;
+                  const v10trans = activeTranslations?.['9:10'] || '';
+                  const v10transMatch = v10trans.match(/^(.*?the ten sons of\s*)/i);
+                  const v10transBefore = v10transMatch ? v10transMatch[1] : '';
 
                   const bneiTranslations = activeTranslations
-                    ? ['9:6', '9:7', '9:8', '9:9']
-                        .map(k => activeTranslations[k])
+                    ? [trans96Loud, ...['9:7', '9:8', '9:9'].map(k => activeTranslations[k]), v10transBefore]
                         .filter(Boolean)
                         .join(' ')
                     : null;
 
+                  const sideBySide96 = translationMode === 'both' && lang !== 'he';
+
                   return [
-                    <span key="9-6-before" class="verse" data-verse="9:6">
-                      <sup class="verse-num">{toHebrew(v.verse)}</sup>
-                      {beforeText}
-                    </span>,
+                    sideBySide96 ? (
+                      <div key="9-6-before" class="verse verse-row" data-verse="9:6">
+                        <div class="verse-col verse-col-translation" dir="ltr">
+                          <sup class="verse-num">{v.verse}</sup>
+                          {trans96Before && <span class="verse-translation" dir="ltr">{trans96Before}</span>}
+                        </div>
+                        <div class="verse-col verse-col-hebrew" dir="rtl">
+                          <sup class="verse-num">{toHebrew(v.verse)}</sup>
+                          {beforeText}
+                        </div>
+                      </div>
+                    ) : (
+                      <span key="9-6-before" class="verse" data-verse="9:6">
+                        <sup class="verse-num">{lang === 'he' ? toHebrew(v.verse) : v.verse}</sup>
+                        {translationMode !== 'translation' && beforeText}
+                        {trans96Before && translationMode !== 'hebrew' && <span class="verse-translation" dir={lang === 'he' ? 'rtl' : 'ltr'}>{trans96Before}</span>}
+                      </span>
+                    ),
                     <span key="bnei-haman-block" class="verse loud-verse bnei-haman" data-verse="9:7">
                       <span class="loud-label" dir={lang === 'he' ? 'rtl' : 'ltr'}>{t.bneiHamanLabel}</span>
-                      <span class="haman-son">{splitText}</span>
-                      {allNames.map((name, i) => (
-                        <span key={`son-${i}`} class="haman-son">{name}</span>
-                      ))}
+                      {lang === 'en' && <span class="transliteration-box" dir="ltr">Chamesh me'ot ish. V'et Parshandatha, v'et Dalfon, v'et Aspatha, v'et Poratha, v'et Adalya, v'et Aridatha, v'et Parmashta, v'et Arisai, v'et Aridai, v'et Vayzatha. Aseret...</span>}
+                      {translationMode !== 'translation' && <>
+                        <span class="haman-son">{splitText}</span>
+                        {sonsVerses.map(sv => {
+                          const svText = !showCantillation ? stripCantillation(sv.text) : sv.text;
+                          const names = svText.split(/\s{2,}/).map(n => n.trim()).filter(Boolean);
+                          return <span key={`sv-${sv.verse}`} class="haman-verse-group">
+                            <sup class="verse-num">{lang === 'he' ? toHebrew(sv.verse) : sv.verse}</sup>
+                            {names.map((name, i) => (
+                              <span key={`son-${sv.verse}-${i}`} class="haman-son">{name}</span>
+                            ))}
+                          </span>;
+                        })}
+                        {v10 && <span class="haman-verse-group">
+                          <sup class="verse-num">{lang === 'he' ? toHebrew(10) : 10}</sup>
+                          <span class="haman-son">{v10firstWord}</span>
+                        </span>}
+                      </>}
                       {bneiTranslations && <span class="verse-translation" dir={lang === 'he' ? 'rtl' : 'ltr'}>{bneiTranslations}</span>}
                     </span>,
-                  ];
+                  ].filter(Boolean);
+                }
+
+                // Verse 9:10: skip first word (rendered in bnei haman block above)
+                if (verseKey === '9:10') {
+                  const raw = !showCantillation ? stripCantillation(v.text) : v.text;
+                  const firstSpace = raw.indexOf(' ');
+                  const restText = firstSpace > 0 ? raw.slice(firstSpace + 1) : '';
+                  const v10trans = activeTranslations?.['9:10'] || '';
+                  const transMatch = v10trans.match(/^(.*?the ten sons of\s*)([\s\S]*)$/i);
+                  const transRest = transMatch ? transMatch[2] : v10trans;
+                  const customTranslations = transRest ? { '9:10': transRest } as TranslationMap : activeTranslations;
+                  const verseResult = [renderVerse(restText, ch.chapter, v.verse, playGragger, chabadMode, false, translationMode, t, lang, customTranslations, activeWord, activeVerse)];
+                  return verseResult;
                 }
 
                 const verseResult = [renderVerse(v.text, ch.chapter, v.verse, playGragger, chabadMode, !showCantillation, translationMode, t, lang, activeTranslations, activeWord, activeVerse)];
@@ -1896,6 +1996,25 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           line-height: 1;
         }
 
+        .transliteration-box {
+          display: block;
+          background: rgba(232, 190, 80, 0.1);
+          border: 1px solid rgba(232, 190, 80, 0.3);
+          border-radius: 6px;
+          padding: 8px 10px;
+          margin-bottom: 6px;
+          font-size: 0.7em;
+          font-style: italic;
+          font-weight: 400;
+          line-height: 1.5;
+          color: var(--color-text);
+          text-align: left;
+        }
+
+        .side-by-side .transliteration-box {
+          flex-basis: 100%;
+        }
+
         .bnei-haman {
           text-align: center;
         }
@@ -1903,6 +2022,15 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
         .haman-son {
           display: block;
           line-height: 2;
+        }
+
+        .haman-verse-group {
+          display: block;
+        }
+
+        .haman-verse-group .haman-son {
+          display: inline;
+          margin-inline-end: 6px;
         }
 
         .verse-translation {
