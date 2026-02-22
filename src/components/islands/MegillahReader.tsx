@@ -20,6 +20,14 @@ const BNEI_HAMAN_SPLIT_VERSE = '9:6';
 const BNEI_HAMAN_SPLIT_RE = /(חֲמֵ[\u0591-\u05C7]*שׁ מֵא[\u0591-\u05C7]*וֹת אִ[\u0591-\u05C7]*י[\u0591-\u05C7]*שׁ׃)/;
 const DEFAULT_READING_MINUTES = 35;
 
+const ILLUSTRATIONS = [
+  { after: '1:1', src: '/illustrations/1-1-4.webp', he: 'המשתה המלכותי', en: 'The Royal Feast' },
+  { after: '1:10', src: '/illustrations/1-10-12.webp', he: 'ושתי מסרבת', en: 'Vashti Refuses' },
+  { after: '2:17', src: '/illustrations/2-17.webp', he: 'אסתר מוכתרת', en: 'Esther is Crowned' },
+  { after: '3:1', src: '/illustrations/3-1-2.webp', he: 'מרדכי מסרב להשתחוות', en: 'Mordechai Refuses to Bow' },
+  { after: '3:8', src: '/illustrations/3-8-11.webp', he: 'הגזירה הרעה', en: 'The Evil Decree' },
+];
+
 const translations = {
   he: {
     showCantillation: 'הצג טעמים',
@@ -39,6 +47,7 @@ const translations = {
     headerSub: 'הטקסט המלא עם ניקוד וטעמי מקרא',
     language: 'שפה',
     shakeToPlay: 'נער להשמעת רעשן',
+    displayIllustrations: 'הצג איורים',
   },
   en: {
     showCantillation: 'Show cantillation signs',
@@ -58,6 +67,7 @@ const translations = {
     headerSub: <a href="https://www.chabad.org/purim" target="_blank" rel="noopener noreferrer" class="header-link">Learn more about Purim</a>,
     language: 'Language',
     shakeToPlay: 'Shake phone to boo Haman',
+    displayIllustrations: 'Display illustrations',
   },
   es: {
     showCantillation: 'Mostrar signos de cantilación',
@@ -77,6 +87,7 @@ const translations = {
     headerSub: 'Matraca incorporada y barra de progreso',
     language: 'Idioma',
     shakeToPlay: 'Agitar para sonar matraca',
+    displayIllustrations: 'Mostrar ilustraciones',
   },
   ru: {
     showCantillation: 'Показать знаки кантилляции',
@@ -96,6 +107,7 @@ const translations = {
     headerSub: 'Встроенная трещотка и индикатор прогресса',
     language: 'Язык',
     shakeToPlay: 'Встряхните для трещотки',
+    displayIllustrations: 'Показать иллюстрации',
   },
   fr: {
     showCantillation: 'Afficher les signes de cantillation',
@@ -115,6 +127,7 @@ const translations = {
     headerSub: 'Crécelle intégrée et barre de progression',
     language: 'Langue',
     shakeToPlay: 'Secouer pour la crécelle',
+    displayIllustrations: 'Afficher les illustrations',
   },
   pt: {
     showCantillation: 'Mostrar sinais de cantilação',
@@ -134,6 +147,7 @@ const translations = {
     headerSub: 'Matraca embutida e barra de progresso',
     language: 'Idioma',
     shakeToPlay: 'Agitar para tocar matraca',
+    displayIllustrations: 'Mostrar ilustrações',
   },
   it: {
     showCantillation: 'Mostra segni di cantillazione',
@@ -153,6 +167,7 @@ const translations = {
     headerSub: 'Raganella integrata e barra di avanzamento',
     language: 'Lingua',
     shakeToPlay: 'Agita per la raganella',
+    displayIllustrations: 'Mostra illustrazioni',
   },
 } as const;
 
@@ -318,6 +333,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
   const [loadedTranslations, setLoadedTranslations] = useState<TranslationMap | null>(null);
   const translationCache = useRef<Record<string, TranslationMap>>({});
   const deviceLang = useRef<Lang>('he');
+  const [showIllustrations, setShowIllustrations] = useState(false);
   const [muted, setMuted] = useState(false);
   const [soundActive, setSoundActive] = useState(false);
   const audioPool = useRef<HTMLAudioElement[]>([]);
@@ -723,6 +739,15 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
               <span class="option-label">{t.shakeToPlay}</span>
             </label>
           )}
+          <label class="option-toggle">
+            <input
+              type="checkbox"
+              checked={showIllustrations}
+              onChange={() => setShowIllustrations(!showIllustrations)}
+            />
+            <span class="toggle-switch"></span>
+            <span class="option-label">{t.displayIllustrations}</span>
+          </label>
           <div class="menu-row">
             <label>
               {t.language}
@@ -807,7 +832,16 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
                   ];
                 }
 
-                return [renderVerse(v.text, ch.chapter, v.verse, playGragger, chabadMode, !showCantillation, t, lang, activeTranslations)];
+                const verseResult = [renderVerse(v.text, ch.chapter, v.verse, playGragger, chabadMode, !showCantillation, t, lang, activeTranslations)];
+                const illustration = showIllustrations && ILLUSTRATIONS.find(ill => ill.after === verseKey);
+                if (illustration) {
+                  verseResult.push(
+                    <div class={`illustration${lang === 'he' ? ' illustration-he' : ''}`} key={`ill-${verseKey}`}>
+                      <img src={illustration.src} alt={illustration[lang === 'he' ? 'he' : 'en']} loading="lazy" />
+                    </div>
+                  );
+                }
+                return verseResult;
               })}
             </div>
           </div>
@@ -1385,6 +1419,22 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           font-size: 0.8rem;
           font-weight: 600;
           margin: 0 -16px;
+        }
+
+        .illustration {
+          float: right;
+          margin: 8px 0 8px 20px;
+          width: 45%;
+        }
+
+        .illustration.illustration-he {
+          float: left;
+          margin: 8px 20px 8px 0;
+        }
+
+        .illustration img {
+          width: 100%;
+          border-radius: 8px;
         }
 
         .mobile-only { display: inline; }
