@@ -428,42 +428,60 @@ function renderVerse(
 
   const showHebrew = translationMode !== 'translation';
   const showTrans = translationMode !== 'hebrew' && !!translation;
+  const sideBySide = translationMode === 'both' && lang !== 'he';
 
-  const verseContent = (
-    <span class={`verse${isLoud ? ' loud-verse' : ''}${isVerseActive ? ' verse-active' : ''}`} data-verse={verseKey}>
-      {isLoud && <span class="loud-label" dir={lang === 'he' ? 'rtl' : 'ltr'}>{t.loudLabel}</span>}
-      <sup class="verse-num">{lang === 'he' ? toHebrew(verseNum) : verseNum}</sup>
-      {showHebrew && parts.map((part, i) => {
-        if (!HAMAN_REGEX.test(part)) {
-          const { nodes, nextIdx } = wrapWords(part, verseKey, wordIdx, activeWord);
-          wordIdx = nextIdx;
-          return <span key={`${chapterNum}-${verseNum}-${i}`}>{nodes}</span>;
-        }
-        if (chabadMode) {
-          const nextPart = parts[i + 1] || '';
-          if (!hasTitleAfter(nextPart)) {
-            const wId = `${verseKey}-${wordIdx}`;
-            const isActive = activeWord === wId;
-            wordIdx++;
-            return <span key={`${chapterNum}-${verseNum}-${i}`} class={`word${isActive ? ' word-active' : ''}`} data-word={wId}>{part}</span>;
-          }
-        }
+  const hebrewContent = showHebrew && parts.map((part, i) => {
+    if (!HAMAN_REGEX.test(part)) {
+      const { nodes, nextIdx } = wrapWords(part, verseKey, wordIdx, activeWord);
+      wordIdx = nextIdx;
+      return <span key={`${chapterNum}-${verseNum}-${i}`}>{nodes}</span>;
+    }
+    if (chabadMode) {
+      const nextPart = parts[i + 1] || '';
+      if (!hasTitleAfter(nextPart)) {
         const wId = `${verseKey}-${wordIdx}`;
         const isActive = activeWord === wId;
         wordIdx++;
-        return (
-          <HamanWord key={`${chapterNum}-${verseNum}-${i}`} text={part} onTap={onHamanTap} wordId={wId} isActive={isActive} />
-        );
-      })}
-      {showTrans && <span class="verse-translation" dir={lang === 'he' ? 'rtl' : 'ltr'}>{
-        (chabadMode ? HAMAN_TITLED_VERSES : HAMAN_VERSES).has(verseKey)
-          ? translation.split(/(Haman)/gi).map((seg, j) =>
-              /^haman$/i.test(seg)
-                ? <HamanWord key={`tr-${chapterNum}-${verseNum}-${j}`} text={seg} onTap={onHamanTap} />
-                : seg
-            )
-          : translation
-      }</span>}
+        return <span key={`${chapterNum}-${verseNum}-${i}`} class={`word${isActive ? ' word-active' : ''}`} data-word={wId}>{part}</span>;
+      }
+    }
+    const wId = `${verseKey}-${wordIdx}`;
+    const isActive = activeWord === wId;
+    wordIdx++;
+    return (
+      <HamanWord key={`${chapterNum}-${verseNum}-${i}`} text={part} onTap={onHamanTap} wordId={wId} isActive={isActive} />
+    );
+  });
+
+  const translationContent = showTrans && (
+    <span class="verse-translation" dir={lang === 'he' ? 'rtl' : 'ltr'}>{
+      (chabadMode ? HAMAN_TITLED_VERSES : HAMAN_VERSES).has(verseKey)
+        ? translation.split(/(Haman)/gi).map((seg, j) =>
+            /^haman$/i.test(seg)
+              ? <HamanWord key={`tr-${chapterNum}-${verseNum}-${j}`} text={seg} onTap={onHamanTap} />
+              : seg
+          )
+        : translation
+    }</span>
+  );
+
+  const verseContent = sideBySide ? (
+    <div class={`verse verse-row${isLoud ? ' loud-verse' : ''}${isVerseActive ? ' verse-active' : ''}`} data-verse={verseKey}>
+      <div class="verse-col verse-col-translation" dir="ltr">
+        <sup class="verse-num">{verseNum}</sup>
+        {translationContent}
+      </div>
+      <div class="verse-col verse-col-hebrew" dir="rtl">
+        <sup class="verse-num">{toHebrew(verseNum)}</sup>
+        {hebrewContent}
+      </div>
+    </div>
+  ) : (
+    <span class={`verse${isLoud ? ' loud-verse' : ''}${isVerseActive ? ' verse-active' : ''}`} data-verse={verseKey}>
+      {isLoud && <span class="loud-label" dir={lang === 'he' ? 'rtl' : 'ltr'}>{t.loudLabel}</span>}
+      <sup class="verse-num">{lang === 'he' ? toHebrew(verseNum) : verseNum}</sup>
+      {hebrewContent}
+      {translationContent}
       {' '}
     </span>
   );
@@ -1182,7 +1200,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
         {megillahText.map((ch) => (
           <div key={ch.chapter} class="chapter-block">
             <h2 class="chapter-heading">{t.chapter} {lang === 'he' ? toHebrew(ch.chapter) : ch.chapter}</h2>
-            <div class={`verses-container${translationMode !== 'hebrew' ? ' with-translation' : ''}${translationMode === 'translation' ? ' translation-only' : ''}`} dir={translationMode === 'translation' && lang !== 'he' ? 'ltr' : undefined} style={{ fontSize: `${fontSize}rem` }}>
+            <div class={`verses-container${translationMode !== 'hebrew' ? ' with-translation' : ''}${translationMode === 'translation' ? ' translation-only' : ''}${translationMode === 'both' && lang !== 'he' ? ' side-by-side' : ''}`} dir={translationMode === 'translation' && lang !== 'he' ? 'ltr' : undefined} style={{ fontSize: `${fontSize}rem` }}>
               {ch.verses.flatMap((v) => {
                 const verseKey = `${ch.chapter}:${v.verse}`;
 
@@ -1584,6 +1602,38 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
         .translation-only .verse {
           display: block;
           margin-bottom: 8px;
+        }
+
+        .side-by-side .verse-row {
+          display: flex;
+          direction: ltr;
+          gap: 16px;
+          margin-bottom: 12px;
+          align-items: flex-start;
+          font-size: 0.85em;
+        }
+
+        .side-by-side .verse-col {
+          flex: 1;
+          min-width: 0;
+        }
+
+        .side-by-side .verse-col-translation {
+          flex: 3;
+          text-align: left;
+          font-weight: 400;
+          line-height: 1.6;
+        }
+
+        .side-by-side .verse-col-hebrew {
+          flex: 2;
+          text-align: right;
+          line-height: 2;
+        }
+
+        .side-by-side .verse-translation {
+          display: inline;
+          margin: 0;
         }
 
         .translation-only .verse-translation {
