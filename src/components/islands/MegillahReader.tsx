@@ -432,7 +432,7 @@ function renderVerse(
   const verseContent = (
     <span class={`verse${isLoud ? ' loud-verse' : ''}${isVerseActive ? ' verse-active' : ''}`} data-verse={verseKey}>
       {isLoud && <span class="loud-label" dir={lang === 'he' ? 'rtl' : 'ltr'}>{t.loudLabel}</span>}
-      <sup class="verse-num">{toHebrew(verseNum)}</sup>
+      <sup class="verse-num">{lang === 'he' ? toHebrew(verseNum) : verseNum}</sup>
       {showHebrew && parts.map((part, i) => {
         if (!HAMAN_REGEX.test(part)) {
           const { nodes, nextIdx } = wrapWords(part, verseKey, wordIdx, activeWord);
@@ -1182,7 +1182,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
         {megillahText.map((ch) => (
           <div key={ch.chapter} class="chapter-block">
             <h2 class="chapter-heading">{t.chapter} {lang === 'he' ? toHebrew(ch.chapter) : ch.chapter}</h2>
-            <div class={`verses-container${translationMode !== 'hebrew' ? ' with-translation' : ''}${translationMode === 'translation' ? ' translation-only' : ''}`} style={{ fontSize: `${fontSize}rem` }}>
+            <div class={`verses-container${translationMode !== 'hebrew' ? ' with-translation' : ''}${translationMode === 'translation' ? ' translation-only' : ''}`} dir={translationMode === 'translation' && lang !== 'he' ? 'ltr' : undefined} style={{ fontSize: `${fontSize}rem` }}>
               {ch.verses.flatMap((v) => {
                 const verseKey = `${ch.chapter}:${v.verse}`;
 
@@ -1575,11 +1575,15 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
         }
 
         .verses-container.translation-only {
-          direction: ltr;
           text-align: start;
           font-family: Arial, 'Heebo', sans-serif;
           font-weight: 400;
           line-height: 1.8;
+        }
+
+        .translation-only .verse {
+          display: block;
+          margin-bottom: 8px;
         }
 
         .translation-only .verse-translation {
