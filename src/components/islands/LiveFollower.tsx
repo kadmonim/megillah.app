@@ -12,6 +12,7 @@ function getCodeFromURL(): string {
 export default function LiveFollower() {
   const [code] = useState(getCodeFromURL);
   const lastVerse = useRef<string | null>(null);
+  const hadSession = useRef(false);
   const [remoteMinutes, setRemoteMinutes] = useState<number | null>(null);
   const [remoteWord, setRemoteWord] = useState<string | null>(null);
   const [remoteActiveVerse, setRemoteActiveVerse] = useState<string | null>(null);
@@ -113,7 +114,14 @@ export default function LiveFollower() {
     );
   }
 
-  if (!session) return null; // loading screen is server-rendered
+  // After leaving, redirect to lobby instead of showing white screen
+  if (session) hadSession.current = true;
+  if (!session && hadSession.current) {
+    window.location.href = '/live';
+    return null;
+  }
+
+  if (!session) return null; // still loading from server-rendered screen
 
   return (
     <div class="live-session">
