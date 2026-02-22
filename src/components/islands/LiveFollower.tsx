@@ -50,7 +50,11 @@ export default function LiveFollower() {
     }
     if (verseKey) {
       const el = document.querySelector(`[data-verse="${verseKey}"]`);
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (el) {
+        const stickyHeight = document.querySelector('.toolbar-sticky')?.getBoundingClientRect().bottom ?? 60;
+        const y = el.getBoundingClientRect().top + window.scrollY - stickyHeight - 40;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
     }
   }, []);
 
