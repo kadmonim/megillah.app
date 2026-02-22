@@ -1286,9 +1286,21 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
                   // Collect all sons' verses from 9:7-9:9
                   const sonsVerses = ch.verses.filter(sv => BNEI_HAMAN_VERSES.has(`${ch.chapter}:${sv.verse}`));
 
-                  // Split 9:6 translation: before = "And in Shushan...destroyed", loud = "five hundred men."
+                  // Split 9:6 translation: before = "...destroyed/killed", loud = "five hundred men."
                   const trans96 = activeTranslations?.['9:6'] || '';
-                  const trans96Match = trans96.match(/^(.*?destroyed\s*)(five hundred men\..*)$/i);
+                  // Match the "500 men" portion across languages
+                  const trans96SplitPatterns: Record<string, RegExp> = {
+                    en: /^(.*?destroyed\s*)(five hundred men\..*)$/i,
+                    es: /^(.*?mataron a\s*)(quinientos hombres\..*)$/i,
+                    fr: /^(.*?exterminèrent\s*)(cinq cents hommes.*)$/i,
+                    it: /^(.*?distrussero\s*)(cinquecent.*)$/i,
+                    pt: /^(.*?destruíram\s*)(quinhentos homens\..*)$/i,
+                    ru: /^(.*?истребили\s*)(пятьсот человек\..*)$/i,
+                    hu: /^(.*?elpusztítottak\s*)(ötszáz embert.*)$/i,
+                    he: /^(.*?וְאַבֵּד\s*)(חֲמֵשׁ מֵאוֹת אִישׁ.*)$/,
+                  };
+                  const trans96Re = trans96SplitPatterns[lang];
+                  const trans96Match = trans96Re ? trans96.match(trans96Re) : null;
                   const trans96Before = trans96Match ? trans96Match[1] : trans96;
                   const trans96Loud = trans96Match ? trans96Match[2] : '';
 
@@ -1298,7 +1310,19 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
                   const v10firstSpace = v10text.indexOf(' ');
                   const v10firstWord = v10firstSpace > 0 ? v10text.slice(0, v10firstSpace) : v10text;
                   const v10trans = activeTranslations?.['9:10'] || '';
-                  const v10transMatch = v10trans.match(/^(.*?the ten sons of\s*)/i);
+                  // Match "the ten sons of" across languages
+                  const v10SplitPatterns: Record<string, RegExp> = {
+                    en: /^(.*?the ten sons of\s*)/i,
+                    es: /^(.*?los diez hijos de\s*)/i,
+                    fr: /^(.*?les dix fils d['']\s*)/i,
+                    it: /^(.*?[Dd]ieci figli d['']\s*)/i,
+                    pt: /^(.*?[Oo]s dez filhos de\s*)/i,
+                    ru: /^(.*?[Дд]есять сыновей\s*)/i,
+                    hu: /^(.*?tíz fiát\s*)/i,
+                    he: /^(.*?עֲשֶׂרֶת בְּנֵי הָמָן\s*)/,
+                  };
+                  const v10Re = v10SplitPatterns[lang];
+                  const v10transMatch = v10Re ? v10trans.match(v10Re) : null;
                   const v10transBefore = v10transMatch ? v10transMatch[1] : '';
 
                   const bneiTranslations = activeTranslations
@@ -1359,7 +1383,18 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
                   const firstSpace = raw.indexOf(' ');
                   const restText = firstSpace > 0 ? raw.slice(firstSpace + 1) : '';
                   const v10trans = activeTranslations?.['9:10'] || '';
-                  const transMatch = v10trans.match(/^(.*?the ten sons of\s*)([\s\S]*)$/i);
+                  const v10RestPatterns: Record<string, RegExp> = {
+                    en: /^(.*?the ten sons of\s*)([\s\S]*)$/i,
+                    es: /^(.*?los diez hijos de\s*)([\s\S]*)$/i,
+                    fr: /^(.*?les dix fils d['']\s*)([\s\S]*)$/i,
+                    it: /^(.*?[Dd]ieci figli d['']\s*)([\s\S]*)$/i,
+                    pt: /^(.*?[Oo]s dez filhos de\s*)([\s\S]*)$/i,
+                    ru: /^(.*?[Дд]есять сыновей\s*)([\s\S]*)$/i,
+                    hu: /^(.*?tíz fiát\s*)([\s\S]*)$/i,
+                    he: /^(.*?עֲשֶׂרֶת בְּנֵי הָמָן\s*)([\s\S]*)$/,
+                  };
+                  const v10RestRe = v10RestPatterns[lang];
+                  const transMatch = v10RestRe ? v10trans.match(v10RestRe) : null;
                   const transRest = transMatch ? transMatch[2] : v10trans;
                   const customTranslations = transRest ? { '9:10': transRest } as TranslationMap : activeTranslations;
                   const verseResult = [renderVerse(restText, ch.chapter, v.verse, playGragger, chabadMode, false, translationMode, t, lang, customTranslations, activeWord, activeVerse)];
