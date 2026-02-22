@@ -1043,7 +1043,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
 
       <p class="hint-text">
         <span class="material-icons hint-icon">touch_app</span>
-        {chabadMode ? t.chabadHint : t.tapHint}
+        {t.tapHint}
       </p>
 
       <div class={`scroll-text${session?.role === 'admin' ? ' admin-session' : ''}`} dir="rtl" ref={scrollTextRef}>
