@@ -65,6 +65,11 @@ const translations = {
     language: 'שפה',
 
     displayIllustrations: 'הצג איורים',
+    sessionCode: 'קוד',
+    broadcasting: 'משדר',
+    following: 'עוקב',
+    endSession: 'סיום',
+    leaveSession: 'יציאה',
   },
   en: {
     showCantillation: 'Show cantillation signs',
@@ -85,6 +90,11 @@ const translations = {
     language: 'Language',
 
     displayIllustrations: 'Display illustrations',
+    sessionCode: 'Code',
+    broadcasting: 'Broadcasting',
+    following: 'Following',
+    endSession: 'End',
+    leaveSession: 'Leave',
   },
   es: {
     showCantillation: 'Mostrar signos de cantilación',
@@ -104,6 +114,11 @@ const translations = {
     headerSub: 'Matraca incorporada y barra de progreso',
     language: 'Idioma',
     displayIllustrations: 'Mostrar ilustraciones',
+    sessionCode: 'Código',
+    broadcasting: 'Transmitiendo',
+    following: 'Siguiendo',
+    endSession: 'Finalizar',
+    leaveSession: 'Salir',
   },
   ru: {
     showCantillation: 'Показать знаки кантилляции',
@@ -123,6 +138,11 @@ const translations = {
     headerSub: 'Встроенная трещотка и индикатор прогресса',
     language: 'Язык',
     displayIllustrations: 'Показать иллюстрации',
+    sessionCode: 'Код',
+    broadcasting: 'Трансляция',
+    following: 'Слежение',
+    endSession: 'Завершить',
+    leaveSession: 'Выйти',
   },
   fr: {
     showCantillation: 'Afficher les signes de cantillation',
@@ -142,6 +162,11 @@ const translations = {
     headerSub: 'Crécelle intégrée et barre de progression',
     language: 'Langue',
     displayIllustrations: 'Afficher les illustrations',
+    sessionCode: 'Code',
+    broadcasting: 'Diffusion',
+    following: 'Suivi',
+    endSession: 'Terminer',
+    leaveSession: 'Quitter',
   },
   pt: {
     showCantillation: 'Mostrar sinais de cantilação',
@@ -161,6 +186,11 @@ const translations = {
     headerSub: 'Matraca embutida e barra de progresso',
     language: 'Idioma',
     displayIllustrations: 'Mostrar ilustrações',
+    sessionCode: 'Código',
+    broadcasting: 'Transmitindo',
+    following: 'Seguindo',
+    endSession: 'Encerrar',
+    leaveSession: 'Sair',
   },
   it: {
     showCantillation: 'Mostra segni di cantillazione',
@@ -180,6 +210,11 @@ const translations = {
     headerSub: 'Raganella integrata e barra di avanzamento',
     language: 'Lingua',
     displayIllustrations: 'Mostra illustrazioni',
+    sessionCode: 'Codice',
+    broadcasting: 'Trasmissione',
+    following: 'Seguendo',
+    endSession: 'Termina',
+    leaveSession: 'Esci',
   },
 } as const;
 
@@ -797,26 +832,20 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
       {session && (
         <div class="session-bar">
           <span class="session-code">
-            <span class="material-icons" style="font-size:16px;vertical-align:middle;margin-right:4px">
+            <span class="material-icons" style="font-size:16px;vertical-align:middle;margin:0 4px">
               {session.role === 'admin' ? 'cast' : 'cast_connected'}
             </span>
-            Code: {session.code}
+            {t.sessionCode}: {session.code}
           </span>
           <span class="session-role">
-            {session.role === 'admin' ? 'Broadcasting' : 'Following'}
+            {session.role === 'admin' ? t.broadcasting : t.following}
           </span>
           <button class="session-leave" onClick={session.leave}>
-            <span class="material-icons" style="font-size:16px;vertical-align:middle;margin-right:2px">
+            <span class="material-icons" style={`font-size:16px;vertical-align:middle;margin:0 2px${lang === 'he' && session.role !== 'admin' ? ';transform:scaleX(-1)' : ''}`}>
               {session.role === 'admin' ? 'stop_circle' : 'logout'}
             </span>
-            {session.role === 'admin' ? 'End' : 'Leave'}
+            {session.role === 'admin' ? t.endSession : t.leaveSession}
           </button>
-        </div>
-      )}
-      {session?.role === 'follower' && (
-        <div class="following-banner">
-          <span class="material-icons" style="font-size:18px;vertical-align:middle;margin-right:4px">sync</span>
-          Following live — auto-scrolling
         </div>
       )}
       {/* Progress bar */}
