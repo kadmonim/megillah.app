@@ -29,7 +29,13 @@ const description = 'Follow along with a live Megillah reading — auto-scroll s
   </head>
   <body>
     <main class="container">
-      <LiveSession client:load />
+      <div class="maintenance">
+        <div class="maintenance-card">
+          <span class="material-icons" style="font-size:48px;color:var(--color-burgundy);margin-bottom:12px;">rocket_launch</span>
+          <h1>Upgrading to a faster system</h1>
+          <p>We're moving to a faster server for a better experience. Please check back in 15 minutes.</p>
+        </div>
+      </div>
     </main>
   </body>
 </html>
@@ -38,5 +44,36 @@ const description = 'Follow along with a live Megillah reading — auto-scroll s
   main {
     padding-top: 0;
     padding-bottom: 24px;
+  }
+
+  .maintenance {
+    min-height: 80dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
+  }
+
+  .maintenance-card {
+    background: var(--color-white);
+    border-radius: 16px;
+    padding: 48px 32px;
+    box-shadow: 0 4px 20px rgba(102, 10, 35, 0.12);
+    max-width: 380px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .maintenance-card h1 {
+    font-size: 1.3rem;
+    font-weight: 900;
+    color: var(--color-burgundy);
+    margin-bottom: 12px;
+  }
+
+  .maintenance-card p {
+    font-size: 0.95rem;
+    color: var(--color-text-light);
+    line-height: 1.5;
   }
 </style>
