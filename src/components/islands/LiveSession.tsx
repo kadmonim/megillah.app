@@ -248,10 +248,16 @@ export default function LiveSession() {
   const [remoteWord, setRemoteWord] = useState<string | null>(null);
   const [remoteActiveVerse, setRemoteActiveVerse] = useState<string | null>(null);
   const [remoteSettings, setRemoteSettings] = useState<Record<string, unknown>>({});
+  const [syncEnabled, setSyncEnabled] = useState(true);
+  const syncRef = useRef(true);
+  syncRef.current = syncEnabled;
+  const lastBroadcastVerse = useRef<string | null>(null);
   const [pendingSession, setPendingSession] = useState<{ code: string; password: string } | null>(null);
   const [createLoading, setCreateLoading] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
   const handleRemoteScroll = useCallback((pos: ScrollPosition) => {
+    lastBroadcastVerse.current = pos.verse;
+    if (!syncRef.current) return;
     // Suppress scroll broadcasts while word/verse highlighting is active
     if (Date.now() - lastHighlightTime.current < 3000) return;
     if (pos.verse === lastVerse.current) return;
@@ -267,19 +273,25 @@ export default function LiveSession() {
   }, []);
 
   const handleRemoteWord = useCallback((wordId: string) => {
-    lastHighlightTime.current = Date.now();
+    // Track last broadcast verse even when sync is off
     let verseKey: string | null = null;
+    if (wordId.startsWith('v:')) {
+      verseKey = wordId.slice(2);
+    } else {
+      const lastDash = wordId.lastIndexOf('-');
+      if (lastDash > 0) verseKey = wordId.slice(0, lastDash);
+    }
+    if (verseKey) lastBroadcastVerse.current = verseKey;
+
+    if (!syncRef.current) return;
+    lastHighlightTime.current = Date.now();
     if (wordId.startsWith('v:')) {
       const verse = wordId.slice(2);
       setRemoteActiveVerse(verse);
       setRemoteWord(null);
-      verseKey = verse;
     } else {
       setRemoteWord(wordId);
       setRemoteActiveVerse(null);
-      // Extract verse key: "3:7-5" → "3:7"
-      const lastDash = wordId.lastIndexOf('-');
-      if (lastDash > 0) verseKey = wordId.slice(0, lastDash);
     }
     if (verseKey) {
       const el = document.querySelector(`[data-verse="${verseKey}"]`);
@@ -356,7 +368,21 @@ export default function LiveSession() {
 
   return (
     <div class="live-session">
-      <MegillahReader standalone={true} session={session} remoteMinutes={remoteMinutes} activeWord={remoteWord} activeVerse={remoteActiveVerse} remoteSettings={remoteSettings} />
+      <MegillahReader standalone={true} session={session} remoteMinutes={remoteMinutes} activeWord={remoteWord} activeVerse={remoteActiveVerse} remoteSettings={remoteSettings} syncEnabled={syncEnabled} onToggleSync={() => {
+        setSyncEnabled(v => {
+          const next = !v;
+          if (next && lastBroadcastVerse.current) {
+            // Jump to broadcaster's last known position when re-enabling sync
+            const el = document.querySelector(`[data-verse="${lastBroadcastVerse.current}"]`);
+            if (el) {
+              const stickyHeight = document.querySelector('.toolbar-sticky')?.getBoundingClientRect().bottom ?? 60;
+              const y = el.getBoundingClientRect().top + window.scrollY - stickyHeight - 40;
+              window.scrollTo({ top: y, behavior: 'smooth' });
+            }
+          }
+          return next;
+        });
+      }} />
     </div>
   );
 }

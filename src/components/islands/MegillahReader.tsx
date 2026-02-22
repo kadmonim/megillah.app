@@ -385,7 +385,7 @@ function renderVerse(
   return verseContent;
 }
 
-export default function MegillahReader({ standalone = false, showTitle = false, session, remoteMinutes, activeWord: remoteActiveWord, activeVerse: remoteActiveVerse, onWordTap, remoteSettings }: { standalone?: boolean; showTitle?: boolean; session?: Session; remoteMinutes?: number | null; activeWord?: string | null; activeVerse?: string | null; onWordTap?: (wordId: string) => void; remoteSettings?: Record<string, unknown> }) {
+export default function MegillahReader({ standalone = false, showTitle = false, session, remoteMinutes, activeWord: remoteActiveWord, activeVerse: remoteActiveVerse, onWordTap, remoteSettings, syncEnabled = true, onToggleSync }: { standalone?: boolean; showTitle?: boolean; session?: Session; remoteMinutes?: number | null; activeWord?: string | null; activeVerse?: string | null; onWordTap?: (wordId: string) => void; remoteSettings?: Record<string, unknown>; syncEnabled?: boolean; onToggleSync?: () => void }) {
   const dragging = useRef(false);
   const lastBroadcastTime = useRef(0);
   const lastDragWord = useRef<string | null>(null);
@@ -850,6 +850,15 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
               title="Tracking mode"
             >
               <span class="material-icons">highlight</span>
+            </button>
+          )}
+          {session?.role === 'follower' && onToggleSync && (
+            <button
+              class={`toolbar-icon-btn${syncEnabled ? ' tracking-active' : ''}`}
+              onClick={onToggleSync}
+              title={syncEnabled ? 'Unfollow broadcaster' : 'Follow broadcaster'}
+            >
+              <span class="material-icons">{syncEnabled ? 'sensors' : 'sensors_off'}</span>
             </button>
           )}
           {!(session?.role === 'follower') && (
