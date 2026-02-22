@@ -7,9 +7,17 @@ export function getSupabase(): SupabaseClient {
     const url = import.meta.env.PUBLIC_SUPABASE_URL || '';
     const key = import.meta.env.PUBLIC_SUPABASE_ANON_KEY || '';
     if (!url || !key) {
-      throw new Error('Supabase URL and key must be configured');
+      throw new Error(
+        'Connection error — please hard-refresh the page (Ctrl+Shift+R) to get the latest version.',
+      );
     }
-    _supabase = createClient(url, key);
+    try {
+      _supabase = createClient(url, key);
+    } catch {
+      throw new Error(
+        'Connection error — please hard-refresh the page (Ctrl+Shift+R) to get the latest version.',
+      );
+    }
   }
   return _supabase;
 }

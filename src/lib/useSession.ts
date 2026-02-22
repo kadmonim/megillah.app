@@ -5,6 +5,7 @@ import type { RealtimeChannel } from '@supabase/supabase-js';
 export type SessionRole = 'admin' | 'follower';
 
 const STORAGE_KEY = 'megillah-live-session';
+const CREATED_SESSION_KEY = 'megillah-created-session';
 
 /** A position in the megillah text — either a chapter:verse or a named section */
 export interface ScrollPosition {
@@ -53,6 +54,24 @@ function loadFromStorage(): { code: string; password: string } | null {
     if (parsed.code) return parsed;
   } catch {}
   return null;
+}
+
+export function saveCreatedSession(code: string, password: string) {
+  localStorage.setItem(CREATED_SESSION_KEY, JSON.stringify({ code, password }));
+}
+
+export function loadCreatedSession(): { code: string; password: string } | null {
+  try {
+    const raw = localStorage.getItem(CREATED_SESSION_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (parsed.code && parsed.password) return parsed;
+  } catch {}
+  return null;
+}
+
+export function clearCreatedSession() {
+  localStorage.removeItem(CREATED_SESSION_KEY);
 }
 
 export function useSession(
@@ -139,6 +158,7 @@ export function useSession(
 
       const leave = () => {
         clearStorage();
+        clearCreatedSession();
         cleanup();
       };
 

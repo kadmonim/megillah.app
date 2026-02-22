@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from 'preact/hooks';
-import { useSession } from '../../lib/useSession';
+import { useSession, saveCreatedSession, loadCreatedSession, clearCreatedSession } from '../../lib/useSession';
 import type { Session, ScrollPosition } from '../../lib/useSession';
 import { getSupabase } from '../../lib/supabase';
 import MegillahReader from './MegillahReader';
@@ -12,26 +12,38 @@ const lobbyText = {
     subtitle: 'עקבו אחרי קריאת מגילה בזמן אמת',
     createSession: 'צור סשן',
     joinSession: 'הצטרף לסשן',
-    adminPassword: 'סיסמת מנהל',
-    choosePassword: 'בחר סיסמה...',
+    adminPassword: 'הגדירו סיסמת שידור',
+    choosePassword: 'בחרו סיסמה...',
     creating: 'יוצר...',
     sessionCode: 'קוד סשן',
     passwordAdmins: 'סיסמה (למנהלים בלבד)',
     optional: 'אופציונלי...',
     joining: 'מצטרף...',
     back: 'חזרה',
-    shareTitle: 'שתפו עם העוקבים',
     copyLink: 'העתק קישור',
     copied: 'הועתק!',
     startBroadcasting: 'התחל שידור',
     scanQR: 'או סרקו קוד QR',
+    sessionCreated: 'הסשן נוצר בהצלחה!',
+
+    shareHeading: 'מידע לשיתוף',
+    shareTip1: 'שלחו להם את הקישור הזה:',
+    shareTip2: 'או, בקשו מהם להיכנס ל-megillah.app/live, ללחוץ על "הצטרף לסשן" ולהזין את קוד הסשן',
+    shareTip3: 'או שיסרקו את קוד ה-QR.',
+    broadcastHeading: 'מידע לשידור',
+    broadcastTip1: 'לחצו על הכפתור למטה כדי להתחיל לשדר עכשיו.',
+    broadcastTip2Pre: 'או, מכל מכשיר אחר, היכנסו ל-megillah.app/live, לחצו על "הצטרף לסשן", הזינו את קוד הסשן',
+    broadcastTip2Mid: 'ואת הסיסמה שהגדרתם:',
+    saveNote: 'הקפידו לזכור את הסיסמה שלכם.',
+    showPassword: 'הצג',
+    hidePassword: 'הסתר',
   },
   en: {
     title: 'Megillah Live',
     subtitle: 'Follow along with a live Megillah reading',
     createSession: 'Create Session',
     joinSession: 'Join Session',
-    adminPassword: 'Admin Password',
+    adminPassword: 'Set a Broadcaster Password',
     choosePassword: 'Choose a password...',
     creating: 'Creating...',
     sessionCode: 'Session Code',
@@ -39,18 +51,30 @@ const lobbyText = {
     optional: 'Optional...',
     joining: 'Joining...',
     back: 'Back',
-    shareTitle: 'Share with followers',
     copyLink: 'Copy Link',
     copied: 'Copied!',
     startBroadcasting: 'Start Broadcasting',
     scanQR: 'Or scan QR code',
+    sessionCreated: 'Session created successfully!',
+
+    shareHeading: 'Sharing Information',
+    shareTip1: 'Send them this link:',
+    shareTip2: 'Or, tell them to go to megillah.app/live, click "Join Session", and enter the Session Code',
+    shareTip3: 'Or have them scan this QR code.',
+    broadcastHeading: 'Broadcasting Information',
+    broadcastTip1: 'Click the button below to start broadcasting now.',
+    broadcastTip2Pre: 'Or, from any device, go to megillah.app/live, click "Join Session", and enter the Session Code',
+    broadcastTip2Mid: 'and the password you just created:',
+    saveNote: 'Make sure to remember your password.',
+    showPassword: 'Show',
+    hidePassword: 'Hide',
   },
   es: {
     title: 'Meguilá en Vivo',
     subtitle: 'Sigue una lectura en vivo de la Meguilá',
     createSession: 'Crear sesión',
     joinSession: 'Unirse a sesión',
-    adminPassword: 'Contraseña de admin',
+    adminPassword: 'Establece una contraseña de transmisión',
     choosePassword: 'Elige una contraseña...',
     creating: 'Creando...',
     sessionCode: 'Código de sesión',
@@ -58,18 +82,30 @@ const lobbyText = {
     optional: 'Opcional...',
     joining: 'Uniéndose...',
     back: 'Volver',
-    shareTitle: 'Compartir con seguidores',
     copyLink: 'Copiar enlace',
     copied: '¡Copiado!',
     startBroadcasting: 'Iniciar transmisión',
     scanQR: 'O escanear código QR',
+    sessionCreated: '¡Sesión creada con éxito!',
+
+    shareHeading: 'Información para compartir',
+    shareTip1: 'Envíales este enlace:',
+    shareTip2: 'O diles que vayan a megillah.app/live, hagan clic en "Unirse a sesión" e ingresen el código de sesión',
+    shareTip3: 'O que escaneen este código QR.',
+    broadcastHeading: 'Información de transmisión',
+    broadcastTip1: 'Haz clic en el botón de abajo para comenzar a transmitir ahora.',
+    broadcastTip2Pre: 'O, desde cualquier dispositivo, ve a megillah.app/live, haz clic en "Unirse a sesión" e ingresa el código de sesión',
+    broadcastTip2Mid: 'y la contraseña que acabas de crear:',
+    saveNote: 'Asegúrate de recordar tu contraseña.',
+    showPassword: 'Mostrar',
+    hidePassword: 'Ocultar',
   },
   ru: {
     title: 'Мегила Лайв',
     subtitle: 'Следите за чтением Мегилы в реальном времени',
     createSession: 'Создать сессию',
     joinSession: 'Присоединиться',
-    adminPassword: 'Пароль администратора',
+    adminPassword: 'Задайте пароль трансляции',
     choosePassword: 'Выберите пароль...',
     creating: 'Создание...',
     sessionCode: 'Код сессии',
@@ -77,18 +113,30 @@ const lobbyText = {
     optional: 'Необязательно...',
     joining: 'Подключение...',
     back: 'Назад',
-    shareTitle: 'Поделиться с подписчиками',
     copyLink: 'Копировать ссылку',
     copied: 'Скопировано!',
     startBroadcasting: 'Начать трансляцию',
     scanQR: 'Или отсканируйте QR-код',
+    sessionCreated: 'Сессия успешно создана!',
+
+    shareHeading: 'Информация для обмена',
+    shareTip1: 'Отправьте им эту ссылку:',
+    shareTip2: 'Или попросите их зайти на megillah.app/live, нажать «Присоединиться» и ввести код сессии',
+    shareTip3: 'Или пусть отсканируют этот QR-код.',
+    broadcastHeading: 'Информация о трансляции',
+    broadcastTip1: 'Нажмите кнопку ниже, чтобы начать трансляцию сейчас.',
+    broadcastTip2Pre: 'Или с любого устройства зайдите на megillah.app/live, нажмите «Присоединиться» и введите код сессии',
+    broadcastTip2Mid: 'и пароль, который вы только что создали:',
+    saveNote: 'Обязательно запомните свой пароль.',
+    showPassword: 'Показать',
+    hidePassword: 'Скрыть',
   },
   fr: {
     title: 'Méguila en Direct',
     subtitle: 'Suivez une lecture en direct de la Méguila',
     createSession: 'Créer une session',
     joinSession: 'Rejoindre une session',
-    adminPassword: 'Mot de passe admin',
+    adminPassword: 'Définir un mot de passe de diffusion',
     choosePassword: 'Choisissez un mot de passe...',
     creating: 'Création...',
     sessionCode: 'Code de session',
@@ -96,18 +144,30 @@ const lobbyText = {
     optional: 'Facultatif...',
     joining: 'Connexion...',
     back: 'Retour',
-    shareTitle: 'Partager avec les abonnés',
     copyLink: 'Copier le lien',
     copied: 'Copié !',
     startBroadcasting: 'Commencer la diffusion',
     scanQR: 'Ou scannez le code QR',
+    sessionCreated: 'Session créée avec succès !',
+
+    shareHeading: 'Informations de partage',
+    shareTip1: 'Envoyez-leur ce lien :',
+    shareTip2: 'Ou demandez-leur d\'aller sur megillah.app/live, de cliquer sur « Rejoindre » et d\'entrer le code de session',
+    shareTip3: 'Ou qu\'ils scannent ce code QR.',
+    broadcastHeading: 'Informations de diffusion',
+    broadcastTip1: 'Cliquez sur le bouton ci-dessous pour commencer la diffusion maintenant.',
+    broadcastTip2Pre: 'Ou, depuis n\'importe quel appareil, allez sur megillah.app/live, cliquez sur « Rejoindre » et entrez le code de session',
+    broadcastTip2Mid: 'et le mot de passe que vous venez de créer :',
+    saveNote: 'N\'oubliez pas de retenir votre mot de passe.',
+    showPassword: 'Afficher',
+    hidePassword: 'Masquer',
   },
   pt: {
     title: 'Meguilá ao Vivo',
     subtitle: 'Acompanhe uma leitura ao vivo da Meguilá',
     createSession: 'Criar sessão',
     joinSession: 'Entrar na sessão',
-    adminPassword: 'Senha de admin',
+    adminPassword: 'Defina uma senha de transmissão',
     choosePassword: 'Escolha uma senha...',
     creating: 'Criando...',
     sessionCode: 'Código da sessão',
@@ -115,18 +175,30 @@ const lobbyText = {
     optional: 'Opcional...',
     joining: 'Entrando...',
     back: 'Voltar',
-    shareTitle: 'Compartilhar com seguidores',
     copyLink: 'Copiar link',
     copied: 'Copiado!',
     startBroadcasting: 'Iniciar transmissão',
     scanQR: 'Ou escaneie o código QR',
+    sessionCreated: 'Sessão criada com sucesso!',
+
+    shareHeading: 'Informações de compartilhamento',
+    shareTip1: 'Envie este link para eles:',
+    shareTip2: 'Ou peça para acessarem megillah.app/live, clicar em "Entrar na sessão" e digitar o código da sessão',
+    shareTip3: 'Ou escanear este código QR.',
+    broadcastHeading: 'Informações de transmissão',
+    broadcastTip1: 'Clique no botão abaixo para começar a transmitir agora.',
+    broadcastTip2Pre: 'Ou, de qualquer dispositivo, acesse megillah.app/live, clique em "Entrar na sessão" e digite o código da sessão',
+    broadcastTip2Mid: 'e a senha que você acabou de criar:',
+    saveNote: 'Não se esqueça da sua senha.',
+    showPassword: 'Mostrar',
+    hidePassword: 'Ocultar',
   },
   it: {
     title: 'Meghillà dal Vivo',
     subtitle: 'Segui una lettura dal vivo della Meghillà',
     createSession: 'Crea sessione',
     joinSession: 'Unisciti alla sessione',
-    adminPassword: 'Password admin',
+    adminPassword: 'Imposta una password di trasmissione',
     choosePassword: 'Scegli una password...',
     creating: 'Creazione...',
     sessionCode: 'Codice sessione',
@@ -134,11 +206,23 @@ const lobbyText = {
     optional: 'Facoltativo...',
     joining: 'Connessione...',
     back: 'Indietro',
-    shareTitle: 'Condividi con i follower',
     copyLink: 'Copia link',
     copied: 'Copiato!',
     startBroadcasting: 'Inizia la trasmissione',
     scanQR: 'Oppure scansiona il codice QR',
+    sessionCreated: 'Sessione creata con successo!',
+
+    shareHeading: 'Informazioni per la condivisione',
+    shareTip1: 'Invia loro questo link:',
+    shareTip2: 'Oppure chiedi di andare su megillah.app/live, cliccare "Unisciti alla sessione" e inserire il codice sessione',
+    shareTip3: 'Oppure fai scansionare questo codice QR.',
+    broadcastHeading: 'Informazioni sulla trasmissione',
+    broadcastTip1: 'Clicca il pulsante qui sotto per iniziare a trasmettere ora.',
+    broadcastTip2Pre: 'Oppure, da qualsiasi dispositivo, vai su megillah.app/live, clicca "Unisciti alla sessione" e inserisci il codice sessione',
+    broadcastTip2Mid: 'e la password che hai appena creato:',
+    saveNote: 'Assicurati di ricordare la tua password.',
+    showPassword: 'Mostra',
+    hidePassword: 'Nascondi',
   },
 } as const;
 
@@ -212,6 +296,13 @@ export default function LiveSession() {
   const [lang, setLang] = useState<Lang>('en');
   useEffect(() => { setLang(detectLang()); }, []);
 
+  // Restore a previously created session from localStorage
+  useEffect(() => {
+    if (session || pendingSession) return;
+    const saved = loadCreatedSession();
+    if (saved) setPendingSession(saved);
+  }, []);
+
   const handleCreate = useCallback(async (password: string) => {
     setCreateLoading(true);
     setCreateError(null);
@@ -222,6 +313,7 @@ export default function LiveSession() {
         .from('sessions')
         .insert({ code, password });
       if (insertErr) throw insertErr;
+      saveCreatedSession(code, password);
       setPendingSession({ code, password });
     } catch (e: any) {
       setCreateError(e.message || 'Failed to create session');
@@ -239,10 +331,11 @@ export default function LiveSession() {
   if (pendingSession && !session) {
     return <ShareScreen
       code={pendingSession.code}
+      password={pendingSession.password}
       lang={lang}
       loading={loading}
       onStart={handleStartBroadcasting}
-      onBack={() => setPendingSession(null)}
+      onBack={() => { clearCreatedSession(); setPendingSession(null); }}
     />;
   }
 
@@ -265,18 +358,21 @@ export default function LiveSession() {
 
 function ShareScreen({
   code,
+  password,
   lang,
   loading,
   onStart,
   onBack,
 }: {
   code: string;
+  password: string;
   lang: Lang;
   loading: boolean;
   onStart: () => void;
   onBack: () => void;
 }) {
   const [copied, setCopied] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const t = lobbyText[lang];
   const dir = lang === 'he' ? 'rtl' : 'ltr';
   const shareUrl = `https://megillah.app/live/join?code=${code}`;
@@ -292,39 +388,158 @@ function ShareScreen({
   return (
     <div class="lobby" dir={dir}>
       <div class="lobby-card">
-        <h1 class="lobby-title">{t.shareTitle}</h1>
-
-        <div class="share-code">{code}</div>
-
-        <div class="share-url-box">
-          <span class="share-url">{shareUrl}</span>
-          <button class="share-copy-btn" onClick={handleCopy}>
-            <span class="material-icons">{copied ? 'check' : 'content_copy'}</span>
-            {copied ? t.copied : t.copyLink}
-          </button>
+        {/* Success banner */}
+        <div class="share-success-banner">
+          <span class="material-icons">check_circle</span>
+          <span>{t.sessionCreated}</span>
         </div>
 
-        <p class="share-qr-label">{t.scanQR}</p>
-        <img class="share-qr" src={qrUrl} alt="QR Code" width={200} height={200} />
+        {/* Section 1: Sharing Information */}
+        <div class="share-section">
+          <h2 class="share-section-heading">{t.shareHeading}</h2>
+          <ul class="share-tips">
+            <li>
+              {t.shareTip1}
+              <div class="share-url-box">
+                <span class="share-url">{shareUrl}</span>
+                <button class="share-copy-btn" onClick={handleCopy}>
+                  <span class="material-icons">{copied ? 'check' : 'content_copy'}</span>
+                  {copied ? t.copied : t.copyLink}
+                </button>
+              </div>
+            </li>
+            <li>{t.shareTip2} <strong>{code}</strong></li>
+            <li>
+              {t.shareTip3}
+              <img class="share-qr" src={qrUrl} alt="QR Code" width={180} height={180} />
+            </li>
+          </ul>
+        </div>
 
-        <div class="share-actions">
-          <button class="lobby-btn create" onClick={onStart} disabled={loading}>
-            <span class="material-icons">cast</span>
-            {loading ? t.joining : t.startBroadcasting}
-          </button>
-          <button type="button" class="lobby-back" onClick={onBack}>
-            {t.back}
-          </button>
+        {/* Section 2: Broadcasting Information */}
+        <div class="share-section">
+          <h2 class="share-section-heading">{t.broadcastHeading}</h2>
+          <ul class="share-tips">
+            <li>{t.broadcastTip1}</li>
+            <li>
+              {t.broadcastTip2Pre} <strong>{code}</strong> {t.broadcastTip2Mid}{' '}
+              {showPassword
+                ? <strong>{password}</strong>
+                : <span class="share-pw-dots">{'••••••••'}</span>}
+              {' '}
+              <button
+                type="button"
+                class="share-pw-toggle"
+                onClick={() => setShowPassword((v) => !v)}
+              >
+                ({showPassword ? t.hidePassword : t.showPassword})
+              </button>
+            </li>
+          </ul>
+          <p class="share-admin-save">{t.saveNote}</p>
+
+          <div class="share-actions">
+            <button class="lobby-btn create" onClick={onStart} disabled={loading}>
+              <span class="material-icons">cast</span>
+              {loading ? t.joining : t.startBroadcasting}
+            </button>
+            <button type="button" class="lobby-back" onClick={onBack}>
+              {t.back}
+            </button>
+          </div>
         </div>
       </div>
 
       <style>{`
-        .share-code {
-          font-size: 2.2rem;
-          font-weight: 900;
-          letter-spacing: 0.15em;
+        .share-success-banner {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          background: rgba(46, 125, 50, 0.1);
+          color: #2e7d32;
+          border-radius: 8px;
+          padding: 10px 16px;
+          font-weight: 700;
+          font-size: 0.95rem;
+          margin-bottom: 8px;
+        }
+
+        .share-success-banner .material-icons {
+          font-size: 20px;
+        }
+
+        .share-section {
+          border-top: 1px solid var(--color-cream-dark, #e8ddd0);
+          padding-top: 18px;
+          margin-top: 4px;
+          margin-bottom: 8px;
+          text-align: start;
+        }
+
+        .share-section-heading {
+          font-size: 0.95rem;
+          font-weight: 700;
           color: var(--color-burgundy);
-          margin: 16px 0 20px;
+          margin: 0 0 10px;
+        }
+
+        .share-tips {
+          list-style: none;
+          padding: 0;
+          margin: 0 0 14px;
+          font-size: 0.85rem;
+          color: var(--color-text);
+          line-height: 1.6;
+        }
+
+        .share-tips li {
+          position: relative;
+          padding-inline-start: 20px;
+          margin-bottom: 10px;
+        }
+
+        .share-tips li::before {
+          content: '•';
+          position: absolute;
+          inset-inline-start: 4px;
+          color: var(--color-burgundy);
+          font-weight: 700;
+        }
+
+        .share-tips .share-url-box {
+          margin-top: 8px;
+        }
+
+        .share-tips .share-qr {
+          margin-top: 10px;
+        }
+
+        .share-pw-dots {
+          color: var(--color-text);
+          letter-spacing: 0.1em;
+        }
+
+        .share-pw-toggle {
+          background: none;
+          border: none;
+          color: var(--color-burgundy);
+          font-size: 0.8rem;
+          font-weight: 600;
+          cursor: pointer;
+          padding: 0;
+        }
+
+        .share-pw-toggle:hover {
+          text-decoration: underline;
+        }
+
+        .share-admin-save {
+          font-size: 0.8rem;
+          font-style: italic;
+          color: var(--color-text-light);
+          opacity: 0.8;
+          margin: 0 0 16px;
         }
 
         .share-url-box {
@@ -370,15 +585,8 @@ function ShareScreen({
           background: var(--color-burgundy-light);
         }
 
-        .share-qr-label {
-          font-size: 0.85rem;
-          color: var(--color-text-light);
-          margin-bottom: 12px;
-        }
-
         .share-qr {
           display: block;
-          margin: 0 auto 24px;
           border-radius: 8px;
         }
 
