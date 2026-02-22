@@ -179,12 +179,22 @@ export default function LiveSession() {
   }, []);
 
   const handleRemoteWord = useCallback((wordId: string) => {
+    let verseKey: string | null = null;
     if (wordId.startsWith('v:')) {
-      setRemoteActiveVerse(wordId.slice(2));
+      const verse = wordId.slice(2);
+      setRemoteActiveVerse(verse);
       setRemoteWord(null);
+      verseKey = verse;
     } else {
       setRemoteWord(wordId);
       setRemoteActiveVerse(null);
+      // Extract verse key: "3:7-5" → "3:7"
+      const lastDash = wordId.lastIndexOf('-');
+      if (lastDash > 0) verseKey = wordId.slice(0, lastDash);
+    }
+    if (verseKey) {
+      const el = document.querySelector(`[data-verse="${verseKey}"]`);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   }, []);
 

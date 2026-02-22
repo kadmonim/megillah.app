@@ -403,6 +403,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
   const [draftMinutes, setDraftMinutes] = useState(DEFAULT_READING_MINUTES);
   const [showTimeEdit, setShowTimeEdit] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [showTrackingMenu, setShowTrackingMenu] = useState(false);
   const [lang, setLang] = useState<Lang>('he');
   const [showTranslation, setShowTranslation] = useState(false);
   const [loadedTranslations, setLoadedTranslations] = useState<TranslationMap | null>(null);
@@ -899,16 +900,25 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           />
         </div>
         <div class="toolbar-right">
+          {session?.role === 'admin' && (
+            <button
+              class={`toolbar-icon-btn${trackingMode !== 'off' ? ' tracking-active' : ''}`}
+              onClick={() => { setShowTrackingMenu(!showTrackingMenu); setShowTimeEdit(false); setMenuOpen(false); }}
+              title="Tracking mode"
+            >
+              <span class="material-icons">highlight</span>
+            </button>
+          )}
           <button
             class="toolbar-icon-btn"
-            onClick={() => { setShowTimeEdit(!showTimeEdit); setMenuOpen(false); }}
+            onClick={() => { setShowTimeEdit(!showTimeEdit); setMenuOpen(false); setShowTrackingMenu(false); }}
             title={t.changeReadingTime}
           >
             <span class="material-icons">timer</span>
           </button>
           <button
             class="toolbar-icon-btn"
-            onClick={() => { setMenuOpen(!menuOpen); setShowTimeEdit(false); }}
+            onClick={() => { setMenuOpen(!menuOpen); setShowTimeEdit(false); setShowTrackingMenu(false); }}
             title="Settings"
           >
             <span class="material-icons">{menuOpen ? 'close' : 'menu'}</span>
@@ -944,6 +954,32 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
             }}
           >
             {t.save}
+          </button>
+        </div>
+      )}
+      {/* Tracking mode popover */}
+      {showTrackingMenu && (
+        <div class="tracking-popover" dir={lang === 'he' ? 'rtl' : 'ltr'}>
+          <button
+            class={`tracking-option${trackingMode === 'off' ? ' active' : ''}`}
+            onClick={() => { setTrackingMode('off'); setActiveVerse(null); setActiveWord(null); setShowTrackingMenu(false); }}
+          >
+            <span class="material-icons">swipe_vertical</span>
+            Follow scrolling only
+          </button>
+          <button
+            class={`tracking-option${trackingMode === 'verse' ? ' active' : ''}`}
+            onClick={() => { setTrackingMode('verse'); setActiveWord(null); setShowTrackingMenu(false); }}
+          >
+            <span class="material-icons">view_headline</span>
+            Highlight pesukim
+          </button>
+          <button
+            class={`tracking-option${trackingMode === 'word' ? ' active' : ''}`}
+            onClick={() => { setTrackingMode('word'); setActiveVerse(null); setShowTrackingMenu(false); }}
+          >
+            <span class="material-icons">touch_app</span>
+            Highlight words
           </button>
         </div>
       )}
@@ -1123,33 +1159,6 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           </div>
         </div>
       </div>
-
-      {/* Tracking mode toggle — admin only, session only */}
-      {session?.role === 'admin' && (
-        <div class="tracking-toggle">
-          <button
-            class={`tracking-btn${trackingMode === 'off' ? ' active' : ''}`}
-            onClick={() => { setTrackingMode('off'); setActiveVerse(null); }}
-            title="Scroll mode (tracking off)"
-          >
-            <span class="material-icons">swipe</span>
-          </button>
-          <button
-            class={`tracking-btn${trackingMode === 'verse' ? ' active' : ''}`}
-            onClick={() => { setTrackingMode('verse'); setActiveWord(null); }}
-            title="Verse tracking"
-          >
-            <span class="material-icons">segment</span>
-          </button>
-          <button
-            class={`tracking-btn${trackingMode === 'word' ? ' active' : ''}`}
-            onClick={() => { setTrackingMode('word'); setActiveVerse(null); }}
-            title="Word tracking"
-          >
-            <span class="material-icons">text_select_move_forward_word</span>
-          </button>
-        </div>
-      )}
 
       {(soundActive || muted) && (
         <button
@@ -1749,43 +1758,47 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           transition: background 0.3s ease;
         }
 
-        .tracking-toggle {
-          position: fixed;
-          bottom: 24px;
-          inset-inline-start: 24px;
-          display: flex;
-          gap: 2px;
-          background: var(--color-white);
-          border-radius: 24px;
-          padding: 4px;
-          box-shadow: 0 3px 12px rgba(102, 10, 35, 0.2);
-          z-index: 100;
+        .toolbar-icon-btn.tracking-active {
+          color: var(--color-burgundy);
         }
 
-        .tracking-btn {
+        .tracking-popover {
+          background: var(--color-white);
+          border-radius: 10px;
+          padding: 8px;
+          margin-bottom: 10px;
+          box-shadow: 0 2px 12px rgba(102, 10, 35, 0.12);
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+
+        .tracking-option {
           display: flex;
           align-items: center;
-          justify-content: center;
-          width: 40px;
-          height: 40px;
+          gap: 10px;
+          padding: 10px 14px;
           border: none;
-          border-radius: 50%;
+          border-radius: 8px;
           background: transparent;
-          color: var(--color-text-light);
+          color: var(--color-text);
+          font-size: 0.85rem;
+          font-weight: 500;
           cursor: pointer;
           transition: background 0.2s, color 0.2s;
+          text-align: start;
         }
 
-        .tracking-btn:hover {
+        .tracking-option:hover {
           background: var(--color-cream-dark);
         }
 
-        .tracking-btn.active {
+        .tracking-option.active {
           background: var(--color-burgundy);
           color: var(--color-white);
         }
 
-        .tracking-btn .material-icons {
+        .tracking-option .material-icons {
           font-size: 20px;
         }
 
