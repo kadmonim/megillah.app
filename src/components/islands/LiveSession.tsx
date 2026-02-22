@@ -160,6 +160,7 @@ function generateCode(): string {
 export default function LiveSession() {
   const lastVerse = useRef<string | null>(null);
   const [remoteMinutes, setRemoteMinutes] = useState<number | null>(null);
+  const [remoteWord, setRemoteWord] = useState<string | null>(null);
   const [pendingSession, setPendingSession] = useState<{ code: string; password: string } | null>(null);
   const [createLoading, setCreateLoading] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
@@ -176,8 +177,12 @@ export default function LiveSession() {
     setRemoteMinutes(minutes);
   }, []);
 
+  const handleRemoteWord = useCallback((wordId: string) => {
+    setRemoteWord(wordId);
+  }, []);
+
   const { session, loading, error, joinSession } =
-    useSession(handleRemoteScroll, handleRemoteTime);
+    useSession(handleRemoteScroll, handleRemoteTime, undefined, handleRemoteWord);
 
   const [lang, setLang] = useState<Lang>('en');
   useEffect(() => { setLang(detectLang()); }, []);
@@ -228,7 +233,7 @@ export default function LiveSession() {
 
   return (
     <div class="live-session">
-      <MegillahReader standalone={true} session={session} remoteMinutes={remoteMinutes} />
+      <MegillahReader standalone={true} session={session} remoteMinutes={remoteMinutes} activeWord={remoteWord} />
     </div>
   );
 }

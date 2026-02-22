@@ -19,6 +19,8 @@ export interface Session {
   broadcast: (pos: ScrollPosition) => void;
   /** Call to broadcast reading time change (admin only) */
   broadcastTime: (minutes: number) => void;
+  /** Call to broadcast a word highlight (admin only) */
+  broadcastWord: (wordId: string) => void;
   /** Call to leave/end the session */
   leave: () => void;
 }
@@ -57,6 +59,7 @@ export function useSession(
   onRemoteScroll?: (pos: ScrollPosition) => void,
   onRemoteTime?: (minutes: number) => void,
   initialCode?: string,
+  onRemoteWord?: (wordId: string) => void,
 ): UseSessionReturn {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(!!initialCode || !!loadFromStorage());
@@ -95,6 +98,12 @@ export function useSession(
         }
       });
 
+      channel.on('broadcast', { event: 'word-highlight' }, (payload) => {
+        if (role === 'follower' && onRemoteWord) {
+          onRemoteWord(payload.payload.word);
+        }
+      });
+
       channel.subscribe();
       channelRef.current = channel;
 
@@ -119,14 +128,23 @@ export function useSession(
         });
       };
 
+      const broadcastWord = (wordId: string) => {
+        if (role !== 'admin') return;
+        channel.send({
+          type: 'broadcast',
+          event: 'word-highlight',
+          payload: { word: wordId },
+        });
+      };
+
       const leave = () => {
         clearStorage();
         cleanup();
       };
 
-      setSession({ code, role, broadcast, broadcastTime, leave });
+      setSession({ code, role, broadcast, broadcastTime, broadcastWord, leave });
     },
-    [cleanup, onRemoteScroll, onRemoteTime],
+    [cleanup, onRemoteScroll, onRemoteTime, onRemoteWord],
   );
 
   const createSession = useCallback(
