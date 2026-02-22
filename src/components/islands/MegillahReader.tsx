@@ -63,7 +63,7 @@ const translations = {
     headerTitle: 'מגילת אסתר',
     headerSub: 'הטקסט המלא עם ניקוד וטעמי מקרא',
     language: 'שפה',
-    shakeToPlay: 'נער להשמעת רעשן',
+
     displayIllustrations: 'הצג איורים',
   },
   en: {
@@ -83,7 +83,7 @@ const translations = {
     headerTitle: 'The Megillah App',
     headerSub: <a href="https://www.chabad.org/purim" target="_blank" rel="noopener noreferrer" class="header-link">Learn more about Purim</a>,
     language: 'Language',
-    shakeToPlay: 'Shake phone to boo Haman',
+
     displayIllustrations: 'Display illustrations',
   },
   es: {
@@ -103,7 +103,6 @@ const translations = {
     headerTitle: 'La Meguilá',
     headerSub: 'Matraca incorporada y barra de progreso',
     language: 'Idioma',
-    shakeToPlay: 'Agitar para sonar matraca',
     displayIllustrations: 'Mostrar ilustraciones',
   },
   ru: {
@@ -123,7 +122,6 @@ const translations = {
     headerTitle: 'Мегилат Эстер',
     headerSub: 'Встроенная трещотка и индикатор прогресса',
     language: 'Язык',
-    shakeToPlay: 'Встряхните для трещотки',
     displayIllustrations: 'Показать иллюстрации',
   },
   fr: {
@@ -143,7 +141,6 @@ const translations = {
     headerTitle: 'La Méguila',
     headerSub: 'Crécelle intégrée et barre de progression',
     language: 'Langue',
-    shakeToPlay: 'Secouer pour la crécelle',
     displayIllustrations: 'Afficher les illustrations',
   },
   pt: {
@@ -163,7 +160,6 @@ const translations = {
     headerTitle: 'A Meguilá',
     headerSub: 'Matraca embutida e barra de progresso',
     language: 'Idioma',
-    shakeToPlay: 'Agitar para tocar matraca',
     displayIllustrations: 'Mostrar ilustrações',
   },
   it: {
@@ -183,7 +179,6 @@ const translations = {
     headerTitle: 'La Meghillà',
     headerSub: 'Raganella integrata e barra di avanzamento',
     language: 'Lingua',
-    shakeToPlay: 'Agita per la raganella',
     displayIllustrations: 'Mostra illustrazioni',
   },
 } as const;
@@ -757,85 +752,6 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
     };
   }, []);
 
-  // Shake detection for mobile devices
-  const [shakeEnabled, setShakeEnabled] = useState(false);
-  const needsMotionPermission = typeof DeviceMotionEvent !== 'undefined'
-    && typeof (DeviceMotionEvent as any).requestPermission === 'function';
-
-  const hasMotionSupport = typeof DeviceMotionEvent !== 'undefined';
-
-  useEffect(() => {
-    if (!shakeEnabled) return;
-
-    const SHAKE_THRESHOLD = 15;
-    const STOP_DELAY = 100;
-    let lastX = 0, lastY = 0, lastZ = 0;
-    let hasReading = false;
-    let stopTimer: ReturnType<typeof setTimeout> | null = null;
-    const shakeIdx = Math.floor(Math.random() * 22) + 1;
-    const shakeAudio = new Audio(`/sounds/gragger${shakeIdx}.mp3`);
-    shakeAudio.loop = true;
-    let isShaking = false;
-
-    const stopShakeSounds = () => {
-      shakeAudio.pause();
-      shakeAudio.currentTime = 0;
-      isShaking = false;
-    };
-
-    const startShakeGragger = () => {
-      if (mutedRef.current || isShaking) return;
-      isShaking = true;
-      shakeAudio.play().catch(() => {});
-      setSoundActive(true);
-      if (soundTimer.current) clearTimeout(soundTimer.current);
-    };
-
-    const handleMotion = (e: DeviceMotionEvent) => {
-      const acc = e.acceleration;
-      if (!acc || acc.x == null || acc.y == null || acc.z == null) return;
-
-      if (!hasReading) {
-        lastX = acc.x; lastY = acc.y; lastZ = acc.z;
-        hasReading = true;
-        return;
-      }
-
-      const dx = Math.abs(acc.x - lastX);
-      const dy = Math.abs(acc.y - lastY);
-      const dz = Math.abs(acc.z - lastZ);
-      lastX = acc.x; lastY = acc.y; lastZ = acc.z;
-
-      if ((dx + dy + dz) > SHAKE_THRESHOLD) {
-        // Reset stop timer — still shaking
-        if (stopTimer) clearTimeout(stopTimer);
-        stopTimer = setTimeout(() => {
-          stopShakeSounds();
-          soundTimer.current = setTimeout(() => setSoundActive(false), 1000);
-        }, STOP_DELAY);
-
-        if (!isShaking) {
-          startShakeGragger();
-        }
-      }
-    };
-
-    window.addEventListener('devicemotion', handleMotion);
-    return () => {
-      window.removeEventListener('devicemotion', handleMotion);
-      if (stopTimer) clearTimeout(stopTimer);
-      stopShakeSounds();
-    };
-  }, [shakeEnabled]);
-
-  // iOS: request permission and enable shake (must be called from user gesture)
-  const enableShakeIOS = useCallback(async () => {
-    try {
-      const result = await (DeviceMotionEvent as any).requestPermission();
-      if (result === 'granted') setShakeEnabled(true);
-    } catch {}
-  }, []);
-
   return (
     <div class="megillah-reader" dir={lang === 'he' ? 'rtl' : 'ltr'}>
       {standalone && (
@@ -1013,24 +929,6 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
             <span class="toggle-switch"></span>
             <span class="option-label">{t.chabadCustom}</span>
           </label>
-          {hasMotionSupport && (
-            <label class="option-toggle">
-              <input
-                type="checkbox"
-                checked={shakeEnabled}
-                onChange={() => {
-                  if (!shakeEnabled) {
-                    if (needsMotionPermission) enableShakeIOS();
-                    else setShakeEnabled(true);
-                  } else {
-                    setShakeEnabled(false);
-                  }
-                }}
-              />
-              <span class="toggle-switch"></span>
-              <span class="option-label">{t.shakeToPlay}</span>
-            </label>
-          )}
           <label class="option-toggle">
             <input
               type="checkbox"
