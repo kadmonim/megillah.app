@@ -266,13 +266,12 @@ function spawnSplats(el: HTMLElement) {
   }
 }
 
-function HamanWord({ text, onTap, wordId, isActive, isAdmin, onWordTap }: { text: string; onTap: () => void; wordId?: string; isActive?: boolean; isAdmin?: boolean; onWordTap?: (wordId: string) => void }) {
+function HamanWord({ text, onTap, wordId, isActive }: { text: string; onTap: () => void; wordId?: string; isActive?: boolean }) {
   const [shaking, setShaking] = useState(false);
   const ref = useRef<HTMLSpanElement>(null);
 
   const handleClick = () => {
     onTap();
-    if (wordId && isAdmin && onWordTap) onWordTap(wordId);
     setShaking(true);
     if (ref.current) spawnSplats(ref.current);
     setTimeout(() => setShaking(false), 400);
@@ -300,9 +299,7 @@ function wrapWords(
   text: string,
   verseKey: string,
   startIdx: number,
-  isAdmin: boolean,
   activeWord: string | null,
-  onWordTap?: (wordId: string) => void,
 ): { nodes: ComponentChildren[]; nextIdx: number } {
   const words = text.split(/(\s+)/);
   const nodes: ComponentChildren[] = [];
@@ -320,7 +317,6 @@ function wrapWords(
         key={wordId}
         class={`word${isActive ? ' word-active' : ''}`}
         data-word={wordId}
-        onClick={isAdmin && onWordTap ? () => onWordTap(wordId) : undefined}
       >
         {w}
       </span>
@@ -340,9 +336,7 @@ function renderVerse(
   t: Translations,
   lang: Lang,
   translationMap: TranslationMap | null,
-  isAdmin: boolean,
   activeWord: string | null,
-  onWordTap?: (wordId: string) => void,
 ) {
   const displayText = hideCantillation ? stripCantillation(text) : text;
   const parts = displayText.split(HAMAN_REGEX);
@@ -358,7 +352,7 @@ function renderVerse(
       <sup class="verse-num">{toHebrew(verseNum)}</sup>
       {parts.map((part, i) => {
         if (!HAMAN_REGEX.test(part)) {
-          const { nodes, nextIdx } = wrapWords(part, verseKey, wordIdx, isAdmin, activeWord, onWordTap);
+          const { nodes, nextIdx } = wrapWords(part, verseKey, wordIdx, activeWord);
           wordIdx = nextIdx;
           return <span key={`${chapterNum}-${verseNum}-${i}`}>{nodes}</span>;
         }
@@ -368,14 +362,14 @@ function renderVerse(
             const wId = `${verseKey}-${wordIdx}`;
             const isActive = activeWord === wId;
             wordIdx++;
-            return <span key={`${chapterNum}-${verseNum}-${i}`} class={`word${isActive ? ' word-active' : ''}`} data-word={wId} onClick={isAdmin && onWordTap ? () => onWordTap(wId) : undefined}>{part}</span>;
+            return <span key={`${chapterNum}-${verseNum}-${i}`} class={`word${isActive ? ' word-active' : ''}`} data-word={wId}>{part}</span>;
           }
         }
         const wId = `${verseKey}-${wordIdx}`;
         const isActive = activeWord === wId;
         wordIdx++;
         return (
-          <HamanWord key={`${chapterNum}-${verseNum}-${i}`} text={part} onTap={onHamanTap} wordId={wId} isActive={isActive} isAdmin={isAdmin} onWordTap={onWordTap} />
+          <HamanWord key={`${chapterNum}-${verseNum}-${i}`} text={part} onTap={onHamanTap} wordId={wId} isActive={isActive} />
         );
       })}
       {translation && <span class="verse-translation" dir={lang === 'he' ? 'rtl' : 'ltr'}>{
@@ -395,6 +389,8 @@ function renderVerse(
 }
 
 export default function MegillahReader({ standalone = false, showTitle = false, session, remoteMinutes, activeWord: remoteActiveWord, onWordTap }: { standalone?: boolean; showTitle?: boolean; session?: Session; remoteMinutes?: number | null; activeWord?: string | null; onWordTap?: (wordId: string) => void }) {
+  const dragging = useRef(false);
+  const lastBroadcastTime = useRef(0);
   const [showCantillation, setShowCantillation] = useState(false);
   const [chabadMode, setChabadMode] = useState(false);
   const [fontSize, setFontSize] = useState(1.35);
@@ -486,15 +482,98 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
     }
   }, [remoteActiveWord]);
 
-  const handleWordTap = useCallback((wordId: string) => {
-    if (session?.role !== 'admin') return;
+  const highlightWord = useCallback((wordId: string) => {
     setActiveWord(wordId);
-    session.broadcastWord(wordId);
-    onWordTap?.(wordId);
+    const now = Date.now();
+    if (now - lastBroadcastTime.current >= 80) {
+      lastBroadcastTime.current = now;
+      session?.broadcastWord(wordId);
+      onWordTap?.(wordId);
+    }
   }, [session, onWordTap]);
 
   const sessionRef = useRef(session);
   sessionRef.current = session;
+
+  // Touch/mouse drag handlers for word-by-word highlighting (admin only)
+  useEffect(() => {
+    const container = scrollTextRef.current;
+    if (!container || session?.role !== 'admin') return;
+
+    const getWordFromPoint = (x: number, y: number): string | null => {
+      const el = document.elementFromPoint(x, y);
+      if (!el) return null;
+      const wordEl = (el as HTMLElement).closest?.('[data-word]') as HTMLElement | null;
+      return wordEl?.dataset.word ?? null;
+    };
+
+    const onPointerStart = (x: number, y: number) => {
+      const wordId = getWordFromPoint(x, y);
+      if (!wordId) return false;
+      dragging.current = true;
+      setActiveWord(wordId);
+      lastBroadcastTime.current = Date.now();
+      session?.broadcastWord(wordId);
+      onWordTap?.(wordId);
+      return true;
+    };
+
+    const onPointerMove = (x: number, y: number) => {
+      if (!dragging.current) return;
+      const wordId = getWordFromPoint(x, y);
+      if (wordId) highlightWord(wordId);
+    };
+
+    const onPointerEnd = () => {
+      dragging.current = false;
+    };
+
+    // Touch events
+    const handleTouchStart = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      if (onPointerStart(touch.clientX, touch.clientY)) {
+        // Don't preventDefault here — let the browser decide on scrolling
+      }
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!dragging.current) return;
+      e.preventDefault(); // Block scrolling while dragging words
+      const touch = e.touches[0];
+      onPointerMove(touch.clientX, touch.clientY);
+    };
+
+    const handleTouchEnd = () => onPointerEnd();
+
+    // Mouse events
+    const handleMouseDown = (e: MouseEvent) => {
+      onPointerStart(e.clientX, e.clientY);
+    };
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!dragging.current) return;
+      e.preventDefault();
+      onPointerMove(e.clientX, e.clientY);
+    };
+
+    const handleMouseUp = () => onPointerEnd();
+
+    container.addEventListener('touchstart', handleTouchStart, { passive: true });
+    container.addEventListener('touchmove', handleTouchMove, { passive: false });
+    container.addEventListener('touchend', handleTouchEnd);
+    container.addEventListener('mousedown', handleMouseDown);
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+
+    return () => {
+      container.removeEventListener('touchstart', handleTouchStart);
+      container.removeEventListener('touchmove', handleTouchMove);
+      container.removeEventListener('touchend', handleTouchEnd);
+      container.removeEventListener('mousedown', handleMouseDown);
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [session?.role, highlightWord, session, onWordTap]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -922,7 +1001,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
                   ];
                 }
 
-                const verseResult = [renderVerse(v.text, ch.chapter, v.verse, playGragger, chabadMode, !showCantillation, t, lang, activeTranslations, session?.role === 'admin', activeWord, handleWordTap)];
+                const verseResult = [renderVerse(v.text, ch.chapter, v.verse, playGragger, chabadMode, !showCantillation, t, lang, activeTranslations, activeWord)];
                 const illustration = showIllustrations && ILLUSTRATIONS.find(ill => ill.after === verseKey);
                 if (illustration) {
                   verseResult.push(
@@ -1315,11 +1394,9 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
         }
 
         .megillah-reader .scroll-text.admin-session .word[data-word] {
-          cursor: pointer;
-        }
-
-        .megillah-reader .scroll-text.admin-session .word[data-word]:hover {
-          background: rgba(232, 190, 80, 0.15);
+          cursor: default;
+          -webkit-user-select: none;
+          user-select: none;
         }
 
         .haman-name {
