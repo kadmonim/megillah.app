@@ -247,6 +247,7 @@ export default function LiveSession() {
   const [remoteMinutes, setRemoteMinutes] = useState<number | null>(null);
   const [remoteWord, setRemoteWord] = useState<string | null>(null);
   const [remoteActiveVerse, setRemoteActiveVerse] = useState<string | null>(null);
+  const [remoteSettings, setRemoteSettings] = useState<Record<string, unknown>>({});
   const [pendingSession, setPendingSession] = useState<{ code: string; password: string } | null>(null);
   const [createLoading, setCreateLoading] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
@@ -290,8 +291,12 @@ export default function LiveSession() {
     }
   }, []);
 
+  const handleRemoteSetting = useCallback((key: string, value: unknown) => {
+    setRemoteSettings(prev => ({ ...prev, [key]: value }));
+  }, []);
+
   const { session, loading, error, joinSession } =
-    useSession(handleRemoteScroll, handleRemoteTime, undefined, handleRemoteWord);
+    useSession(handleRemoteScroll, handleRemoteTime, undefined, handleRemoteWord, handleRemoteSetting);
 
   const [lang, setLang] = useState<Lang>('en');
   useEffect(() => { setLang(detectLang()); }, []);
@@ -351,7 +356,7 @@ export default function LiveSession() {
 
   return (
     <div class="live-session">
-      <MegillahReader standalone={true} session={session} remoteMinutes={remoteMinutes} activeWord={remoteWord} activeVerse={remoteActiveVerse} />
+      <MegillahReader standalone={true} session={session} remoteMinutes={remoteMinutes} activeWord={remoteWord} activeVerse={remoteActiveVerse} remoteSettings={remoteSettings} />
     </div>
   );
 }

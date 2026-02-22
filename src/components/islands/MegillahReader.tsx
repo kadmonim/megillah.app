@@ -385,7 +385,7 @@ function renderVerse(
   return verseContent;
 }
 
-export default function MegillahReader({ standalone = false, showTitle = false, session, remoteMinutes, activeWord: remoteActiveWord, activeVerse: remoteActiveVerse, onWordTap }: { standalone?: boolean; showTitle?: boolean; session?: Session; remoteMinutes?: number | null; activeWord?: string | null; activeVerse?: string | null; onWordTap?: (wordId: string) => void }) {
+export default function MegillahReader({ standalone = false, showTitle = false, session, remoteMinutes, activeWord: remoteActiveWord, activeVerse: remoteActiveVerse, onWordTap, remoteSettings }: { standalone?: boolean; showTitle?: boolean; session?: Session; remoteMinutes?: number | null; activeWord?: string | null; activeVerse?: string | null; onWordTap?: (wordId: string) => void; remoteSettings?: Record<string, unknown> }) {
   const dragging = useRef(false);
   const lastBroadcastTime = useRef(0);
   const lastDragWord = useRef<string | null>(null);
@@ -476,6 +476,13 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
       setDraftMinutes(remoteMinutes);
     }
   }, [remoteMinutes]);
+
+  // Follower: apply settings from admin
+  useEffect(() => {
+    if (remoteSettings?.chabadMode !== undefined) {
+      setChabadMode(remoteSettings.chabadMode as boolean);
+    }
+  }, [remoteSettings?.chabadMode]);
 
   // Sync remote word/verse highlight from follower callback
   useEffect(() => {
@@ -927,7 +934,11 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
             <input
               type="checkbox"
               checked={chabadMode}
-              onChange={() => setChabadMode(!chabadMode)}
+              onChange={() => {
+                const next = !chabadMode;
+                setChabadMode(next);
+                if (session?.role === 'admin') session.broadcastSetting('chabadMode', next);
+              }}
             />
             <span class="toggle-switch"></span>
             <span class="option-label">{t.chabadCustom}</span>
