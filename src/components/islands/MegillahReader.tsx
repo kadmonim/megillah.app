@@ -20,6 +20,22 @@ const BNEI_HAMAN_SPLIT_VERSE = '9:6';
 const BNEI_HAMAN_SPLIT_RE = /(חֲמֵ[\u0591-\u05C7]*שׁ מֵא[\u0591-\u05C7]*וֹת אִ[\u0591-\u05C7]*י[\u0591-\u05C7]*שׁ׃)/;
 const DEFAULT_READING_MINUTES = 35;
 
+// Precomputed: verses where Haman's name appears
+const HAMAN_VERSES = new Set([
+  '3:1','3:2','3:4','3:5','3:6','3:7','3:8','3:10','3:11','3:12','3:15',
+  '4:7',
+  '5:4','5:5','5:8','5:9','5:10','5:11','5:12','5:14',
+  '6:4','6:5','6:6','6:7','6:10','6:11','6:12','6:13','6:14',
+  '7:1','7:6','7:7','7:8','7:9','7:10',
+  '8:1','8:2','8:3','8:5','8:7',
+  '9:10','9:12','9:13','9:14','9:24',
+]);
+
+// Precomputed: verses where Haman has a title (Chabad mode — only these get highlighted)
+const HAMAN_TITLED_VERSES = new Set([
+  '3:1','3:10','7:6','8:1','8:3','8:5','9:10','9:24',
+]);
+
 const ILLUSTRATIONS = [
   { after: '1:1', src: '/illustrations/1-1-4.webp', he: 'המשתה המלכותי', en: 'The Royal Feast' },
   { after: '1:10', src: '/illustrations/1-10-12.webp', he: 'ושתי מסרבת', en: 'Vashti Refuses' },
@@ -311,7 +327,15 @@ function renderVerse(
           <HamanWord key={`${chapterNum}-${verseNum}-${i}`} text={part} onTap={onHamanTap} />
         );
       })}
-      {translation && <span class="verse-translation" dir={lang === 'he' ? 'rtl' : 'ltr'}>{translation}</span>}
+      {translation && <span class="verse-translation" dir={lang === 'he' ? 'rtl' : 'ltr'}>{
+        (chabadMode ? HAMAN_TITLED_VERSES : HAMAN_VERSES).has(verseKey)
+          ? translation.split(/(Haman)/gi).map((seg, j) =>
+              /^haman$/i.test(seg)
+                ? <HamanWord key={`tr-${chapterNum}-${verseNum}-${j}`} text={seg} onTap={onHamanTap} />
+                : seg
+            )
+          : translation
+      }</span>}
       {' '}
     </span>
   );
