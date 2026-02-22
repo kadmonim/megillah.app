@@ -1,6 +1,7 @@
 import { useState, useCallback, useRef, useEffect } from 'preact/hooks';
 import { useSession } from '../../lib/useSession';
 import type { Session, ScrollPosition } from '../../lib/useSession';
+import { getSupabase } from '../../lib/supabase';
 import MegillahReader from './MegillahReader';
 
 type Lang = 'he' | 'en' | 'es' | 'ru' | 'fr' | 'pt' | 'it';
@@ -19,6 +20,11 @@ const lobbyText = {
     optional: 'אופציונלי...',
     joining: 'מצטרף...',
     back: 'חזרה',
+    shareTitle: 'שתפו עם העוקבים',
+    copyLink: 'העתק קישור',
+    copied: 'הועתק!',
+    startBroadcasting: 'התחל שידור',
+    scanQR: 'או סרקו קוד QR',
   },
   en: {
     title: 'Megillah Live',
@@ -33,6 +39,11 @@ const lobbyText = {
     optional: 'Optional...',
     joining: 'Joining...',
     back: 'Back',
+    shareTitle: 'Share with followers',
+    copyLink: 'Copy Link',
+    copied: 'Copied!',
+    startBroadcasting: 'Start Broadcasting',
+    scanQR: 'Or scan QR code',
   },
   es: {
     title: 'Meguilá en Vivo',
@@ -47,6 +58,11 @@ const lobbyText = {
     optional: 'Opcional...',
     joining: 'Uniéndose...',
     back: 'Volver',
+    shareTitle: 'Compartir con seguidores',
+    copyLink: 'Copiar enlace',
+    copied: '¡Copiado!',
+    startBroadcasting: 'Iniciar transmisión',
+    scanQR: 'O escanear código QR',
   },
   ru: {
     title: 'Мегила Лайв',
@@ -61,6 +77,11 @@ const lobbyText = {
     optional: 'Необязательно...',
     joining: 'Подключение...',
     back: 'Назад',
+    shareTitle: 'Поделиться с подписчиками',
+    copyLink: 'Копировать ссылку',
+    copied: 'Скопировано!',
+    startBroadcasting: 'Начать трансляцию',
+    scanQR: 'Или отсканируйте QR-код',
   },
   fr: {
     title: 'Méguila en Direct',
@@ -75,6 +96,11 @@ const lobbyText = {
     optional: 'Facultatif...',
     joining: 'Connexion...',
     back: 'Retour',
+    shareTitle: 'Partager avec les abonnés',
+    copyLink: 'Copier le lien',
+    copied: 'Copié !',
+    startBroadcasting: 'Commencer la diffusion',
+    scanQR: 'Ou scannez le code QR',
   },
   pt: {
     title: 'Meguilá ao Vivo',
@@ -89,6 +115,11 @@ const lobbyText = {
     optional: 'Opcional...',
     joining: 'Entrando...',
     back: 'Voltar',
+    shareTitle: 'Compartilhar com seguidores',
+    copyLink: 'Copiar link',
+    copied: 'Copiado!',
+    startBroadcasting: 'Iniciar transmissão',
+    scanQR: 'Ou escaneie o código QR',
   },
   it: {
     title: 'Meghillà dal Vivo',
@@ -103,6 +134,11 @@ const lobbyText = {
     optional: 'Facoltativo...',
     joining: 'Connessione...',
     back: 'Indietro',
+    shareTitle: 'Condividi con i follower',
+    copyLink: 'Copia link',
+    copied: 'Copiato!',
+    startBroadcasting: 'Inizia la trasmissione',
+    scanQR: 'Oppure scansiona il codice QR',
   },
 } as const;
 
@@ -117,10 +153,16 @@ function detectLang(): Lang {
   return 'en';
 }
 
-export default function LiveSession({ initialCode }: { initialCode?: string }) {
+function generateCode(): string {
+  return String(Math.floor(100000 + Math.random() * 900000));
+}
+
+export default function LiveSession() {
   const lastVerse = useRef<string | null>(null);
   const [remoteMinutes, setRemoteMinutes] = useState<number | null>(null);
-
+  const [pendingSession, setPendingSession] = useState<{ code: string; password: string } | null>(null);
+  const [createLoading, setCreateLoading] = useState(false);
+  const [createError, setCreateError] = useState<string | null>(null);
   const handleRemoteScroll = useCallback((pos: ScrollPosition) => {
     if (pos.verse === lastVerse.current) return;
     lastVerse.current = pos.verse;
@@ -134,18 +176,51 @@ export default function LiveSession({ initialCode }: { initialCode?: string }) {
     setRemoteMinutes(minutes);
   }, []);
 
-  const { session, loading, error, createSession, joinSession } =
+  const { session, loading, error, joinSession } =
     useSession(handleRemoteScroll, handleRemoteTime);
 
   const [lang, setLang] = useState<Lang>('en');
   useEffect(() => { setLang(detectLang()); }, []);
 
+  const handleCreate = useCallback(async (password: string) => {
+    setCreateLoading(true);
+    setCreateError(null);
+    try {
+      const sb = getSupabase();
+      const code = generateCode();
+      const { error: insertErr } = await sb
+        .from('sessions')
+        .insert({ code, password });
+      if (insertErr) throw insertErr;
+      setPendingSession({ code, password });
+    } catch (e: any) {
+      setCreateError(e.message || 'Failed to create session');
+    } finally {
+      setCreateLoading(false);
+    }
+  }, []);
+
+  const handleStartBroadcasting = useCallback(async () => {
+    if (!pendingSession) return;
+    await joinSession(pendingSession.code, pendingSession.password);
+    setPendingSession(null);
+  }, [pendingSession, joinSession]);
+
+  if (pendingSession && !session) {
+    return <ShareScreen
+      code={pendingSession.code}
+      lang={lang}
+      loading={loading}
+      onStart={handleStartBroadcasting}
+      onBack={() => setPendingSession(null)}
+    />;
+  }
+
   if (!session) {
     return <LobbyScreen
-      initialCode={initialCode}
-      loading={loading}
-      error={error}
-      onCreateSession={createSession}
+      loading={createLoading || loading}
+      error={createError || error}
+      onCreateSession={handleCreate}
       onJoinSession={joinSession}
       lang={lang}
     />;
@@ -158,26 +233,197 @@ export default function LiveSession({ initialCode }: { initialCode?: string }) {
   );
 }
 
+function ShareScreen({
+  code,
+  lang,
+  loading,
+  onStart,
+  onBack,
+}: {
+  code: string;
+  lang: Lang;
+  loading: boolean;
+  onStart: () => void;
+  onBack: () => void;
+}) {
+  const [copied, setCopied] = useState(false);
+  const t = lobbyText[lang];
+  const dir = lang === 'he' ? 'rtl' : 'ltr';
+  const shareUrl = `https://megillah.app/live/join?code=${code}`;
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(shareUrl)}`;
+
+  const handleCopy = useCallback(() => {
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  }, [shareUrl]);
+
+  return (
+    <div class="lobby" dir={dir}>
+      <div class="lobby-card">
+        <h1 class="lobby-title">{t.shareTitle}</h1>
+
+        <div class="share-code">{code}</div>
+
+        <div class="share-url-box">
+          <span class="share-url">{shareUrl}</span>
+          <button class="share-copy-btn" onClick={handleCopy}>
+            <span class="material-icons">{copied ? 'check' : 'content_copy'}</span>
+            {copied ? t.copied : t.copyLink}
+          </button>
+        </div>
+
+        <p class="share-qr-label">{t.scanQR}</p>
+        <img class="share-qr" src={qrUrl} alt="QR Code" width={200} height={200} />
+
+        <div class="share-actions">
+          <button class="lobby-btn create" onClick={onStart} disabled={loading}>
+            <span class="material-icons">cast</span>
+            {loading ? t.joining : t.startBroadcasting}
+          </button>
+          <button type="button" class="lobby-back" onClick={onBack}>
+            {t.back}
+          </button>
+        </div>
+      </div>
+
+      <style>{`
+        .share-code {
+          font-size: 2.2rem;
+          font-weight: 900;
+          letter-spacing: 0.15em;
+          color: var(--color-burgundy);
+          margin: 16px 0 20px;
+        }
+
+        .share-url-box {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          background: var(--color-cream, #f9f5f0);
+          border: 2px solid var(--color-cream-dark, #e8ddd0);
+          border-radius: 8px;
+          padding: 8px 12px;
+          margin-bottom: 20px;
+        }
+
+        .share-url {
+          flex: 1;
+          font-size: 0.8rem;
+          color: var(--color-text);
+          word-break: break-all;
+          text-align: start;
+        }
+
+        .share-copy-btn {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          background: var(--color-burgundy);
+          color: var(--color-white);
+          border: none;
+          border-radius: 6px;
+          padding: 6px 10px;
+          font-size: 0.75rem;
+          font-weight: 600;
+          cursor: pointer;
+          white-space: nowrap;
+          transition: background 0.2s;
+        }
+
+        .share-copy-btn .material-icons {
+          font-size: 16px;
+        }
+
+        .share-copy-btn:hover {
+          background: var(--color-burgundy-light);
+        }
+
+        .share-qr-label {
+          font-size: 0.85rem;
+          color: var(--color-text-light);
+          margin-bottom: 12px;
+        }
+
+        .share-qr {
+          display: block;
+          margin: 0 auto 24px;
+          border-radius: 8px;
+        }
+
+        .share-actions {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .share-actions .lobby-btn {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          padding: 14px 20px;
+          border-radius: 10px;
+          font-size: 1rem;
+          font-weight: 600;
+          border: none;
+          cursor: pointer;
+          transition: background 0.2s, transform 0.1s;
+          width: 100%;
+        }
+
+        .share-actions .lobby-btn:active {
+          transform: scale(0.97);
+        }
+
+        .share-actions .lobby-btn:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+
+        .share-actions .lobby-btn.create {
+          background: var(--color-burgundy);
+          color: var(--color-white);
+        }
+
+        .share-actions .lobby-btn.create:hover:not(:disabled) {
+          background: var(--color-burgundy-light);
+        }
+
+        .share-actions .lobby-back {
+          background: none;
+          border: none;
+          color: var(--color-text-light);
+          font-size: 0.85rem;
+          cursor: pointer;
+          padding: 4px;
+        }
+
+        .share-actions .lobby-back:hover {
+          color: var(--color-burgundy);
+        }
+      `}</style>
+    </div>
+  );
+}
+
 function LobbyScreen({
-  initialCode,
   loading,
   error,
   onCreateSession,
   onJoinSession,
   lang,
 }: {
-  initialCode?: string;
   loading: boolean;
   error: string | null;
   onCreateSession: (password: string) => Promise<void>;
   onJoinSession: (code: string, password?: string) => Promise<void>;
   lang: Lang;
 }) {
-  const [mode, setMode] = useState<'choose' | 'create' | 'join'>(
-    initialCode ? 'join' : 'choose',
-  );
+  const [mode, setMode] = useState<'choose' | 'create' | 'join'>('choose');
   const [password, setPassword] = useState('');
-  const [code, setCode] = useState(initialCode || '');
+  const [code, setCode] = useState('');
   const t = lobbyText[lang];
   const dir = lang === 'he' ? 'rtl' : 'ltr';
 
@@ -255,7 +501,7 @@ function LobbyScreen({
                 placeholder="123456"
                 onInput={(e) => setCode((e.target as HTMLInputElement).value)}
                 required
-                autoFocus={!initialCode}
+                autoFocus
               />
             </label>
             <label class="lobby-label">

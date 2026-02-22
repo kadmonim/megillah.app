@@ -56,9 +56,10 @@ function loadFromStorage(): { code: string; password: string } | null {
 export function useSession(
   onRemoteScroll?: (pos: ScrollPosition) => void,
   onRemoteTime?: (minutes: number) => void,
+  initialCode?: string,
 ): UseSessionReturn {
   const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(!!initialCode || !!loadFromStorage());
   const [error, setError] = useState<string | null>(null);
   const channelRef = useRef<RealtimeChannel | null>(null);
   const lastBroadcast = useRef(0);
@@ -175,11 +176,16 @@ export function useSession(
     [subscribe],
   );
 
-  // Auto-rejoin on mount if session was saved
+  // Auto-rejoin on mount: initialCode (from URL) takes priority over sessionStorage
   useEffect(() => {
-    const saved = loadFromStorage();
-    if (saved) {
-      joinSession(saved.code, saved.password || undefined);
+    if (initialCode) {
+      clearStorage();
+      joinSession(initialCode);
+    } else {
+      const saved = loadFromStorage();
+      if (saved) {
+        joinSession(saved.code, saved.password || undefined);
+      }
     }
   }, []);
 
