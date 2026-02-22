@@ -17,7 +17,8 @@ export interface SessionSettings {
   readingMinutes?: number;
   chabadMode?: boolean;
   lang?: string;
-  showTranslation?: boolean;
+  showTranslation?: boolean; // legacy, mapped to translationMode
+  translationMode?: 'hebrew' | 'both' | 'translation';
   customSubtitle?: { text: string; url: string };
 }
 

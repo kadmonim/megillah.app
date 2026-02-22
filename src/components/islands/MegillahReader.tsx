@@ -49,7 +49,11 @@ const translations = {
   he: {
     showCantillation: 'הצג טעמים',
     chabadCustom: 'הדגש המן לפי מנהג חב״ד',
-    showTranslation: 'הצג תרגום',
+    showTranslation: 'הגדרות',
+    hebrewOnly: 'מקור בלבד',
+    langName: 'ביאור',
+    hebrewName: 'מקור',
+    only: 'בלבד',
     fontSize: 'גודל גופן',
     minLeft: 'דק׳ נותרו',
     readingTime: 'זמן קריאה (דקות):',
@@ -76,7 +80,11 @@ const translations = {
   en: {
     showCantillation: 'Show cantillation signs',
     chabadCustom: 'Highlight fewer Hamans',
-    showTranslation: 'Display translation',
+    showTranslation: 'Translation',
+    hebrewOnly: 'Hebrew Only',
+    langName: 'English',
+    hebrewName: 'Hebrew',
+    only: 'Only',
     fontSize: 'Font size',
     minLeft: 'min left',
     readingTime: 'Reading time (min):',
@@ -103,7 +111,11 @@ const translations = {
   es: {
     showCantillation: 'Mostrar signos de cantilación',
     chabadCustom: 'Resaltar menos Hamanes',
-    showTranslation: 'Mostrar traducción',
+    showTranslation: 'Traducción',
+    hebrewOnly: 'Solo hebreo',
+    langName: 'Español',
+    hebrewName: 'Hebreo',
+    only: 'Solo',
     fontSize: 'Tamaño de fuente',
     minLeft: 'min restantes',
     readingTime: 'Tiempo de lectura (min):',
@@ -130,7 +142,11 @@ const translations = {
   ru: {
     showCantillation: 'Показать знаки кантилляции',
     chabadCustom: 'Выделять меньше Аманов',
-    showTranslation: 'Показать перевод',
+    showTranslation: 'Перевод',
+    hebrewOnly: 'Только иврит',
+    langName: 'Русский',
+    hebrewName: 'Иврит',
+    only: 'Только',
     fontSize: 'Размер шрифта',
     minLeft: 'мин осталось',
     readingTime: 'Время чтения (мин):',
@@ -157,7 +173,11 @@ const translations = {
   fr: {
     showCantillation: 'Afficher les signes de cantillation',
     chabadCustom: 'Surligner moins de Hamans',
-    showTranslation: 'Afficher la traduction',
+    showTranslation: 'Traduction',
+    hebrewOnly: 'Hébreu seul',
+    langName: 'Français',
+    hebrewName: 'Hébreu',
+    only: 'Seul',
     fontSize: 'Taille de police',
     minLeft: 'min restantes',
     readingTime: 'Temps de lecture (min) :',
@@ -184,7 +204,11 @@ const translations = {
   pt: {
     showCantillation: 'Mostrar sinais de cantilação',
     chabadCustom: 'Destacar menos Hamãs',
-    showTranslation: 'Mostrar tradução',
+    showTranslation: 'Tradução',
+    hebrewOnly: 'Só hebraico',
+    langName: 'Português',
+    hebrewName: 'Hebraico',
+    only: 'Só',
     fontSize: 'Tamanho da fonte',
     minLeft: 'min restantes',
     readingTime: 'Tempo de leitura (min):',
@@ -211,7 +235,11 @@ const translations = {
   it: {
     showCantillation: 'Mostra segni di cantillazione',
     chabadCustom: 'Evidenzia meno Haman',
-    showTranslation: 'Mostra traduzione',
+    showTranslation: 'Traduzione',
+    hebrewOnly: 'Solo ebraico',
+    langName: 'Italiano',
+    hebrewName: 'Ebraico',
+    only: 'Solo',
     fontSize: 'Dimensione carattere',
     minLeft: 'min rimasti',
     readingTime: 'Tempo di lettura (min):',
@@ -382,6 +410,7 @@ function renderVerse(
   onHamanTap: () => void,
   chabadMode: boolean,
   hideCantillation: boolean,
+  translationMode: 'hebrew' | 'both' | 'translation',
   t: Translations,
   lang: Lang,
   translationMap: TranslationMap | null,
@@ -397,11 +426,14 @@ function renderVerse(
 
   let wordIdx = 0;
 
+  const showHebrew = translationMode !== 'translation';
+  const showTrans = translationMode !== 'hebrew' && !!translation;
+
   const verseContent = (
     <span class={`verse${isLoud ? ' loud-verse' : ''}${isVerseActive ? ' verse-active' : ''}`} data-verse={verseKey}>
       {isLoud && <span class="loud-label" dir={lang === 'he' ? 'rtl' : 'ltr'}>{t.loudLabel}</span>}
       <sup class="verse-num">{toHebrew(verseNum)}</sup>
-      {parts.map((part, i) => {
+      {showHebrew && parts.map((part, i) => {
         if (!HAMAN_REGEX.test(part)) {
           const { nodes, nextIdx } = wrapWords(part, verseKey, wordIdx, activeWord);
           wordIdx = nextIdx;
@@ -423,7 +455,7 @@ function renderVerse(
           <HamanWord key={`${chapterNum}-${verseNum}-${i}`} text={part} onTap={onHamanTap} wordId={wId} isActive={isActive} />
         );
       })}
-      {translation && <span class="verse-translation" dir={lang === 'he' ? 'rtl' : 'ltr'}>{
+      {showTrans && <span class="verse-translation" dir={lang === 'he' ? 'rtl' : 'ltr'}>{
         (chabadMode ? HAMAN_TITLED_VERSES : HAMAN_VERSES).has(verseKey)
           ? translation.split(/(Haman)/gi).map((seg, j) =>
               /^haman$/i.test(seg)
@@ -454,7 +486,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
   const [menuOpen, setMenuOpen] = useState(false);
   const [showTrackingMenu, setShowTrackingMenu] = useState(false);
   const [lang, setLang] = useState<Lang>('he');
-  const [showTranslation, setShowTranslation] = useState(false);
+  const [translationMode, setTranslationMode] = useState<'hebrew' | 'both' | 'translation'>('hebrew');
   const [loadedTranslations, setLoadedTranslations] = useState<TranslationMap | null>(null);
   const translationCache = useRef<Record<string, TranslationMap>>({});
   const deviceLang = useRef<Lang>('he');
@@ -475,9 +507,10 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
 
   const t = translations[lang];
 
-  // The translation language to use when showTranslation is on
+  // The translation language to use when translation is shown
   // Hebrew users get Steinsaltz commentary; others get their language's translation
   const translationKey: Lang = lang;
+  const showTranslation = translationMode !== 'hebrew';
 
   // Resolve the active translation map
   const activeTranslations: TranslationMap | null =
@@ -541,8 +574,10 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
     if (s.lang) {
       setLang(s.lang as Lang);
     }
-    if (s.showTranslation !== undefined) {
-      setShowTranslation(s.showTranslation);
+    if (s.translationMode) {
+      setTranslationMode(s.translationMode);
+    } else if (s.showTranslation) {
+      setTranslationMode('both');
     }
     if (s.customSubtitle) {
       setCustomSubtitle(s.customSubtitle);
@@ -563,6 +598,12 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
       setChabadMode(remoteSettings.chabadMode as boolean);
     }
   }, [remoteSettings?.chabadMode]);
+
+  useEffect(() => {
+    if (remoteSettings?.translationMode !== undefined) {
+      setTranslationMode(remoteSettings.translationMode as 'hebrew' | 'both' | 'translation');
+    }
+  }, [remoteSettings?.translationMode]);
 
   useEffect(() => {
     if (remoteSettings?.customSubtitle !== undefined) {
@@ -1047,19 +1088,23 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
       {/* Settings menu */}
       {menuOpen && (
         <div class="settings-menu" dir={lang === 'he' ? 'rtl' : 'ltr'}>
-          <label class="option-toggle">
-            <input
-              type="checkbox"
-              checked={showTranslation}
-              onChange={() => {
-                const next = !showTranslation;
-                setShowTranslation(next);
-                if (session?.role === 'admin') session.broadcastSetting('showTranslation', next);
-              }}
-            />
-            <span class="toggle-switch"></span>
+          <div class="translation-mode-control">
             <span class="option-label">{t.showTranslation}</span>
-          </label>
+            <div class="segmented-control">
+              {(['hebrew', 'both', 'translation'] as const).map((mode) => (
+                <button
+                  key={mode}
+                  class={`segmented-btn${translationMode === mode ? ' active' : ''}`}
+                  onClick={() => {
+                    setTranslationMode(mode);
+                    if (session?.role === 'admin') session.broadcastSetting('translationMode', mode);
+                  }}
+                >
+                  {mode === 'hebrew' ? t.hebrewOnly : mode === 'both' ? (lang === 'he' ? `${t.hebrewName} ו${t.langName}` : `${t.hebrewName} & ${t.langName}`) : `${t.langName} ${t.only}`}
+                </button>
+              ))}
+            </div>
+          </div>
           <label class="option-toggle">
             <input
               type="checkbox"
@@ -1137,7 +1182,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
         {megillahText.map((ch) => (
           <div key={ch.chapter} class="chapter-block">
             <h2 class="chapter-heading">{t.chapter} {lang === 'he' ? toHebrew(ch.chapter) : ch.chapter}</h2>
-            <div class={`verses-container${showTranslation ? ' with-translation' : ''}`} style={{ fontSize: `${fontSize}rem` }}>
+            <div class={`verses-container${translationMode !== 'hebrew' ? ' with-translation' : ''}${translationMode === 'translation' ? ' translation-only' : ''}`} style={{ fontSize: `${fontSize}rem` }}>
               {ch.verses.flatMap((v) => {
                 const verseKey = `${ch.chapter}:${v.verse}`;
 
@@ -1181,7 +1226,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
                   ];
                 }
 
-                const verseResult = [renderVerse(v.text, ch.chapter, v.verse, playGragger, chabadMode, !showCantillation, t, lang, activeTranslations, activeWord, activeVerse)];
+                const verseResult = [renderVerse(v.text, ch.chapter, v.verse, playGragger, chabadMode, !showCantillation, translationMode, t, lang, activeTranslations, activeWord, activeVerse)];
                 const illustration = showIllustrations && ILLUSTRATIONS.find(ill => ill.after === verseKey);
                 if (illustration) {
                   verseResult.push(
@@ -1494,6 +1539,52 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           font-size: 0.9rem;
           font-weight: 500;
           color: var(--color-text);
+        }
+
+        .translation-mode-control {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          margin-bottom: 4px;
+        }
+
+        .segmented-control {
+          display: flex;
+          background: var(--color-cream-dark);
+          border-radius: 8px;
+          padding: 2px;
+          gap: 2px;
+        }
+
+        .segmented-btn {
+          flex: 1;
+          padding: 5px 8px;
+          border: none;
+          border-radius: 6px;
+          background: transparent;
+          font-size: 0.8rem;
+          font-weight: 500;
+          color: var(--color-text-light);
+          cursor: pointer;
+          transition: background 0.2s, color 0.2s;
+        }
+
+        .segmented-btn.active {
+          background: var(--color-burgundy);
+          color: var(--color-white);
+        }
+
+        .verses-container.translation-only {
+          direction: ltr;
+          text-align: start;
+          font-family: Arial, 'Heebo', sans-serif;
+          font-weight: 400;
+          line-height: 1.8;
+        }
+
+        .translation-only .verse-translation {
+          display: inline;
+          margin: 0;
         }
 
         .size-icon {
