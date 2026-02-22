@@ -1,0 +1,598 @@
+---
+import '../styles/global.css';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#660a23" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    <title>Updates — The Megillah App</title>
+  </head>
+  <body>
+    <main class="container">
+      <div class="updates-page">
+        <div class="updates-header">
+          <a href="/" class="back-link">&larr; Back to Megillah</a>
+          <div class="lang-toggle">
+            <button class="lang-btn active" data-lang="en">English</button>
+            <button class="lang-btn" data-lang="he">עברית</button>
+          </div>
+        </div>
+
+        <h1 class="updates-title" data-en="What's New" data-he="מה חדש">What's New</h1>
+        <p class="updates-date" data-en="5 Adar 5786" data-he="ה׳ אדר תשפ״ו">5 Adar 5786</p>
+
+        <!-- English content -->
+        <div class="updates-content" id="content-en">
+
+          <section class="update-section">
+            <h2>Live Session Broadcasting</h2>
+            <p>Readers can now create a <strong>live session</strong> and share a 6-digit code with their audience. Followers join with the code and see the reader's scroll position, highlighted verses, and word-by-word tracking in real time.</p>
+            <p>Several settings are controlled by the broadcaster and automatically apply to all followers:</p>
+            <ul>
+              <li><strong>Reading time</strong> — only the broadcaster can set the countdown timer. Followers see it but can't change it.</li>
+              <li><strong>Language</strong> — the default language that loads for followers is set by the broadcaster.</li>
+              <li><strong>Haman highlighting mode</strong> — whether all Hamans or only titled ones are highlighted is controlled by the broadcaster.</li>
+              <li><strong>Translation mode</strong> — the broadcaster's choice of Hebrew only / side-by-side / translation only applies to followers.</li>
+              <li><strong>Custom subtitle and announcement</strong> — any custom header text or announcement area content set by the broadcaster is shown to all followers.</li>
+            </ul>
+            <div class="how-to">
+              <h3>How to use</h3>
+              <ol>
+                <li>Go to <a href="/live">/live</a> and create a session — all you need is a password.</li>
+                <li>Once broadcasting, configure your settings (language, reading time, Haman mode, etc.). All settings are saved and will be there when you come back later.</li>
+                <li>Share the 6-digit code (or QR link) with your audience.</li>
+                <li>Followers open <a href="/live">/live</a> and enter the code to follow along.</li>
+              </ol>
+              <p style="margin-top:10px">Sessions don't expire — you can set up a session once and reuse it for all your readings (night and day, year after year). Your settings will be saved. You only need multiple sessions if you have several readings happening at the same time.</p>
+              <p style="margin-top:10px"><strong>About your password:</strong> Choose something simple and easy to remember, like "purim" or "megillah". There is no "forgot password" feature — we don't collect emails or any personal information, so there's no way to recover a lost password. The password is only used to identify you as the session admin. Don't reuse a password you use for email, banking, or other accounts — passwords are stored as plain text and are not encrypted.</p>
+            </div>
+          </section>
+
+          <section class="update-section">
+            <h2>Tracking Modes</h2>
+            <p>Broadcasters can choose how much detail to share with followers:</p>
+            <ul>
+              <li><strong>Scroll only</strong> — followers see your scroll position.</li>
+              <li><strong>Verse highlighting</strong> (recommended) — verses you tap are highlighted for viewers.</li>
+              <li><strong>Word highlighting</strong> — individual words you tap or drag over are highlighted.</li>
+            </ul>
+            <p><em>Note: Verse highlighting is the most accurate mode — when you tap a verse, the system knows exactly which verse to scroll to for your followers. Word highlighting depends on touch precision, which can be less reliable on mobile devices.</em></p>
+            <div class="mockup">
+              <div class="mockup-label">Tracking mode selector</div>
+              <div class="mock-tracking">
+                <button class="mock-track-opt"><span class="material-icons">swipe_vertical</span> Scrolling only</button>
+                <button class="mock-track-opt active"><span class="material-icons">view_headline</span> Verse highlighting (recommended)</button>
+                <button class="mock-track-opt"><span class="material-icons">touch_app</span> Word highlighting</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="update-section">
+            <h2>Translation Display Modes</h2>
+            <p>Three ways to view translations:</p>
+            <ul>
+              <li><strong>Hebrew Only</strong> — the original text without translation.</li>
+              <li><strong>Side-by-Side</strong> — Hebrew and translation displayed in two columns (non-Hebrew languages).</li>
+              <li><strong>Translation Only</strong> — hides the Hebrew and shows only the translation.</li>
+            </ul>
+            <div class="mockup">
+              <div class="mockup-label">Translation mode selector</div>
+              <div class="mock-segmented">
+                <button class="mock-seg-btn">Hebrew Only</button>
+                <button class="mock-seg-btn active">English &amp; Hebrew</button>
+                <button class="mock-seg-btn">English Only</button>
+              </div>
+            </div>
+            <div class="how-to">
+              <h3>How to use</h3>
+              <p>Open the settings menu and find the translation selector. Choose your preferred mode from the three options.</p>
+            </div>
+          </section>
+
+          <section class="update-section">
+            <h2>Editable Header Subtitle</h2>
+            <p>Session broadcasters can customize the subtitle shown at the top of the page. Add custom text and an optional link — perfect for synagogue names, sponsor messages, or event info.</p>
+            <div class="mockup">
+              <div class="mockup-label">Header with edit button</div>
+              <div class="mock-header">
+                <div class="mock-header-title">The Megillah App</div>
+                <div class="mock-header-sub">Learn more about Purim <span class="material-icons mock-edit-icon">edit</span></div>
+              </div>
+            </div>
+            <div class="how-to">
+              <h3>How to use</h3>
+              <p>While broadcasting, click the <span class="material-icons" style="font-size:14px;vertical-align:middle">edit</span> pencil icon next to the subtitle. Enter your text and optional URL, then save. Followers will see your custom subtitle in real time.</p>
+            </div>
+          </section>
+
+          <section class="update-section">
+            <h2>Editable Announcement Area</h2>
+            <p>Broadcasters can replace the default "click Haman's name" hint with a custom announcement using a rich text editor. Add formatted text, links, lists, and more.</p>
+            <div class="mockup">
+              <div class="mockup-label">Announcement area with edit button</div>
+              <div class="mock-hint-area">
+                <span class="material-icons" style="color:#E8962E;font-size:20px">touch_app</span>
+                <span style="color:#E8962E;font-weight:500">Don't have a gragger? Just click Haman's name!</span>
+                <span class="material-icons mock-hint-edit">edit</span>
+              </div>
+            </div>
+            <div class="how-to">
+              <h3>How to use</h3>
+              <p>While broadcasting, click the <span class="material-icons" style="font-size:14px;vertical-align:middle">edit</span> pencil icon next to the hint text. A rich text editor will open where you can format your announcement. Click Save to broadcast it to all followers, or Reset to restore the default message.</p>
+            </div>
+          </section>
+
+          <section class="update-section">
+            <h2>Transliteration for Loud Verses</h2>
+            <p>For English readers, verses traditionally read aloud by the congregation now include transliteration boxes showing the pronunciation in Latin characters. This covers the four "loud" verses as well as the Bnei Haman section (9:6–9:10).</p>
+            <div class="mockup">
+              <div class="mockup-label">Transliteration box example</div>
+              <div class="mock-transliteration">
+                Ish Yehudi haya b'Shushan habirah, ush'mo Mordechai ben Ya'ir ben Shim'i ben Kish, ish Y'mini.
+              </div>
+            </div>
+          </section>
+
+          <section class="update-section">
+            <h2>Follower Sync Controls</h2>
+            <p>Followers can now toggle sync on and off. When sync is on, scrolling and highlighting follow the broadcaster. Turn it off to browse freely, and turn it back on to jump back to the broadcaster's position.</p>
+          </section>
+
+          <section class="update-section">
+            <h2>8 Languages Supported</h2>
+            <p>The app now supports <strong>Hebrew, English, Spanish, Russian, French, Portuguese, Italian,</strong> and <strong>Hungarian</strong>. The interface, settings, and session controls are all translated. Translation text is available for each language alongside the Hebrew original.</p>
+          </section>
+
+          <section class="update-section">
+            <h2>Inline Illustrations</h2>
+            <p>Optional illustrations can be displayed between verses, bringing the story to life. Toggle them on or off from the settings menu.</p>
+            <p><em>This feature is still in development — more illustrations will be added over time.</em></p>
+          </section>
+
+          <section class="update-section">
+            <h2>Database Upgrade</h2>
+            <p>The database powering live sessions has been upgraded from the free tier to <strong>4 GB memory</strong> and a <strong>2-core CPU</strong>, which should provide a much smoother experience for live broadcasts.</p>
+          </section>
+
+          <section class="update-section">
+            <h2>Connection Troubleshooting</h2>
+            <p>Having trouble creating or joining a live session? Visit <a href="/debug">/debug</a> to check if your browser can reach the required services. The page tests connectivity and provides troubleshooting tips if something is blocked.</p>
+          </section>
+
+        </div>
+
+        <!-- Hebrew content -->
+        <div class="updates-content" id="content-he" style="display:none;" dir="rtl">
+
+          <section class="update-section">
+            <h2>שידור חי של קריאת המגילה</h2>
+            <p>בעלי קריאה יכולים כעת ליצור <strong>שידור חי</strong> ולשתף קוד בן 6 ספרות עם הקהל. העוקבים מצטרפים עם הקוד ורואים את מיקום הגלילה, פסוקים מודגשים ומעקב מילה-אחר-מילה בזמן אמת.</p>
+            <p>מספר הגדרות נשלטות על ידי המשדר וחלות אוטומטית על כל העוקבים:</p>
+            <ul>
+              <li><strong>זמן קריאה</strong> — רק המשדר יכול להגדיר את טיימר הספירה לאחור. העוקבים רואים אותו אך לא יכולים לשנותו.</li>
+              <li><strong>שפה</strong> — שפת ברירת המחדל שנטענת לעוקבים נקבעת על ידי המשדר.</li>
+              <li><strong>מצב הדגשת המן</strong> — האם כל ההמנים מודגשים או רק אלה עם תואר נשלט על ידי המשדר.</li>
+              <li><strong>מצב תרגום</strong> — בחירת המשדר בין מקור בלבד / מקור וביאור / ביאור בלבד חלה על העוקבים.</li>
+              <li><strong>כותרת משנה והודעה מותאמת</strong> — כל טקסט כותרת או הודעה מותאמת שהמשדר מגדיר מוצגים לכל העוקבים.</li>
+            </ul>
+            <div class="how-to">
+              <h3>איך להשתמש</h3>
+              <ol>
+                <li>היכנסו ל-<a href="/live">/live</a> וצרו שידור — כל מה שצריך זה סיסמה.</li>
+                <li>לאחר תחילת השידור, הגדירו את ההעדפות שלכם (שפה, זמן קריאה, מצב המן וכו׳). כל ההגדרות נשמרות ויהיו שם כשתחזרו מאוחר יותר.</li>
+                <li>שתפו את הקוד בן 6 הספרות (או קישור QR) עם הקהל.</li>
+                <li>העוקבים פותחים את <a href="/live">/live</a> ומזינים את הקוד כדי לעקוב.</li>
+              </ol>
+              <p style="margin-top:10px">שידורים לא נמחקים — אפשר להגדיר שידור פעם אחת ולהשתמש בו לכל הקריאות (ערב ובוקר, שנה אחרי שנה). ההגדרות שלכם יישמרו. תצטרכו שידורים נפרדים רק אם יש לכם כמה קריאות במקביל.</p>
+              <p style="margin-top:10px"><strong>לגבי הסיסמה:</strong> בחרו משהו פשוט וקל לזכירה, כמו "purim" או "megillah". אין אפשרות "שכחתי סיסמה" — אנחנו לא אוספים אימיילים או מידע אישי, ולכן אין דרך לשחזר סיסמה שנשכחה. הסיסמה משמשת רק כדי לזהות אתכם כמנהלי השידור. אל תשתמשו בסיסמה שאתם משתמשים בה לאימייל, לבנק או לחשבונות אחרים — הסיסמאות נשמרות כטקסט פשוט ואינן מוצפנות.</p>
+            </div>
+          </section>
+
+          <section class="update-section">
+            <h2>מצבי מעקב</h2>
+            <p>המשדרים יכולים לבחור כמה פרטים לשתף עם העוקבים:</p>
+            <ul>
+              <li><strong>גלילה בלבד</strong> — העוקבים רואים את מיקום הגלילה שלכם.</li>
+              <li><strong>הדגשת פסוקים</strong> (מומלץ) — פסוקים שתלחצו עליהם יודגשו לצופים.</li>
+              <li><strong>הדגשת מילים</strong> — מילים שתלחצו או תגררו עליהן יודגשו.</li>
+            </ul>
+            <p><em>הערה: הדגשת פסוקים היא המצב המדויק ביותר — כשתלחצו על פסוק, המערכת יודעת בדיוק לאיזה פסוק לגלול עבור העוקבים. הדגשת מילים תלויה בדיוק המגע, מה שעלול להיות פחות אמין במכשירים ניידים.</em></p>
+            <div class="mockup">
+              <div class="mockup-label">בורר מצב מעקב</div>
+              <div class="mock-tracking">
+                <button class="mock-track-opt"><span class="material-icons">swipe_vertical</span> גלילה בלבד</button>
+                <button class="mock-track-opt active"><span class="material-icons">view_headline</span> הדגשת פסוקים (מומלץ)</button>
+                <button class="mock-track-opt"><span class="material-icons">touch_app</span> הדגשת מילים</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="update-section">
+            <h2>מצבי תצוגת תרגום</h2>
+            <p>שלוש דרכים לצפות בתרגום:</p>
+            <ul>
+              <li><strong>מקור בלבד</strong> — הטקסט המקורי ללא ביאור.</li>
+              <li><strong>מקור וביאור</strong> — עברית וביאור מוצגים זה לצד זה.</li>
+              <li><strong>ביאור בלבד</strong> — מסתיר את העברית ומציג רק את הביאור.</li>
+            </ul>
+            <div class="mockup">
+              <div class="mockup-label">בורר מצב תרגום</div>
+              <div class="mock-segmented">
+                <button class="mock-seg-btn">מקור בלבד</button>
+                <button class="mock-seg-btn active">מקור וביאור</button>
+                <button class="mock-seg-btn">ביאור בלבד</button>
+              </div>
+            </div>
+            <div class="how-to">
+              <h3>איך להשתמש</h3>
+              <p>פתחו את תפריט ההגדרות ומצאו את בורר התרגום. בחרו את המצב המועדף מבין שלוש האפשרויות.</p>
+            </div>
+          </section>
+
+          <section class="update-section">
+            <h2>כותרת משנה מותאמת אישית</h2>
+            <p>משדרים יכולים להתאים את כותרת המשנה שמוצגת בראש העמוד. הוסיפו טקסט מותאם וקישור אופציונלי — מושלם לשמות בתי כנסת, הודעות חסות או מידע על אירועים.</p>
+            <div class="mockup">
+              <div class="mockup-label">כותרת עם כפתור עריכה</div>
+              <div class="mock-header">
+                <div class="mock-header-title">מגילת אסתר</div>
+                <div class="mock-header-sub">הטקסט המלא עם ניקוד וטעמי מקרא <span class="material-icons mock-edit-icon">edit</span></div>
+              </div>
+            </div>
+            <div class="how-to">
+              <h3>איך להשתמש</h3>
+              <p>בזמן שידור, לחצו על סמל העיפרון <span class="material-icons" style="font-size:14px;vertical-align:middle">edit</span> ליד כותרת המשנה. הזינו טקסט וקישור אופציונלי, ואז שמרו. העוקבים יראו את כותרת המשנה המותאמת בזמן אמת.</p>
+            </div>
+          </section>
+
+          <section class="update-section">
+            <h2>אזור הודעות מותאם</h2>
+            <p>משדרים יכולים להחליף את הטקסט "לחצו על שמו של המן" בהודעה מותאמת באמצעות עורך טקסט עשיר. ניתן להוסיף טקסט מעוצב, קישורים, רשימות ועוד.</p>
+            <div class="mockup">
+              <div class="mockup-label">אזור הודעה עם כפתור עריכה</div>
+              <div class="mock-hint-area">
+                <span class="material-icons" style="color:#E8962E;font-size:20px">touch_app</span>
+                <span style="color:#E8962E;font-weight:500">לחצו על שמו של המן להשמיע רעש!</span>
+                <span class="material-icons mock-hint-edit">edit</span>
+              </div>
+            </div>
+            <div class="how-to">
+              <h3>איך להשתמש</h3>
+              <p>בזמן שידור, לחצו על סמל העיפרון <span class="material-icons" style="font-size:14px;vertical-align:middle">edit</span> ליד טקסט הרמז. ייפתח עורך טקסט עשיר שבו תוכלו לעצב את ההודעה. לחצו על שמור כדי לשדר לכל העוקבים, או על איפוס כדי לשחזר את ההודעה המקורית.</p>
+            </div>
+          </section>
+
+          <section class="update-section">
+            <h2>תעתיק לפסוקים שנאמרים בקול</h2>
+            <p>לקוראים באנגלית, פסוקים שנהוג שהקהל אומר בקול רם כוללים כעת תיבות תעתיק המציגות את ההגייה באותיות לטיניות. זה כולל ארבעת הפסוקים ה"חזקים" וכן את קטע בני המן (ט:ו–ט:י).</p>
+            <div class="mockup">
+              <div class="mockup-label">דוגמה לתיבת תעתיק</div>
+              <div class="mock-transliteration">
+                Ish Yehudi haya b'Shushan habirah, ush'mo Mordechai ben Ya'ir ben Shim'i ben Kish, ish Y'mini.
+              </div>
+            </div>
+          </section>
+
+          <section class="update-section">
+            <h2>בקרת סנכרון לעוקבים</h2>
+            <p>עוקבים יכולים כעת להפעיל ולכבות את הסנכרון. כשהסנכרון מופעל, הגלילה וההדגשה עוקבות אחרי המשדר. כבו אותו כדי לגלול בחופשיות, והפעילו מחדש כדי לקפוץ חזרה למיקום המשדר.</p>
+          </section>
+
+          <section class="update-section">
+            <h2>תמיכה ב-8 שפות</h2>
+            <p>האפליקציה תומכת כעת ב<strong>עברית, אנגלית, ספרדית, רוסית, צרפתית, פורטוגזית, איטלקית</strong> ו<strong>הונגרית</strong>. הממשק, ההגדרות ובקרי השידור מתורגמים. טקסט התרגום זמין לכל שפה לצד המקור העברי.</p>
+          </section>
+
+          <section class="update-section">
+            <h2>איורים בתוך הטקסט</h2>
+            <p>ניתן להציג איורים אופציונליים בין הפסוקים, שמחיים את הסיפור. הפעילו או כבו אותם מתפריט ההגדרות.</p>
+            <p><em>פיצ׳ר זה עדיין בפיתוח — איורים נוספים יתווספו בהמשך.</em></p>
+          </section>
+
+          <section class="update-section">
+            <h2>שדרוג מסד נתונים</h2>
+            <p>מסד הנתונים שמפעיל את השידורים החיים שודרג מהתוכנית החינמית ל-<strong>4 GB זיכרון</strong> ו<strong>מעבד דו-ליבתי</strong>, מה שאמור לספק חוויה חלקה הרבה יותר לשידורים חיים.</p>
+          </section>
+
+          <section class="update-section">
+            <h2>פתרון בעיות חיבור</h2>
+            <p>יש בעיות ביצירה או הצטרפות לשידור חי? בקרו ב-<a href="/debug">/debug</a> כדי לבדוק אם הדפדפן שלכם יכול להגיע לשירותים הנדרשים. הדף בודק קישוריות ומספק טיפים לפתרון בעיות אם משהו חסום.</p>
+          </section>
+
+        </div>
+      </div>
+    </main>
+
+    <script>
+      const langBtns = document.querySelectorAll('.lang-btn');
+      const contentEn = document.getElementById('content-en')!;
+      const contentHe = document.getElementById('content-he')!;
+      const title = document.querySelector('.updates-title')!;
+      const date = document.querySelector('.updates-date')!;
+
+      langBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const lang = (btn as HTMLElement).dataset.lang;
+          langBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+
+          if (lang === 'he') {
+            contentEn.style.display = 'none';
+            contentHe.style.display = 'block';
+            title.textContent = (title as HTMLElement).dataset.he!;
+            date.textContent = (date as HTMLElement).dataset.he!;
+          } else {
+            contentHe.style.display = 'none';
+            contentEn.style.display = 'block';
+            title.textContent = (title as HTMLElement).dataset.en!;
+            date.textContent = (date as HTMLElement).dataset.en!;
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
+
+<style>
+  .updates-page {
+    padding: 24px 0 48px;
+  }
+
+  .updates-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+
+  .back-link {
+    font-size: 0.9rem;
+    color: var(--color-burgundy);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .back-link:hover {
+    text-decoration: underline;
+  }
+
+  .lang-toggle {
+    display: flex;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--color-burgundy);
+  }
+
+  .lang-btn {
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    background: transparent;
+    color: var(--color-burgundy);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .lang-btn.active {
+    background: var(--color-burgundy);
+    color: white;
+  }
+
+  .updates-title {
+    font-size: 1.8rem;
+    color: var(--color-burgundy);
+    margin-bottom: 4px;
+  }
+
+  .updates-date {
+    font-size: 0.9rem;
+    color: var(--color-text-light);
+    margin-bottom: 32px;
+  }
+
+  .update-section {
+    margin-bottom: 28px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--color-cream-dark);
+  }
+  .update-section:last-child {
+    border-bottom: none;
+  }
+
+  .update-section h2 {
+    font-size: 1.15rem;
+    color: var(--color-burgundy);
+    margin-bottom: 8px;
+  }
+
+  .update-section p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--color-text);
+    margin-bottom: 8px;
+  }
+
+  .update-section ul, .update-section ol {
+    margin: 8px 0 8px 20px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--color-text);
+  }
+  .update-section li {
+    margin-bottom: 4px;
+  }
+
+  [dir="rtl"] .update-section ul,
+  [dir="rtl"] .update-section ol {
+    margin-left: 0;
+    margin-right: 20px;
+  }
+
+  .how-to {
+    background: var(--color-cream-dark);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-top: 10px;
+  }
+
+  .how-to h3 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--color-burgundy);
+    margin-bottom: 6px;
+  }
+
+  .how-to p, .how-to ol {
+    font-size: 0.9rem;
+    margin-bottom: 0;
+  }
+
+  .how-to ol {
+    margin: 4px 0 0 18px;
+  }
+  [dir="rtl"] .how-to ol {
+    margin-left: 0;
+    margin-right: 18px;
+  }
+
+  .how-to a {
+    color: var(--color-burgundy);
+    font-weight: 500;
+  }
+
+  /* Mockups */
+  .mockup {
+    margin-top: 14px;
+    border: 1px solid var(--color-cream-dark);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .mockup-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 8px 14px;
+    background: var(--color-cream-dark);
+  }
+
+  /* Tracking mode mockup */
+  .mock-tracking {
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .mock-track-opt {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: var(--color-cream);
+    color: var(--color-text);
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: default;
+    transition: none;
+  }
+  .mock-track-opt .material-icons {
+    font-size: 20px;
+    color: var(--color-text-light);
+  }
+  .mock-track-opt.active {
+    background: var(--color-burgundy);
+    color: white;
+  }
+  .mock-track-opt.active .material-icons {
+    color: white;
+  }
+
+  /* Segmented control mockup */
+  .mock-segmented {
+    display: flex;
+    padding: 10px 14px;
+    gap: 2px;
+    background: white;
+    border-radius: 0 0 12px 12px;
+  }
+  .mock-seg-btn {
+    flex: 1;
+    padding: 6px 8px;
+    border-radius: 6px;
+    background: var(--color-cream-dark);
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--color-text-light);
+    cursor: default;
+    transition: none;
+  }
+  .mock-seg-btn.active {
+    background: var(--color-burgundy);
+    color: white;
+  }
+
+  /* Header mockup */
+  .mock-header {
+    background: var(--color-burgundy);
+    padding: 16px 20px;
+    text-align: center;
+  }
+  .mock-header-title {
+    color: var(--color-gold);
+    font-size: 1.3rem;
+    font-weight: 700;
+  }
+  .mock-header-sub {
+    color: rgba(255,255,255,0.85);
+    font-size: 0.85rem;
+    margin-top: 2px;
+  }
+  .mock-edit-icon {
+    font-size: 14px !important;
+    vertical-align: middle;
+    margin: 0 4px;
+    opacity: 0.7;
+  }
+
+  /* Hint area mockup */
+  .mock-hint-area {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 14px 20px;
+    background: var(--color-burgundy);
+    position: relative;
+    font-size: 0.9rem;
+  }
+  .mock-hint-edit {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px !important;
+    color: rgba(255,255,255,0.5);
+  }
+
+  /* Transliteration mockup */
+  .mock-transliteration {
+    padding: 12px 16px;
+    background: rgba(232, 150, 46, 0.08);
+    border-left: 3px solid var(--color-gold);
+    font-size: 0.9rem;
+    font-style: italic;
+    color: var(--color-text);
+    line-height: 1.6;
+  }
+  [dir="rtl"] .mock-transliteration {
+    border-left: none;
+    border-right: 3px solid var(--color-gold);
+    direction: ltr;
+    text-align: left;
+  }
+</style>
