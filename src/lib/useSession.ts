@@ -20,6 +20,7 @@ export interface SessionSettings {
   showTranslation?: boolean; // legacy, mapped to translationMode
   translationMode?: 'hebrew' | 'both' | 'translation';
   customSubtitle?: { text: string; url: string };
+  customTapHint?: string;
 }
 
 export interface Session {

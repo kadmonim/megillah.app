@@ -81,6 +81,8 @@ const translations = {
     trackScrolling: 'גלילה בלבד, ללא הדגשה',
     trackVerse: 'פסוקים שתלחץ יודגשו לצופים (מומלץ)',
     trackWord: 'מילים שתלחץ יודגשו לצופים',
+    editTapHint: 'ערוך הודעה',
+    resetToDefault: 'איפוס לברירת מחדל',
     sessionCode: 'קוד',
     broadcasting: 'משדר',
     following: 'עוקב',
@@ -115,6 +117,8 @@ const translations = {
     trackScrolling: 'Scrolling only, no highlighting',
     trackVerse: 'Verses you tap are highlighted for viewers (recommended)',
     trackWord: 'Words you tap are highlighted for viewers',
+    editTapHint: 'Edit announcement',
+    resetToDefault: 'Reset to default',
     sessionCode: 'Code',
     broadcasting: 'Broadcasting',
     following: 'Following',
@@ -149,6 +153,8 @@ const translations = {
     trackScrolling: 'Solo desplazamiento, sin resaltado',
     trackVerse: 'Versículos que toques se resaltan para los espectadores (recomendado)',
     trackWord: 'Palabras que toques se resaltan para los espectadores',
+    editTapHint: 'Editar anuncio',
+    resetToDefault: 'Restablecer predeterminado',
     sessionCode: 'Código',
     broadcasting: 'Transmitiendo',
     following: 'Siguiendo',
@@ -183,6 +189,8 @@ const translations = {
     trackScrolling: 'Только прокрутка, без выделения',
     trackVerse: 'Нажатые стихи выделяются для зрителей (рекомендуется)',
     trackWord: 'Нажатые слова выделяются для зрителей',
+    editTapHint: 'Редактировать объявление',
+    resetToDefault: 'Сбросить по умолчанию',
     sessionCode: 'Код',
     broadcasting: 'Трансляция',
     following: 'Слежение',
@@ -217,6 +225,8 @@ const translations = {
     trackScrolling: 'Défilement seul, sans surlignage',
     trackVerse: 'Les versets touchés sont surlignés pour les spectateurs (recommandé)',
     trackWord: 'Les mots touchés sont surlignés pour les spectateurs',
+    editTapHint: "Modifier l'annonce",
+    resetToDefault: 'Réinitialiser par défaut',
     sessionCode: 'Code',
     broadcasting: 'Diffusion',
     following: 'Suivi',
@@ -251,6 +261,8 @@ const translations = {
     trackScrolling: 'Apenas rolagem, sem destaque',
     trackVerse: 'Versículos tocados são destacados para espectadores (recomendado)',
     trackWord: 'Palavras tocadas são destacadas para espectadores',
+    editTapHint: 'Editar anúncio',
+    resetToDefault: 'Redefinir padrão',
     sessionCode: 'Código',
     broadcasting: 'Transmitindo',
     following: 'Seguindo',
@@ -285,6 +297,8 @@ const translations = {
     trackScrolling: 'Solo scorrimento, senza evidenziazione',
     trackVerse: 'I versetti toccati vengono evidenziati per gli spettatori (consigliato)',
     trackWord: 'Le parole toccate vengono evidenziate per gli spettatori',
+    editTapHint: 'Modifica annuncio',
+    resetToDefault: 'Ripristina predefinito',
     sessionCode: 'Codice',
     broadcasting: 'Trasmissione',
     following: 'Seguendo',
@@ -319,6 +333,8 @@ const translations = {
     trackScrolling: 'Csak görgetés, kiemelés nélkül',
     trackVerse: 'Az érintett versek kijelölődnek a nézők számára (ajánlott)',
     trackWord: 'Az érintett szavak kijelölődnek a nézők számára',
+    editTapHint: 'Hirdetmény szerkesztése',
+    resetToDefault: 'Visszaállítás alapértelmezettre',
     sessionCode: 'Kód',
     broadcasting: 'Közvetítés',
     following: 'Követés',
@@ -347,6 +363,43 @@ function hasTitleAfter(textAfter: string): boolean {
 // Strip cantillation marks (U+0591–U+05AF) and paseq (U+05C0) but keep nikkud vowels
 function stripCantillation(s: string): string {
   return s.replace(/[\u0591-\u05AF\u05C0]/g, '');
+}
+
+// Split Steinsaltz commentary into vowelized (biblical) and plain (commentary) runs
+// Words containing nikud vowels (U+05B0–U+05BD, U+05BF, U+05C1–U+05C2, U+05C4–U+05C7) are biblical text
+const NIKUD_RE = /[\u05B0-\u05BD\u05BF\u05C1\u05C2\u05C4-\u05C7]/;
+function boldVowelized(text: string) {
+  // Split into words keeping whitespace/punctuation attached
+  const tokens = text.split(/(\s+)/);
+  const result: (string | ComponentChildren)[] = [];
+  let boldRun: string[] = [];
+  let plainRun: string[] = [];
+
+  const flushBold = () => {
+    if (boldRun.length) {
+      result.push(<b>{boldRun.join('')}</b>);
+      boldRun = [];
+    }
+  };
+  const flushPlain = () => {
+    if (plainRun.length) {
+      result.push(plainRun.join(''));
+      plainRun = [];
+    }
+  };
+
+  for (const token of tokens) {
+    if (NIKUD_RE.test(token)) {
+      flushPlain();
+      boldRun.push(token);
+    } else {
+      flushBold();
+      plainRun.push(token);
+    }
+  }
+  flushBold();
+  flushPlain();
+  return result;
 }
 
 const SPLAT_COLORS = ['#5c3a1e', '#7a4f2e', '#3e2710', '#8b6914', '#6b4423', '#4a3015'];
@@ -583,6 +636,9 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
   const [showSubtitleEdit, setShowSubtitleEdit] = useState(false);
   const [draftSubText, setDraftSubText] = useState('');
   const [draftSubUrl, setDraftSubUrl] = useState('');
+  const [customTapHint, setCustomTapHint] = useState<string | null>(null);
+  const [showTapHintEdit, setShowTapHintEdit] = useState(false);
+  const tinymceRef = useRef<HTMLDivElement | null>(null);
   const [muted, setMuted] = useState(false);
   const [soundActive, setSoundActive] = useState(false);
   const audioPool = useRef<HTMLAudioElement[]>([]);
@@ -668,6 +724,9 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
     if (s.customSubtitle) {
       setCustomSubtitle(s.customSubtitle);
     }
+    if (s.customTapHint) {
+      setCustomTapHint(s.customTapHint);
+    }
   }, [session]);
 
   // Follower: apply real-time reading time from admin
@@ -696,6 +755,50 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
       setCustomSubtitle(remoteSettings.customSubtitle as { text: string; url: string } | null);
     }
   }, [remoteSettings?.customSubtitle]);
+
+  useEffect(() => {
+    if (remoteSettings?.customTapHint !== undefined) {
+      setCustomTapHint(remoteSettings.customTapHint as string | null);
+    }
+  }, [remoteSettings?.customTapHint]);
+
+  // Load TinyMCE when editor opens
+  useEffect(() => {
+    if (!showTapHintEdit) return;
+    const initTinyMCE = () => {
+      const tinymce = (window as any).tinymce;
+      if (!tinymce) return;
+      tinymce.init({
+        selector: '#tap-hint-tinymce',
+        height: 200,
+        menubar: false,
+        branding: false,
+        promotion: false,
+        directionality: lang === 'he' ? 'rtl' as const : 'ltr' as const,
+        plugins: 'link lists directionality',
+        toolbar: 'bold italic underline forecolor | link | bullist numlist | alignleft aligncenter alignright | fontsize | ltr rtl | removeformat',
+        content_style: `body { font-family: Heebo, sans-serif; font-size: 14px; direction: ${lang === 'he' ? 'rtl' : 'ltr'}; }`,
+        setup: (editor: any) => {
+          editor.on('init', () => {
+            editor.setContent(customTapHint || '');
+          });
+        },
+      });
+    };
+    if ((window as any).tinymce) {
+      initTinyMCE();
+    } else {
+      const script = document.createElement('script');
+      script.src = 'https://cdn.tiny.cloud/1/utcucfgqm71xjbhcb3dgsm1sdjund27o1tylz7nl7llyrfc9/tinymce/7/tinymce.min.js';
+      script.referrerPolicy = 'origin';
+      script.onload = initTinyMCE;
+      document.head.appendChild(script);
+    }
+    return () => {
+      const tinymce = (window as any).tinymce;
+      tinymce?.activeEditor?.destroy();
+    };
+  }, [showTapHintEdit]);
 
   // Sync remote word/verse highlight from follower callback
   useEffect(() => {
@@ -1251,10 +1354,46 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
       )}
       </div>
 
-      <p class="hint-text">
-        <span class="material-icons hint-icon">touch_app</span>
-        {t.tapHint}
-      </p>
+      <div class="hint-area">
+        {customTapHint ? (
+          <div class="hint-text custom-hint" dangerouslySetInnerHTML={{ __html: customTapHint }} />
+        ) : (
+          <p class="hint-text">
+            <span class="material-icons hint-icon">touch_app</span>
+            {t.tapHint}
+          </p>
+        )}
+        {session?.role === 'admin' && (
+          <button class="edit-hint-btn" onClick={() => setShowTapHintEdit(!showTapHintEdit)} title={t.editTapHint}>
+            <span class="material-icons" style={{ fontSize: '16px' }}>edit</span>
+          </button>
+        )}
+        {showTapHintEdit && session?.role === 'admin' && (
+          <div class="tap-hint-editor">
+            <div ref={tinymceRef} class="tinymce-container">
+              <textarea id="tap-hint-tinymce" />
+            </div>
+            <div class="tap-hint-editor-actions">
+              <button class="save-btn" onClick={() => {
+                const editor = (window as any).tinymce?.activeEditor;
+                const html = editor?.getContent() || '';
+                const val = html.trim() ? html : null;
+                setCustomTapHint(val);
+                session.broadcastSetting('customTapHint', val);
+                setShowTapHintEdit(false);
+                editor?.destroy();
+              }}>{t.save}</button>
+              <button class="reset-btn" onClick={() => {
+                setCustomTapHint(null);
+                session.broadcastSetting('customTapHint', null);
+                setShowTapHintEdit(false);
+                const editor = (window as any).tinymce?.activeEditor;
+                editor?.destroy();
+              }}>{t.resetToDefault}</button>
+            </div>
+          </div>
+        )}
+      </div>
 
       <div class={`scroll-text${session?.role === 'admin' ? ' admin-session' : ''}`} dir="rtl" ref={scrollTextRef}>
         <div class="blessings-block" data-verse="blessings-before">
@@ -1854,6 +1993,71 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
 
         .hint-icon {
           font-size: 20px;
+        }
+
+        .hint-area {
+          position: relative;
+          text-align: center;
+          margin-bottom: 20px;
+        }
+        .hint-area .hint-text {
+          margin-bottom: 0;
+          padding: 0 28px;
+        }
+        .custom-hint {
+          display: block;
+          color: var(--color-gold);
+          font-size: 0.9rem;
+          font-weight: 500;
+        }
+        .custom-hint p { margin: 4px 0; }
+        .custom-hint a { color: var(--color-gold); text-decoration: underline; }
+        .edit-hint-btn {
+          background: none;
+          border: none;
+          color: inherit;
+          cursor: pointer;
+          opacity: 0.6;
+          padding: 4px;
+          position: absolute;
+          top: 0;
+          right: 0;
+        }
+        .edit-hint-btn:hover { opacity: 1; }
+        .tap-hint-editor {
+          position: relative;
+          background: #fff;
+          border-radius: 12px;
+          padding: 16px;
+          margin-top: 12px;
+          text-align: start;
+          box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+        }
+        .tap-hint-editor-actions {
+          display: flex;
+          gap: 8px;
+          margin-top: 12px;
+        }
+        .tap-hint-editor-actions button {
+          flex: 1;
+          padding: 8px 16px;
+          border: none;
+          border-radius: 8px;
+          cursor: pointer;
+          font-family: inherit;
+          font-size: 0.85rem;
+          font-weight: 500;
+        }
+        .tap-hint-editor-actions .save-btn {
+          background: var(--color-gold);
+          color: #1a1a2e;
+        }
+        .tap-hint-editor-actions .reset-btn {
+          background: #eee;
+          color: #555;
+        }
+        .tap-hint-editor-actions .reset-btn:hover {
+          background: #ddd;
         }
 
         .scroll-text {
