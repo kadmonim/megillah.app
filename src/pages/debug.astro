@@ -1,0 +1,130 @@
+---
+import '../styles/global.css';
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL || '';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Connection Debug</title>
+    <style>
+      body { font-family: 'Heebo', sans-serif; background: #1a1a2e; color: #eee; padding: 24px; max-width: 600px; margin: 0 auto; }
+      h1 { color: #f5c77e; font-size: 1.4rem; }
+      .check { margin: 16px 0; padding: 16px; border-radius: 8px; background: #222; }
+      .check .label { font-weight: 500; margin-bottom: 6px; }
+      .check .status { font-size: 0.9rem; }
+      .pass { border-left: 4px solid #4caf50; }
+      .fail { border-left: 4px solid #f44336; }
+      .pending { border-left: 4px solid #888; }
+      .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid #888; border-top-color: #f5c77e; border-radius: 50%; animation: spin 0.6s linear infinite; vertical-align: middle; margin-right: 6px; }
+      @keyframes spin { to { transform: rotate(360deg); } }
+      .help { margin-top: 24px; padding: 16px; background: #2a2a3e; border-radius: 8px; font-size: 0.85rem; line-height: 1.6; }
+      .help code { background: #333; padding: 2px 6px; border-radius: 4px; }
+    </style>
+  </head>
+  <body>
+    <h1>Connection Debug</h1>
+    <p style="font-size: 0.9rem; color: #aaa;">Checking if your browser can reach the services needed for live sessions.</p>
+
+    <div id="check-supabase" class="check pending">
+      <div class="label"><span class="spinner"></span> Supabase API</div>
+      <div class="status">Testing...</div>
+    </div>
+
+    <div id="check-realtime" class="check pending">
+      <div class="label"><span class="spinner"></span> Realtime (WebSocket)</div>
+      <div class="status">Testing...</div>
+    </div>
+
+    <div id="check-fonts" class="check pending">
+      <div class="label"><span class="spinner"></span> Google Fonts</div>
+      <div class="status">Testing...</div>
+    </div>
+
+    <div id="help" class="help" style="display:none;"></div>
+
+    <script define:vars={{ supabaseUrl }}>
+      const url = supabaseUrl;
+
+      function setResult(id, pass, message) {
+        const el = document.getElementById(id);
+        el.className = 'check ' + (pass ? 'pass' : 'fail');
+        el.querySelector('.label').innerHTML = (pass ? '\u2705' : '\u274c') + ' ' + el.querySelector('.label').textContent.trim();
+        el.querySelector('.status').textContent = message;
+      }
+
+      let failures = [];
+
+      // 1. Supabase REST API
+      fetch(url + '/rest/v1/', { method: 'HEAD', headers: { 'apikey': 'test' } })
+        .then(r => {
+          // Any HTTP response (even 401) means it's reachable
+          setResult('check-supabase', true, 'Reachable (' + r.status + ')');
+        })
+        .catch(e => {
+          setResult('check-supabase', false, 'Blocked or unreachable: ' + e.message);
+          failures.push('supabase');
+          showHelp();
+        });
+
+      // 2. Realtime WebSocket
+      try {
+        const wsUrl = url.replace('https://', 'wss://') + '/realtime/v1/websocket?vsn=1.0.0';
+        const ws = new WebSocket(wsUrl);
+        const timeout = setTimeout(() => {
+          ws.close();
+          setResult('check-realtime', false, 'Connection timed out');
+          failures.push('realtime');
+          showHelp();
+        }, 5000);
+        ws.onopen = () => {
+          clearTimeout(timeout);
+          ws.close();
+          setResult('check-realtime', true, 'WebSocket connected successfully');
+        };
+        ws.onerror = () => {
+          clearTimeout(timeout);
+          setResult('check-realtime', false, 'WebSocket blocked or unreachable');
+          failures.push('realtime');
+          showHelp();
+        };
+      } catch (e) {
+        setResult('check-realtime', false, 'WebSocket error: ' + e.message);
+        failures.push('realtime');
+        showHelp();
+      }
+
+      // 3. Google Fonts
+      fetch('https://fonts.googleapis.com/icon?family=Material+Icons', { method: 'HEAD' })
+        .then(r => {
+          setResult('check-fonts', true, 'Reachable (' + r.status + ')');
+        })
+        .catch(e => {
+          setResult('check-fonts', false, 'Blocked: ' + e.message);
+          failures.push('fonts');
+          showHelp();
+        });
+
+      function showHelp() {
+        const helpEl = document.getElementById('help');
+        let html = '<strong>Troubleshooting:</strong><br><br>';
+        if (failures.includes('supabase') || failures.includes('realtime')) {
+          const host = new URL(url).host;
+          html += 'Live sessions require access to <code>' + host + '</code>. ';
+          html += 'This domain may be blocked by your network, firewall, ad blocker, or browser extension.<br><br>';
+          html += '<strong>Try:</strong><br>';
+          html += '&bull; Disable ad blockers or privacy extensions for this site<br>';
+          html += '&bull; If on a corporate/school network, ask IT to allow <code>' + host + '</code><br>';
+          html += '&bull; Try a different network (e.g. mobile hotspot)<br>';
+        }
+        if (failures.includes('fonts')) {
+          html += '<br>Google Fonts is blocked. Icons may not display correctly. This is cosmetic and won\'t affect functionality.<br>';
+        }
+        helpEl.innerHTML = html;
+        helpEl.style.display = 'block';
+      }
+    </script>
+  </body>
+</html>
