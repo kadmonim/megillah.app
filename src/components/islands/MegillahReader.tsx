@@ -71,6 +71,9 @@ const translations = {
     subtitleText: 'טקסט',
     subtitleUrl: 'קישור (אופציונלי)',
     displayIllustrations: 'הצג איורים',
+    trackScrolling: 'גלילה בלבד, ללא הדגשה',
+    trackVerse: 'פסוקים שתלחץ יודגשו לצופים (מומלץ)',
+    trackWord: 'מילים שתלחץ יודגשו לצופים',
     sessionCode: 'קוד',
     broadcasting: 'משדר',
     following: 'עוקב',
@@ -102,6 +105,9 @@ const translations = {
     subtitleText: 'Text',
     subtitleUrl: 'Link (optional)',
     displayIllustrations: 'Display illustrations',
+    trackScrolling: 'Scrolling only, no highlighting',
+    trackVerse: 'Verses you tap are highlighted for viewers (recommended)',
+    trackWord: 'Words you tap are highlighted for viewers',
     sessionCode: 'Code',
     broadcasting: 'Broadcasting',
     following: 'Following',
@@ -133,6 +139,9 @@ const translations = {
     subtitleText: 'Texto',
     subtitleUrl: 'Enlace (opcional)',
     displayIllustrations: 'Mostrar ilustraciones',
+    trackScrolling: 'Solo desplazamiento, sin resaltado',
+    trackVerse: 'Versículos que toques se resaltan para los espectadores (recomendado)',
+    trackWord: 'Palabras que toques se resaltan para los espectadores',
     sessionCode: 'Código',
     broadcasting: 'Transmitiendo',
     following: 'Siguiendo',
@@ -164,6 +173,9 @@ const translations = {
     subtitleText: 'Текст',
     subtitleUrl: 'Ссылка (необязательно)',
     displayIllustrations: 'Показать иллюстрации',
+    trackScrolling: 'Только прокрутка, без выделения',
+    trackVerse: 'Нажатые стихи выделяются для зрителей (рекомендуется)',
+    trackWord: 'Нажатые слова выделяются для зрителей',
     sessionCode: 'Код',
     broadcasting: 'Трансляция',
     following: 'Слежение',
@@ -195,6 +207,9 @@ const translations = {
     subtitleText: 'Texte',
     subtitleUrl: 'Lien (facultatif)',
     displayIllustrations: 'Afficher les illustrations',
+    trackScrolling: 'Défilement seul, sans surlignage',
+    trackVerse: 'Les versets touchés sont surlignés pour les spectateurs (recommandé)',
+    trackWord: 'Les mots touchés sont surlignés pour les spectateurs',
     sessionCode: 'Code',
     broadcasting: 'Diffusion',
     following: 'Suivi',
@@ -226,6 +241,9 @@ const translations = {
     subtitleText: 'Texto',
     subtitleUrl: 'Link (opcional)',
     displayIllustrations: 'Mostrar ilustrações',
+    trackScrolling: 'Apenas rolagem, sem destaque',
+    trackVerse: 'Versículos tocados são destacados para espectadores (recomendado)',
+    trackWord: 'Palavras tocadas são destacadas para espectadores',
     sessionCode: 'Código',
     broadcasting: 'Transmitindo',
     following: 'Seguindo',
@@ -257,6 +275,9 @@ const translations = {
     subtitleText: 'Testo',
     subtitleUrl: 'Link (facoltativo)',
     displayIllustrations: 'Mostra illustrazioni',
+    trackScrolling: 'Solo scorrimento, senza evidenziazione',
+    trackVerse: 'I versetti toccati vengono evidenziati per gli spettatori (consigliato)',
+    trackWord: 'Le parole toccate vengono evidenziate per gli spettatori',
     sessionCode: 'Codice',
     broadcasting: 'Trasmissione',
     following: 'Seguendo',
@@ -1086,21 +1107,21 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
             onClick={() => { setTrackingMode('off'); setActiveVerse(null); setActiveWord(null); setShowTrackingMenu(false); }}
           >
             <span class="material-icons">swipe_vertical</span>
-            Follow scrolling only
+            {t.trackScrolling}
           </button>
           <button
             class={`tracking-option${trackingMode === 'verse' ? ' active' : ''}`}
             onClick={() => { setTrackingMode('verse'); setActiveWord(null); setShowTrackingMenu(false); }}
           >
             <span class="material-icons">view_headline</span>
-            Highlight pesukim
+            {t.trackVerse}
           </button>
           <button
             class={`tracking-option${trackingMode === 'word' ? ' active' : ''}`}
             onClick={() => { setTrackingMode('word'); setActiveVerse(null); setShowTrackingMenu(false); }}
           >
             <span class="material-icons">touch_app</span>
-            Highlight words
+            {t.trackWord}
           </button>
         </div>
       )}
