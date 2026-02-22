@@ -337,17 +337,19 @@ function renderVerse(
   lang: Lang,
   translationMap: TranslationMap | null,
   activeWord: string | null,
+  activeVerse: string | null,
 ) {
   const displayText = hideCantillation ? stripCantillation(text) : text;
   const parts = displayText.split(HAMAN_REGEX);
   const verseKey = `${chapterNum}:${verseNum}`;
   const isLoud = LOUD_VERSES.has(verseKey);
+  const isVerseActive = activeVerse === verseKey;
   const translation = translationMap?.[verseKey];
 
   let wordIdx = 0;
 
   const verseContent = (
-    <span class={`verse${isLoud ? ' loud-verse' : ''}`} data-verse={verseKey}>
+    <span class={`verse${isLoud ? ' loud-verse' : ''}${isVerseActive ? ' verse-active' : ''}`} data-verse={verseKey}>
       {isLoud && <span class="loud-label" dir={lang === 'he' ? 'rtl' : 'ltr'}>{t.loudLabel}</span>}
       <sup class="verse-num">{toHebrew(verseNum)}</sup>
       {parts.map((part, i) => {
@@ -388,9 +390,11 @@ function renderVerse(
   return verseContent;
 }
 
-export default function MegillahReader({ standalone = false, showTitle = false, session, remoteMinutes, activeWord: remoteActiveWord, onWordTap }: { standalone?: boolean; showTitle?: boolean; session?: Session; remoteMinutes?: number | null; activeWord?: string | null; onWordTap?: (wordId: string) => void }) {
+export default function MegillahReader({ standalone = false, showTitle = false, session, remoteMinutes, activeWord: remoteActiveWord, activeVerse: remoteActiveVerse, onWordTap }: { standalone?: boolean; showTitle?: boolean; session?: Session; remoteMinutes?: number | null; activeWord?: string | null; activeVerse?: string | null; onWordTap?: (wordId: string) => void }) {
   const dragging = useRef(false);
   const lastBroadcastTime = useRef(0);
+  const lastDragWord = useRef<string | null>(null);
+  const gapAnimating = useRef(false);
   const [showCantillation, setShowCantillation] = useState(false);
   const [chabadMode, setChabadMode] = useState(false);
   const [fontSize, setFontSize] = useState(1.35);
@@ -406,6 +410,8 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
   const deviceLang = useRef<Lang>('he');
   const [showIllustrations, setShowIllustrations] = useState(false);
   const [activeWord, setActiveWord] = useState<string | null>(null);
+  const [activeVerse, setActiveVerse] = useState<string | null>(null);
+  const [trackingMode, setTrackingMode] = useState<'off' | 'verse' | 'word'>('off');
   const [muted, setMuted] = useState(false);
   const [soundActive, setSoundActive] = useState(false);
   const audioPool = useRef<HTMLAudioElement[]>([]);
@@ -475,15 +481,22 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
     }
   }, [remoteMinutes]);
 
-  // Sync remote word highlight from follower callback
+  // Sync remote word/verse highlight from follower callback
   useEffect(() => {
     if (remoteActiveWord !== undefined) {
       setActiveWord(remoteActiveWord ?? null);
     }
   }, [remoteActiveWord]);
 
+  useEffect(() => {
+    if (remoteActiveVerse !== undefined) {
+      setActiveVerse(remoteActiveVerse ?? null);
+    }
+  }, [remoteActiveVerse]);
+
   const highlightWord = useCallback((wordId: string) => {
     setActiveWord(wordId);
+    setActiveVerse(null);
     const now = Date.now();
     if (now - lastBroadcastTime.current >= 80) {
       lastBroadcastTime.current = now;
@@ -492,10 +505,19 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
     }
   }, [session, onWordTap]);
 
+  const highlightVerse = useCallback((verseKey: string) => {
+    setActiveVerse(verseKey);
+    setActiveWord(null);
+    session?.broadcastWord(`v:${verseKey}`);
+  }, [session]);
+
+  const trackingModeRef = useRef(trackingMode);
+  trackingModeRef.current = trackingMode;
+
   const sessionRef = useRef(session);
   sessionRef.current = session;
 
-  // Touch/mouse drag handlers for word-by-word highlighting (admin only)
+  // Touch/mouse drag handlers for word-by-word and verse highlighting (admin only)
   useEffect(() => {
     const container = scrollTextRef.current;
     if (!container || session?.role !== 'admin') return;
@@ -507,11 +529,56 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
       return wordEl?.dataset.word ?? null;
     };
 
+    const getVerseFromPoint = (x: number, y: number): string | null => {
+      const el = document.elementFromPoint(x, y);
+      if (!el) return null;
+      const verseEl = (el as HTMLElement).closest?.('[data-verse]') as HTMLElement | null;
+      return verseEl?.dataset.verse ?? null;
+    };
+
+    // Smooth gap-fill: animate through intermediate words when drag skips
+    const fillGap = (fromWord: string, toWord: string) => {
+      if (gapAnimating.current) return;
+      const allWords = Array.from(container.querySelectorAll('[data-word]')) as HTMLElement[];
+      const fromIdx = allWords.findIndex(el => el.dataset.word === fromWord);
+      const toIdx = allWords.findIndex(el => el.dataset.word === toWord);
+      if (fromIdx === -1 || toIdx === -1 || Math.abs(toIdx - fromIdx) <= 1) return;
+
+      gapAnimating.current = true;
+      const step = fromIdx < toIdx ? 1 : -1;
+      let i = fromIdx + step;
+      const animateNext = () => {
+        if ((step > 0 && i >= toIdx) || (step < 0 && i <= toIdx)) {
+          gapAnimating.current = false;
+          return;
+        }
+        const wId = allWords[i]?.dataset.word;
+        if (wId) {
+          setActiveWord(wId);
+        }
+        i += step;
+        setTimeout(() => requestAnimationFrame(animateNext), 30);
+      };
+      requestAnimationFrame(animateNext);
+    };
+
     const onPointerStart = (x: number, y: number) => {
+      const mode = trackingModeRef.current;
+      if (mode === 'off') return false;
+
+      if (mode === 'verse') {
+        const verseKey = getVerseFromPoint(x, y);
+        if (verseKey) highlightVerse(verseKey);
+        return false; // Don't start drag for verse mode
+      }
+
+      // Word mode
       const wordId = getWordFromPoint(x, y);
       if (!wordId) return false;
       dragging.current = true;
+      lastDragWord.current = wordId;
       setActiveWord(wordId);
+      setActiveVerse(null);
       lastBroadcastTime.current = Date.now();
       session?.broadcastWord(wordId);
       onWordTap?.(wordId);
@@ -521,22 +588,41 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
     const onPointerMove = (x: number, y: number) => {
       if (!dragging.current) return;
       const wordId = getWordFromPoint(x, y);
-      if (wordId) highlightWord(wordId);
+      if (wordId && wordId !== lastDragWord.current) {
+        // Fill gaps if words were skipped
+        if (lastDragWord.current) {
+          fillGap(lastDragWord.current, wordId);
+        }
+        lastDragWord.current = wordId;
+        highlightWord(wordId);
+      }
     };
 
     const onPointerEnd = () => {
       dragging.current = false;
+      lastDragWord.current = null;
     };
 
     // Touch events
     const handleTouchStart = (e: TouchEvent) => {
-      const touch = e.touches[0];
-      if (onPointerStart(touch.clientX, touch.clientY)) {
-        // Don't preventDefault here — let the browser decide on scrolling
+      // Multi-touch always cancels tracking and allows scroll
+      if (e.touches.length >= 2) {
+        dragging.current = false;
+        lastDragWord.current = null;
+        return;
       }
+      if (trackingModeRef.current === 'off') return;
+      const touch = e.touches[0];
+      onPointerStart(touch.clientX, touch.clientY);
     };
 
     const handleTouchMove = (e: TouchEvent) => {
+      // Multi-touch cancels
+      if (e.touches.length >= 2) {
+        dragging.current = false;
+        lastDragWord.current = null;
+        return;
+      }
       if (!dragging.current) return;
       e.preventDefault(); // Block scrolling while dragging words
       const touch = e.touches[0];
@@ -547,6 +633,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
 
     // Mouse events
     const handleMouseDown = (e: MouseEvent) => {
+      if (trackingModeRef.current === 'off') return;
       onPointerStart(e.clientX, e.clientY);
     };
 
@@ -573,7 +660,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [session?.role, highlightWord, session, onWordTap]);
+  }, [session?.role, highlightWord, highlightVerse, session, onWordTap]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -1001,7 +1088,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
                   ];
                 }
 
-                const verseResult = [renderVerse(v.text, ch.chapter, v.verse, playGragger, chabadMode, !showCantillation, t, lang, activeTranslations, activeWord)];
+                const verseResult = [renderVerse(v.text, ch.chapter, v.verse, playGragger, chabadMode, !showCantillation, t, lang, activeTranslations, activeWord, activeVerse)];
                 const illustration = showIllustrations && ILLUSTRATIONS.find(ill => ill.after === verseKey);
                 if (illustration) {
                   verseResult.push(
@@ -1036,6 +1123,33 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           </div>
         </div>
       </div>
+
+      {/* Tracking mode toggle — admin only, session only */}
+      {session?.role === 'admin' && (
+        <div class="tracking-toggle">
+          <button
+            class={`tracking-btn${trackingMode === 'off' ? ' active' : ''}`}
+            onClick={() => { setTrackingMode('off'); setActiveVerse(null); }}
+            title="Scroll mode (tracking off)"
+          >
+            <span class="material-icons">swipe</span>
+          </button>
+          <button
+            class={`tracking-btn${trackingMode === 'verse' ? ' active' : ''}`}
+            onClick={() => { setTrackingMode('verse'); setActiveWord(null); }}
+            title="Verse tracking"
+          >
+            <span class="material-icons">segment</span>
+          </button>
+          <button
+            class={`tracking-btn${trackingMode === 'word' ? ' active' : ''}`}
+            onClick={() => { setTrackingMode('word'); setActiveVerse(null); }}
+            title="Word tracking"
+          >
+            <span class="material-icons">text_select_move_forward_word</span>
+          </button>
+        </div>
+      )}
 
       {(soundActive || muted) && (
         <button
@@ -1627,6 +1741,52 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
         .illustration img {
           width: 100%;
           border-radius: 8px;
+        }
+
+        .verse-active {
+          background: rgba(232, 190, 80, 0.18);
+          border-radius: 4px;
+          transition: background 0.3s ease;
+        }
+
+        .tracking-toggle {
+          position: fixed;
+          bottom: 24px;
+          inset-inline-start: 24px;
+          display: flex;
+          gap: 2px;
+          background: var(--color-white);
+          border-radius: 24px;
+          padding: 4px;
+          box-shadow: 0 3px 12px rgba(102, 10, 35, 0.2);
+          z-index: 100;
+        }
+
+        .tracking-btn {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 40px;
+          height: 40px;
+          border: none;
+          border-radius: 50%;
+          background: transparent;
+          color: var(--color-text-light);
+          cursor: pointer;
+          transition: background 0.2s, color 0.2s;
+        }
+
+        .tracking-btn:hover {
+          background: var(--color-cream-dark);
+        }
+
+        .tracking-btn.active {
+          background: var(--color-burgundy);
+          color: var(--color-white);
+        }
+
+        .tracking-btn .material-icons {
+          font-size: 20px;
         }
 
         .mobile-only { display: inline; }

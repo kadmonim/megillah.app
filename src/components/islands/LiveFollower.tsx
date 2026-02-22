@@ -14,6 +14,7 @@ export default function LiveFollower() {
   const lastVerse = useRef<string | null>(null);
   const [remoteMinutes, setRemoteMinutes] = useState<number | null>(null);
   const [remoteWord, setRemoteWord] = useState<string | null>(null);
+  const [remoteActiveVerse, setRemoteActiveVerse] = useState<string | null>(null);
 
   const handleRemoteScroll = useCallback((pos: ScrollPosition) => {
     if (pos.verse === lastVerse.current) return;
@@ -29,7 +30,13 @@ export default function LiveFollower() {
   }, []);
 
   const handleRemoteWord = useCallback((wordId: string) => {
-    setRemoteWord(wordId);
+    if (wordId.startsWith('v:')) {
+      setRemoteActiveVerse(wordId.slice(2));
+      setRemoteWord(null);
+    } else {
+      setRemoteWord(wordId);
+      setRemoteActiveVerse(null);
+    }
   }, []);
 
   const { session, error } = useSession(handleRemoteScroll, handleRemoteTime, code, handleRemoteWord);
@@ -100,7 +107,7 @@ export default function LiveFollower() {
 
   return (
     <div class="live-session">
-      <MegillahReader standalone={true} session={session} remoteMinutes={remoteMinutes} activeWord={remoteWord} />
+      <MegillahReader standalone={true} session={session} remoteMinutes={remoteMinutes} activeWord={remoteWord} activeVerse={remoteActiveVerse} />
     </div>
   );
 }
