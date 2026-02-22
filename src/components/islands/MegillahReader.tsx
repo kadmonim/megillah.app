@@ -1671,7 +1671,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
 
         .toolbar-sticky {
           position: sticky;
-          top: 20px;
+          top: 28px;
           z-index: 50;
           margin-bottom: 14px;
         }
