@@ -1,4 +1,4 @@
-const SUPPORTED = ['he', 'en', 'es', 'ru', 'fr', 'pt', 'it', 'hu', 'de'] as const;
+const SUPPORTED = ['he', 'en', 'es', 'ru', 'fr', 'pt', 'it', 'hu', 'de', 'el'] as const;
 
 function parseLang(header: string | null): string {
   if (!header) return 'en';

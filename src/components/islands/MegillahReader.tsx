@@ -4,7 +4,7 @@ import { megillahText } from '../../lib/megillah-text';
 import { translationsEn } from '../../lib/megillah-translations-en';
 import type { Session, ScrollPosition } from '../../lib/useSession';
 
-type Lang = 'he' | 'en' | 'es' | 'ru' | 'fr' | 'pt' | 'it' | 'hu' | 'de';
+type Lang = 'he' | 'en' | 'es' | 'ru' | 'fr' | 'pt' | 'it' | 'hu' | 'de' | 'el';
 type TranslationMap = Record<string, string>;
 
 function toHebrew(n: number): string {
@@ -65,6 +65,12 @@ const LOUD_TRANSLITERATIONS: Record<string, Record<string, string>> = {
     '8:15': 'U-Mordechai jatza milifnei hamelech bilwusch malchut techelet wachur, waateret sahaw gedola, wetachrich buz weargaman, wehair Schuschan zahala wesamecha.',
     '8:16': 'LaJehudim hajta ora wesimcha wesasson wikar.',
     '10:3': 'Ki Mordechai haJehudi mischne lamelech Achaschverosch, wegadol laJehudim weratzui lerow echaw, doresch tow leamo wedower schalom lechol saro.',
+  },
+  el: {
+    '2:5': 'Ις Γιεχουντί χαγιά μπε-Σουσάν χαμπιρά, ουσμό Μορντοχάι μπεν Γιαΐρ μπεν Σιμΐ μπεν Κις, ις Γιεμινί.',
+    '8:15': 'Ου-Μορντοχάι γιατζά μιλιφνέι χαμέλεχ μπιλβούς μαλχούτ τεχέλετ βαχούρ, βααταρέτ ζαχάβ γκεντολά, βεταχρίχ μπουτζ βεαργαμάν, βεχαΐρ Σουσάν τζαχαλά βεσαμέχα.',
+    '8:16': 'Λα-Γιεχουντίμ χαϊτά ορά βεσιμχά βεσασόν βικάρ.',
+    '10:3': 'Κι Μορντοχάι χα-Γιεχουντί μισνέ λαμέλεχ Αχασβερός, βεγκαντόλ λα-Γιεχουντίμ βερατζούι λερόβ εχάβ, ντορές τοβ λεαμό βεντοβέρ σαλόμ λεχόλ ζαρό.',
   },
 };
 const BNEI_HAMAN_VERSES = new Set(['9:7', '9:8', '9:9']);
@@ -433,6 +439,43 @@ const translations = {
     leaveSession: 'Verlassen',
     joinLive: 'Live',
   },
+  el: {
+    showCantillation: 'Εμφάνιση σημείων καντιλασιόν',
+    chabadCustom: 'Λιγότερη επισήμανση Αμάν',
+    showTranslation: 'Μετάφραση',
+    hebrewOnly: 'Μόνο Εβραϊκά',
+    langName: 'Ελληνικά',
+    hebrewName: 'Εβραϊκά',
+    only: 'Μόνο',
+    fontSize: 'Μέγεθος γραμματοσειράς',
+    minLeft: 'λεπτά απομ.',
+    readingTime: 'Χρόνος ανάγνωσης (λεπτά):',
+    save: 'Αποθήκευση',
+    changeReadingTime: 'Αλλαγή χρόνου ανάγνωσης',
+    chabadHint: 'Έθιμο Χαμπάντ — ο Αμάν επισημαίνεται μόνο με τίτλο',
+    tapHint: 'Δεν έχετε ρατσέτα; Πατήστε στο όνομα του Αμάν!',
+    chapter: 'Κεφάλαιο',
+    loudLabel: 'Όλοι διαβάζουν αυτό μαζί:',
+    bneiHamanLabel: 'Σε ορισμένες κοινότητες, όλοι λένε αυτό μαζί.',
+    headerTitle: 'Η Μεγιλά',
+    headerSub: 'Ενσωματωμένη ρατσέτα και παρακολούθηση προόδου',
+    language: 'Γλώσσα',
+    editSubtitle: 'Επεξεργασία υπότιτλου',
+    subtitleText: 'Κείμενο',
+    subtitleUrl: 'Σύνδεσμος (προαιρετικά)',
+    displayIllustrations: 'Εμφάνιση εικονογραφήσεων',
+    trackScrolling: 'Μόνο κύλιση, χωρίς επισήμανση',
+    trackVerse: 'Οι στίχοι που πατιούνται επισημαίνονται για τους θεατές (συνιστάται)',
+    trackWord: 'Οι λέξεις που πατιούνται επισημαίνονται για τους θεατές',
+    editTapHint: 'Επεξεργασία ανακοίνωσης',
+    resetToDefault: 'Επαναφορά στις προεπιλογές',
+    sessionCode: 'Κωδικός',
+    broadcasting: 'Μετάδοση',
+    following: 'Παρακολούθηση',
+    endSession: 'Τέλος',
+    leaveSession: 'Αποχώρηση',
+    joinLive: 'Ζωντανά',
+  },
 } as const;
 
 type Translations = typeof translations[keyof typeof translations];
@@ -713,7 +756,7 @@ function renderVerse(
 }
 
 const LANG_STORAGE_KEY = 'megillah-lang';
-const SUPPORTED_LANGS: Lang[] = ['he', 'en', 'es', 'ru', 'fr', 'pt', 'it', 'hu', 'de'];
+const SUPPORTED_LANGS: Lang[] = ['he', 'en', 'es', 'ru', 'fr', 'pt', 'it', 'hu', 'de', 'el'];
 
 function getInitialLang(): Lang {
   if (typeof window === 'undefined') return 'en';
@@ -742,15 +785,8 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
   const [showTimeEdit, setShowTimeEdit] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [showTrackingMenu, setShowTrackingMenu] = useState(false);
-  const [lang, setLang] = useState<Lang>(getInitialLang);
-  const [translationMode, setTranslationMode] = useState<'hebrew' | 'both' | 'translation'>(() => {
-    if (typeof window === 'undefined') return 'hebrew';
-    try {
-      const stored = localStorage.getItem('megillah-translation-mode');
-      if (stored === 'hebrew' || stored === 'both' || stored === 'translation') return stored;
-    } catch {}
-    return 'hebrew';
-  });
+  const [lang, setLang] = useState<Lang>('he');
+  const [translationMode, setTranslationMode] = useState<'hebrew' | 'both' | 'translation'>('hebrew');
   const [loadedTranslations, setLoadedTranslations] = useState<TranslationMap | null>(null);
   const translationCache = useRef<Record<string, TranslationMap>>({});
   const deviceLang = useRef<Lang>(getInitialLang);
@@ -771,6 +807,16 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
   const soundTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const scrollTextRef = useRef<HTMLDivElement>(null);
   const confettiFired = useRef(false);
+
+  // Detect language & translation mode after hydration to avoid SSR mismatch
+  useEffect(() => {
+    const detected = getInitialLang();
+    if (detected !== 'he') setLang(detected);
+    try {
+      const stored = localStorage.getItem('megillah-translation-mode');
+      if (stored === 'both' || stored === 'translation') setTranslationMode(stored);
+    } catch {}
+  }, []);
 
   const t = translations[lang];
   // Only create per-word spans when word tracking is active or a remote word is highlighted
@@ -1476,6 +1522,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
                 <option value="it">Italiano</option>
                 <option value="hu">Magyar</option>
                 <option value="de">Deutsch</option>
+                <option value="el">Ελληνικά</option>
               </select>
             </label>
           </div>
@@ -1566,6 +1613,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
                     ru: /^(.*?истребили\s*)(пятьсот человек\..*)$/i,
                     hu: /^(.*?elpusztítottak\s*)(ötszáz embert.*)$/i,
                     de: /^(.*?vernichteten\s*)(fünfhundert Mann\..*)$/i,
+                    el: /^(.*?σκότωσαν\s*)(πεντακόσιους άνδρες\..*)$/i,
                     he: /^(.*?וְאַבֵּד\s*)(חֲמֵשׁ מֵאוֹת אִישׁ.*)$/,
                   };
                   const trans96Re = trans96SplitPatterns[lang];
@@ -1589,6 +1637,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
                     ru: /^(.*?[Дд]есять сыновей\s*)/i,
                     hu: /^(.*?tíz fiát\s*)/i,
                     de: /^(.*?[Dd]ie zehn Söhne\s*)/i,
+                    el: /^(.*?δέκα γιους του Αμάν\s*)/i,
                     he: /^(.*?עֲשֶׂרֶת בְּנֵי הָמָן\s*)/,
                   };
                   const v10Re = v10SplitPatterns[lang];
@@ -1633,6 +1682,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
                         it: "Chamesh meòt ish. Veèt Parshandathà, veèt Dalfòn, veèt Aspathà, veèt Porathà, veèt Adalyà, veèt Aridathà, veèt Parmashtà, veèt Arisài, veèt Aridài, veèt Vayzathà. Assèret...",
                         hu: "Hámes méot is. Veét Pársándátá, veét Dálfon, veét Ászpátá, veét Porátá, veét Ádáljá, veét Áridátá, veét Pármástá, veét Áriszáj, veét Áridáj, veét Vájzátá. Ászeret...",
                         de: "Chamesch meot isch. Weet Parschandatha, weet Dalfon, weet Aspatha, weet Poratha, weet Adalja, weet Aridatha, weet Parmaschta, weet Arisai, weet Aridai, weet Waisatha. Asseret...",
+                        el: "Χαμές μεότ ις. Βεέτ Παρσαντάτα, βεέτ Νταλφόν, βεέτ Ασπατά, βεέτ Ποράτα, βεέτ Ανταλγιά, βεέτ Αριντάτα, βεέτ Παρμαστά, βεέτ Αρισάι, βεέτ Αριντάι, βεέτ Βαϊζατά. Ασέρετ...",
                       } as Record<string, string>)[lang] || "Chamesh me'ot ish. V'et Parshandatha, v'et Dalfon, v'et Aspatha, v'et Poratha, v'et Adalya, v'et Aridatha, v'et Parmashta, v'et Arisai, v'et Aridai, v'et Vayzatha. Aseret..."}</span>}
                       {translationMode !== 'translation' && <>
                         <span class="haman-son">{splitText}</span>
@@ -1671,7 +1721,8 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
                     ru: /^(.*?[Дд]есять сыновей\s*)([\s\S]*)$/i,
                     hu: /^(.*?tíz fiát\s*)([\s\S]*)$/i,
                     de: /^(.*?[Dd]ie zehn Söhne\s*)([\s\S]*)$/i,
-                    he: /^(.*?עֲשֶׂרֶת בְּנֵי הָמָן\s*)([\s\S]*)$/,
+                    el: /^(.*?δέκα γιους του Αμάν\s*)([\s\S]*)$/i,
+                    he: /^(.*?עֲשֶׂרֶת בְּנֵי הָμָן\s*)([\s\S]*)$/,
                   };
                   const v10RestRe = v10RestPatterns[lang];
                   const transMatch = v10RestRe ? v10trans.match(v10RestRe) : null;

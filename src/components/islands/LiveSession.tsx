@@ -4,7 +4,7 @@ import type { Session, ScrollPosition } from '../../lib/useSession';
 import { getSupabase } from '../../lib/supabase';
 import MegillahReader from './MegillahReader';
 
-type Lang = 'he' | 'en' | 'es' | 'ru' | 'fr' | 'pt' | 'it' | 'hu' | 'de';
+type Lang = 'he' | 'en' | 'es' | 'ru' | 'fr' | 'pt' | 'it' | 'hu' | 'de' | 'el';
 
 const lobbyText = {
   he: {
@@ -286,9 +286,39 @@ const lobbyText = {
     showPassword: 'Anzeigen',
     hidePassword: 'Ausblenden',
   },
+  el: {
+    title: 'Megillah Live',
+    subtitle: 'Ακολουθήστε μια ζωντανή ανάγνωση Μεγιλά',
+    createSession: 'Δημιουργία συνεδρίας',
+    joinSession: 'Συμμετοχή σε συνεδρία',
+    adminPassword: 'Ορισμός κωδικού μετάδοσης',
+    choosePassword: 'Επιλέξτε κωδικό...',
+    creating: 'Δημιουργία...',
+    sessionCode: 'Κωδικός συνεδρίας',
+    passwordAdmins: 'Κωδικός (μόνο για διαχειριστές)',
+    optional: 'Προαιρετικά...',
+    joining: 'Σύνδεση...',
+    back: 'Πίσω',
+    copyLink: 'Αντιγραφή συνδέσμου',
+    copied: 'Αντιγράφηκε!',
+    startBroadcasting: 'Έναρξη μετάδοσης',
+    scanQR: 'Ή σαρώστε τον κωδικό QR',
+    sessionCreated: 'Η συνεδρία δημιουργήθηκε επιτυχώς!',
+    shareHeading: 'Πληροφορίες κοινοποίησης',
+    shareTip1: 'Στείλτε τους αυτόν τον σύνδεσμο:',
+    shareTip2: 'Ή ζητήστε τους να ανοίξουν megillah.app/live, να πατήσουν «Συμμετοχή σε συνεδρία» και να εισάγουν τον κωδικό',
+    shareTip3: 'Ή σαρώστε αυτόν τον κωδικό QR.',
+    broadcastHeading: 'Πληροφορίες μετάδοσης',
+    broadcastTip1: 'Πατήστε το κουμπί παρακάτω για να ξεκινήσετε τη μετάδοση.',
+    broadcastTip2Pre: 'Ή ανοίξτε megillah.app/live από οποιαδήποτε συσκευή, πατήστε «Συμμετοχή σε συνεδρία» και εισάγετε τον κωδικό',
+    broadcastTip2Mid: 'και τον κωδικό που μόλις δημιουργήσατε:',
+    saveNote: 'Μην ξεχάσετε τον κωδικό σας.',
+    showPassword: 'Εμφάνιση',
+    hidePassword: 'Απόκρυψη',
+  },
 } as const;
 
-const SUPPORTED_LANGS: Lang[] = ['he', 'en', 'es', 'ru', 'fr', 'pt', 'it', 'hu', 'de'];
+const SUPPORTED_LANGS: Lang[] = ['he', 'en', 'es', 'ru', 'fr', 'pt', 'it', 'hu', 'de', 'el'];
 
 function detectLang(): Lang {
   if (typeof window === 'undefined') return 'en';
@@ -376,7 +406,13 @@ export default function LiveSession() {
   const { session, loading, error, joinSession } =
     useSession(handleRemoteScroll, handleRemoteTime, undefined, handleRemoteWord, handleRemoteSetting);
 
-  const [lang, setLang] = useState<Lang>(detectLang);
+  const [lang, setLang] = useState<Lang>('he');
+
+  // Detect language after hydration to avoid SSR mismatch
+  useEffect(() => {
+    const detected = detectLang();
+    if (detected !== 'he') setLang(detected);
+  }, []);
 
   // Restore a previously created session from localStorage
   useEffect(() => {
