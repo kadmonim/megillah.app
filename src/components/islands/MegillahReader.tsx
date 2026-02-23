@@ -2282,7 +2282,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
 
         @media (hover: hover) and (pointer: fine) {
           .megillah-reader .scroll-text.admin-session.tracking-on .verse {
-            cursor: url('/cursors/highlighter.svg') 4 28, pointer;
+            cursor: pointer;
           }
         }
 
