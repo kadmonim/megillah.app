@@ -581,7 +581,13 @@ function wrapWords(
   verseKey: string,
   startIdx: number,
   activeWord: string | null,
+  needsWordSpans: boolean,
 ): { nodes: ComponentChildren[]; nextIdx: number } {
+  if (!needsWordSpans) {
+    // Count words for index tracking but skip creating individual spans
+    const wordCount = text.split(/\s+/).filter(Boolean).length;
+    return { nodes: [text], nextIdx: startIdx + wordCount };
+  }
   const words = text.split(/(\s+)/);
   const nodes: ComponentChildren[] = [];
   let idx = startIdx;
@@ -620,6 +626,7 @@ function renderVerse(
   translationMap: TranslationMap | null,
   activeWord: string | null,
   activeVerse: string | null,
+  needsWordSpans: boolean = true,
 ) {
   const displayText = hideCantillation ? stripCantillation(text) : text;
   const parts = displayText.split(HAMAN_REGEX);
@@ -636,7 +643,7 @@ function renderVerse(
 
   const hebrewContent = showHebrew && parts.map((part, i) => {
     if (!HAMAN_REGEX.test(part)) {
-      const { nodes, nextIdx } = wrapWords(part, verseKey, wordIdx, activeWord);
+      const { nodes, nextIdx } = wrapWords(part, verseKey, wordIdx, activeWord, needsWordSpans);
       wordIdx = nextIdx;
       return <span key={`${chapterNum}-${verseNum}-${i}`}>{nodes}</span>;
     }
@@ -644,13 +651,15 @@ function renderVerse(
       const nextPart = parts[i + 1] || '';
       if (!hasTitleAfter(nextPart)) {
         const wId = `${verseKey}-${wordIdx}`;
-        const isActive = activeWord === wId;
+        const isActive = needsWordSpans && activeWord === wId;
         wordIdx++;
-        return <span key={`${chapterNum}-${verseNum}-${i}`} class={`word${isActive ? ' word-active' : ''}`} data-word={wId}>{part}</span>;
+        return needsWordSpans
+          ? <span key={`${chapterNum}-${verseNum}-${i}`} class={`word${isActive ? ' word-active' : ''}`} data-word={wId}>{part}</span>
+          : <span key={`${chapterNum}-${verseNum}-${i}`}>{part}</span>;
       }
     }
     const wId = `${verseKey}-${wordIdx}`;
-    const isActive = activeWord === wId;
+    const isActive = needsWordSpans && activeWord === wId;
     wordIdx++;
     return (
       <HamanWord key={`${chapterNum}-${verseNum}-${i}`} text={part} onTap={onHamanTap} wordId={wId} isActive={isActive} />
@@ -738,6 +747,8 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
   const confettiFired = useRef(false);
 
   const t = translations[lang];
+  // Only create per-word spans when word tracking is active or a remote word is highlighted
+  const needsWordSpans = trackingMode === 'word' || !!activeWord || !!remoteActiveWord;
 
   // The translation language to use when translation is shown
   // Hebrew users get Steinsaltz commentary; others get their language's translation
@@ -1647,11 +1658,11 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
                   const transMatch = v10RestRe ? v10trans.match(v10RestRe) : null;
                   const transRest = transMatch ? transMatch[2] : v10trans;
                   const customTranslations = transRest ? { '9:10': transRest } as TranslationMap : activeTranslations;
-                  const verseResult = [renderVerse(restText, ch.chapter, v.verse, playGragger, chabadMode, false, translationMode, t, lang, customTranslations, activeWord, activeVerse)];
+                  const verseResult = [renderVerse(restText, ch.chapter, v.verse, playGragger, chabadMode, false, translationMode, t, lang, customTranslations, activeWord, activeVerse, needsWordSpans)];
                   return verseResult;
                 }
 
-                const verseResult = [renderVerse(v.text, ch.chapter, v.verse, playGragger, chabadMode, !showCantillation, translationMode, t, lang, activeTranslations, activeWord, activeVerse)];
+                const verseResult = [renderVerse(v.text, ch.chapter, v.verse, playGragger, chabadMode, !showCantillation, translationMode, t, lang, activeTranslations, activeWord, activeVerse, needsWordSpans)];
                 const illustration = showIllustrations && ILLUSTRATIONS.find(ill => ill.after === verseKey);
                 if (illustration) {
                   verseResult.push(
