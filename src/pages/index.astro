@@ -30,7 +30,7 @@ const description = "Follow along with the Megillah reading — tap Haman's name
   <body>
     <main class="container">
       <section class="megillah-page">
-        <MegillahReader client:load standalone={true} />
+        <MegillahReader client:only="preact" standalone={true} />
       </section>
     </main>
 
