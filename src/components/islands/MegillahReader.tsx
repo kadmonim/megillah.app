@@ -1592,6 +1592,10 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
         </div>
       </div>
 
+      {customTapHint && (
+        <div class="bottom-announcement custom-hint" dangerouslySetInnerHTML={{ __html: customTapHint }} />
+      )}
+
       {(soundActive || muted) && (
         <button
           class={`sound-fab${soundActive && !muted ? ' playing' : ''}`}
@@ -2050,6 +2054,13 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
         }
         .custom-hint p { margin: 4px 0; }
         .custom-hint a { color: var(--color-gold); text-decoration: underline; }
+        .bottom-announcement {
+          text-align: center;
+          margin-top: 24px;
+          padding: 16px 20px;
+          background: rgba(232, 150, 46, 0.1);
+          border-radius: 10px;
+        }
         .edit-hint-btn {
           background: none;
           border: none;
