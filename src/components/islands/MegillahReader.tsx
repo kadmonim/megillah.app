@@ -94,6 +94,9 @@ const ILLUSTRATIONS = [
   { after: '2:17', src: '/illustrations/2-17.webp', he: 'אסתר מוכתרת', en: 'Esther is Crowned' },
   { after: '3:1', src: '/illustrations/3-1-2.webp', he: 'מרדכי מסרב להשתחוות', en: 'Mordechai Refuses to Bow' },
   { after: '3:8', src: '/illustrations/3-8-11.webp', he: 'הגזירה הרעה', en: 'The Evil Decree' },
+  { after: '5:2', src: '/illustrations/5-1-2.webp', he: 'אסתר ניגשת אל המלך', en: 'Esther Approaches the King' },
+  { after: '6:1', src: '/illustrations/6-1.webp', he: 'המלך אינו ישן', en: 'The King Cannot Sleep' },
+  { after: '7:4', src: '/illustrations/7-3-4.webp', he: 'אסתר חושפת את המזימה', en: 'Esther Reveals the Plot' },
 ];
 
 const translations = {
@@ -740,7 +743,14 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
   const [menuOpen, setMenuOpen] = useState(false);
   const [showTrackingMenu, setShowTrackingMenu] = useState(false);
   const [lang, setLang] = useState<Lang>(getInitialLang);
-  const [translationMode, setTranslationMode] = useState<'hebrew' | 'both' | 'translation'>('hebrew');
+  const [translationMode, setTranslationMode] = useState<'hebrew' | 'both' | 'translation'>(() => {
+    if (typeof window === 'undefined') return 'hebrew';
+    try {
+      const stored = localStorage.getItem('megillah-translation-mode');
+      if (stored === 'hebrew' || stored === 'both' || stored === 'translation') return stored;
+    } catch {}
+    return 'hebrew';
+  });
   const [loadedTranslations, setLoadedTranslations] = useState<TranslationMap | null>(null);
   const translationCache = useRef<Record<string, TranslationMap>>({});
   const deviceLang = useRef<Lang>(getInitialLang);
@@ -1402,6 +1412,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
                   class={`segmented-btn${translationMode === mode ? ' active' : ''}`}
                   onClick={() => {
                     setTranslationMode(mode);
+                    try { localStorage.setItem('megillah-translation-mode', mode); } catch {}
                     if (session?.role === 'admin') session.broadcastSetting('translationMode', mode);
                   }}
                 >
@@ -2545,6 +2556,14 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
         .illustration.illustration-he {
           float: left;
           margin: 8px 20px 8px 0;
+        }
+
+        .side-by-side .illustration,
+        .side-by-side .illustration.illustration-he {
+          float: none;
+          width: 60%;
+          max-width: 400px;
+          margin: 16px auto;
         }
 
         .illustration img {
