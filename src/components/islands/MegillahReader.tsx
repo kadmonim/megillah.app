@@ -1192,7 +1192,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
             )}
           </span>
           {!session && (
-            <a href="/live/join" class="join-live-btn">
+            <a href="/live" class="join-live-btn">
               <span class="material-icons" style="font-size:13px;vertical-align:middle;margin-inline-end:3px">cast</span>
               {t.joinLive}
             </a>
@@ -1505,7 +1505,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
         )}
       </div>
 
-      <div class={`scroll-text${session?.role === 'admin' ? ' admin-session' : ''}`} dir="rtl" ref={scrollTextRef}>
+      <div class={`scroll-text${session?.role === 'admin' ? ' admin-session' : ''}${trackingMode !== 'off' ? ' tracking-on' : ''}`} dir="rtl" ref={scrollTextRef}>
         <div class="blessings-block" data-verse="blessings-before">
           <h2 class="chapter-heading">{lang === 'he' ? 'ברכות לפני קריאת המגילה' : 'Blessings Before the Reading'}</h2>
           <div class="blessing-text">
@@ -2278,6 +2278,12 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           cursor: default;
           -webkit-user-select: none;
           user-select: none;
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+          .megillah-reader .scroll-text.admin-session.tracking-on .verse {
+            cursor: url('/cursors/highlighter.svg') 4 28, pointer;
+          }
         }
 
         .haman-name {

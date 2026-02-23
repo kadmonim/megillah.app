@@ -58,7 +58,12 @@ export default function LiveFollower() {
     }
   }, []);
 
-  const { session, error } = useSession(handleRemoteScroll, handleRemoteTime, code, handleRemoteWord);
+  // Redirect to lobby if no code provided
+  useEffect(() => {
+    if (!code) window.location.href = '/live';
+  }, []);
+
+  const { session, error } = useSession(handleRemoteScroll, handleRemoteTime, code || undefined, handleRemoteWord);
 
   // Hide the server-rendered loading screen once we're ready
   useEffect(() => {
