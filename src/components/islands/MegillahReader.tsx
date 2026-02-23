@@ -4,7 +4,7 @@ import { megillahText } from '../../lib/megillah-text';
 import { translationsEn } from '../../lib/megillah-translations-en';
 import type { Session, ScrollPosition } from '../../lib/useSession';
 
-type Lang = 'he' | 'en' | 'es' | 'ru' | 'fr' | 'pt' | 'it' | 'hu';
+type Lang = 'he' | 'en' | 'es' | 'ru' | 'fr' | 'pt' | 'it' | 'hu' | 'de';
 type TranslationMap = Record<string, string>;
 
 function toHebrew(n: number): string {
@@ -349,6 +349,43 @@ const translations = {
     leaveSession: 'Kilépés',
     joinLive: 'Élő',
   },
+  de: {
+    showCantillation: 'Kantillationszeichen anzeigen',
+    chabadCustom: 'Weniger Haman hervorheben',
+    showTranslation: 'Übersetzung',
+    hebrewOnly: 'Nur Hebräisch',
+    langName: 'Deutsch',
+    hebrewName: 'Hebräisch',
+    only: 'Nur',
+    fontSize: 'Schriftgröße',
+    minLeft: 'Min. übrig',
+    readingTime: 'Lesezeit (Min.):',
+    save: 'Speichern',
+    changeReadingTime: 'Lesezeit ändern',
+    chabadHint: 'Chabad-Brauch — Haman nur mit Titel hervorgehoben',
+    tapHint: 'Keine Ratsche? Klicke einfach auf Hamans Namen!',
+    chapter: 'Kapitel',
+    loudLabel: 'Alle lesen dies gemeinsam:',
+    bneiHamanLabel: 'In manchen Gemeinden sagen alle dies gemeinsam.',
+    headerTitle: 'Die Megilla',
+    headerSub: 'Eingebaute Ratsche und Fortschrittsanzeige',
+    language: 'Sprache',
+    editSubtitle: 'Untertitel bearbeiten',
+    subtitleText: 'Text',
+    subtitleUrl: 'Link (optional)',
+    displayIllustrations: 'Illustrationen anzeigen',
+    trackScrolling: 'Nur Scrollen, keine Hervorhebung',
+    trackVerse: 'Angetippte Verse werden für Zuschauer hervorgehoben (empfohlen)',
+    trackWord: 'Angetippte Wörter werden für Zuschauer hervorgehoben',
+    editTapHint: 'Ankündigung bearbeiten',
+    resetToDefault: 'Auf Standard zurücksetzen',
+    sessionCode: 'Code',
+    broadcasting: 'Übertragung',
+    following: 'Folgen',
+    endSession: 'Beenden',
+    leaveSession: 'Verlassen',
+    joinLive: 'Live',
+  },
 } as const;
 
 type Translations = typeof translations[keyof typeof translations];
@@ -680,6 +717,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
     else if (navLang.startsWith('pt')) detected = 'pt';
     else if (navLang.startsWith('it')) detected = 'it';
     else if (navLang.startsWith('hu')) detected = 'hu';
+    else if (navLang.startsWith('de')) detected = 'de';
     deviceLang.current = detected;
     setLang(detected);
   }, []);
@@ -1363,6 +1401,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
                 <option value="pt">Português</option>
                 <option value="it">Italiano</option>
                 <option value="hu">Magyar</option>
+                <option value="de">Deutsch</option>
               </select>
             </label>
           </div>
@@ -1452,6 +1491,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
                     pt: /^(.*?destruíram\s*)(quinhentos homens\..*)$/i,
                     ru: /^(.*?истребили\s*)(пятьсот человек\..*)$/i,
                     hu: /^(.*?elpusztítottak\s*)(ötszáz embert.*)$/i,
+                    de: /^(.*?vernichteten\s*)(fünfhundert Mann\..*)$/i,
                     he: /^(.*?וְאַבֵּד\s*)(חֲמֵשׁ מֵאוֹת אִישׁ.*)$/,
                   };
                   const trans96Re = trans96SplitPatterns[lang];
@@ -1474,6 +1514,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
                     pt: /^(.*?[Oo]s dez filhos de\s*)/i,
                     ru: /^(.*?[Дд]есять сыновей\s*)/i,
                     hu: /^(.*?tíz fiát\s*)/i,
+                    de: /^(.*?[Dd]ie zehn Söhne\s*)/i,
                     he: /^(.*?עֲשֶׂרֶת בְּנֵי הָמָן\s*)/,
                   };
                   const v10Re = v10SplitPatterns[lang];
@@ -1546,6 +1587,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
                     pt: /^(.*?[Oo]s dez filhos de\s*)([\s\S]*)$/i,
                     ru: /^(.*?[Дд]есять сыновей\s*)([\s\S]*)$/i,
                     hu: /^(.*?tíz fiát\s*)([\s\S]*)$/i,
+                    de: /^(.*?[Dd]ie zehn Söhne\s*)([\s\S]*)$/i,
                     he: /^(.*?עֲשֶׂרֶת בְּנֵי הָמָן\s*)([\s\S]*)$/,
                   };
                   const v10RestRe = v10RestPatterns[lang];

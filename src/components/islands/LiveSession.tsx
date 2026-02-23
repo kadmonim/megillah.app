@@ -4,7 +4,7 @@ import type { Session, ScrollPosition } from '../../lib/useSession';
 import { getSupabase } from '../../lib/supabase';
 import MegillahReader from './MegillahReader';
 
-type Lang = 'he' | 'en' | 'es' | 'ru' | 'fr' | 'pt' | 'it';
+type Lang = 'he' | 'en' | 'es' | 'ru' | 'fr' | 'pt' | 'it' | 'hu' | 'de';
 
 const lobbyText = {
   he: {
@@ -224,6 +224,68 @@ const lobbyText = {
     showPassword: 'Mostra',
     hidePassword: 'Nascondi',
   },
+  hu: {
+    title: 'Megilla Élő',
+    subtitle: 'Kövesse a Megilla felolvasást valós időben',
+    createSession: 'Munkamenet létrehozása',
+    joinSession: 'Csatlakozás',
+    adminPassword: 'Közvetítői jelszó beállítása',
+    choosePassword: 'Válasszon jelszót...',
+    creating: 'Létrehozás...',
+    sessionCode: 'Munkamenet kód',
+    passwordAdmins: 'Jelszó (csak adminoknak)',
+    optional: 'Opcionális...',
+    joining: 'Csatlakozás...',
+    back: 'Vissza',
+    copyLink: 'Link másolása',
+    copied: 'Másolva!',
+    startBroadcasting: 'Közvetítés indítása',
+    scanQR: 'Vagy olvassa be a QR-kódot',
+    sessionCreated: 'Munkamenet sikeresen létrehozva!',
+
+    shareHeading: 'Megosztási információk',
+    shareTip1: 'Küldje el nekik ezt a linket:',
+    shareTip2: 'Vagy kérje meg őket, hogy menjenek a megillah.app/live oldalra, kattintsanak a „Csatlakozás" gombra és írják be a munkamenet kódot',
+    shareTip3: 'Vagy olvassák be ezt a QR-kódot.',
+    broadcastHeading: 'Közvetítési információk',
+    broadcastTip1: 'Kattintson az alábbi gombra a közvetítés indításához.',
+    broadcastTip2Pre: 'Vagy bármilyen eszközről menjen a megillah.app/live oldalra, kattintson a „Csatlakozás" gombra és írja be a munkamenet kódot',
+    broadcastTip2Mid: 'és az imént létrehozott jelszót:',
+    saveNote: 'Ne felejtse el a jelszavát.',
+    showPassword: 'Mutat',
+    hidePassword: 'Elrejt',
+  },
+  de: {
+    title: 'Megilla Live',
+    subtitle: 'Folgen Sie einer Live-Megilla-Lesung',
+    createSession: 'Sitzung erstellen',
+    joinSession: 'Sitzung beitreten',
+    adminPassword: 'Übertragungspasswort festlegen',
+    choosePassword: 'Passwort wählen...',
+    creating: 'Erstelle...',
+    sessionCode: 'Sitzungscode',
+    passwordAdmins: 'Passwort (nur Admins)',
+    optional: 'Optional...',
+    joining: 'Beitritt...',
+    back: 'Zurück',
+    copyLink: 'Link kopieren',
+    copied: 'Kopiert!',
+    startBroadcasting: 'Übertragung starten',
+    scanQR: 'Oder QR-Code scannen',
+    sessionCreated: 'Sitzung erfolgreich erstellt!',
+
+    shareHeading: 'Informationen zum Teilen',
+    shareTip1: 'Senden Sie ihnen diesen Link:',
+    shareTip2: 'Oder bitten Sie sie, megillah.app/live aufzurufen, auf „Sitzung beitreten" zu klicken und den Sitzungscode einzugeben',
+    shareTip3: 'Oder diesen QR-Code scannen.',
+    broadcastHeading: 'Übertragungsinformationen',
+    broadcastTip1: 'Klicken Sie auf die Schaltfläche unten, um die Übertragung zu starten.',
+    broadcastTip2Pre: 'Oder rufen Sie von einem beliebigen Gerät megillah.app/live auf, klicken Sie auf „Sitzung beitreten" und geben Sie den Sitzungscode ein',
+    broadcastTip2Mid: 'und das gerade erstellte Passwort:',
+    saveNote: 'Vergessen Sie Ihr Passwort nicht.',
+    showPassword: 'Anzeigen',
+    hidePassword: 'Ausblenden',
+  },
 } as const;
 
 function detectLang(): Lang {
@@ -234,6 +296,8 @@ function detectLang(): Lang {
   if (navLang.startsWith('fr')) return 'fr';
   if (navLang.startsWith('pt')) return 'pt';
   if (navLang.startsWith('it')) return 'it';
+  if (navLang.startsWith('hu')) return 'hu';
+  if (navLang.startsWith('de')) return 'de';
   return 'en';
 }
 
