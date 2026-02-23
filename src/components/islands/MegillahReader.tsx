@@ -17,11 +17,55 @@ function toHebrew(n: number): string {
 
 const LOUD_VERSES = new Set(['2:5', '8:15', '8:16', '10:3']);
 
-const LOUD_TRANSLITERATIONS: Record<string, string> = {
-  '2:5': 'Ish Yehudi haya b\'Shushan habirah, ush\'mo Mordechai ben Ya\'ir ben Shim\'i ben Kish, ish Y\'mini.',
-  '8:15': 'U\'Mordechai yatza milifnei hamelech bil\'vush malchut t\'chelet vachur, va\'ateret zahav g\'dolah, v\'tachrich butz v\'argaman, v\'ha\'ir Shushan tzahalah v\'sameicha.',
-  '8:16': 'LaYehudim hayta orah v\'simcha v\'sasson vikar.',
-  '10:3': 'Ki Mordechai haYehudi mishneh lamelech Achashveirosh, v\'gadol laYehudim v\'ratzui l\'rov echav, doreish tov l\'amo v\'doveir shalom l\'chol zar\'o.',
+const LOUD_TRANSLITERATIONS: Record<string, Record<string, string>> = {
+  en: {
+    '2:5': 'Ish Yehudi haya b\'Shushan habirah, ush\'mo Mordechai ben Ya\'ir ben Shim\'i ben Kish, ish Y\'mini.',
+    '8:15': 'U\'Mordechai yatza milifnei hamelech bil\'vush malchut t\'chelet vachur, va\'ateret zahav g\'dolah, v\'tachrich butz v\'argaman, v\'ha\'ir Shushan tzahalah v\'sameicha.',
+    '8:16': 'LaYehudim hayta orah v\'simcha v\'sasson vikar.',
+    '10:3': 'Ki Mordechai haYehudi mishneh lamelech Achashveirosh, v\'gadol laYehudim v\'ratzui l\'rov echav, doreish tov l\'amo v\'doveir shalom l\'chol zar\'o.',
+  },
+  es: {
+    '2:5': 'Ish Yehudí hayá be-Shushán habirá, ushmó Mordejai ben Yaír ben Shimí ben Kish, ish Yeminí.',
+    '8:15': 'U-Mordejai yatzá milifnéi hamélej bilvúsh maljut tejélet vajúr, vaatéret zaháv guedolá, vetajríj butz veargamán, vehair Shushán tzahalá vesaméja.',
+    '8:16': 'LaYehudím haytá orá vesimjá vesasón vikar.',
+    '10:3': 'Ki Mordejai haYehudí mishné lamélej Ajashverósh, vegadól laYehudím veratzúi lerov ejáv, dorésh tov leamó vedovér shalóm lejol zaró.',
+  },
+  fr: {
+    '2:5': 'Ish Yehoudi haya be-Shoushan habirah, oushmo Mordekhaï ben Yaïr ben Shim\'i ben Kish, ish Yemini.',
+    '8:15': 'Ou-Mordekhaï yatza milifneï hamélekh bilvoush malkhout tekhélet va\'hour, vaatéret zahav guedolah, vetakhrikh boutz veargamane, vehaïr Shoushan tzahalah vesamé\'ha.',
+    '8:16': 'LaYehoudim hayta orah vesim\'ha vesassone vikar.',
+    '10:3': 'Ki Mordekhaï haYehoudi mishné lamélekh A\'hashvérosh, vegadol laYehoudim veratzouï lerov é\'hav, dorésh tov leamo vedovér shalom lekhol zaro.',
+  },
+  ru: {
+    '2:5': 'Иш Йеуди хая бе-Шушан хабира, ушмо Мордехай бен Яир бен Шими бен Киш, иш Йемини.',
+    '8:15': 'У-Мордехай яца милифней хамелех бильвуш малхут тхелет вахур, ваатерет захав гдола, ветахрих буц веаргаман, веха-ир Шушан цахала весамеха.',
+    '8:16': 'Ла-Йехудим хайта ора весимха весасон викар.',
+    '10:3': 'Ки Мордехай ха-Йехуди мишне ламелех Ахашверош, вегадоль ла-Йехудим верацуй леров эхав, дореш тов леамо ведовер шалом лехоль заро.',
+  },
+  pt: {
+    '2:5': 'Ish Yehudí hayá be-Shushán habirá, ushmó Mordechai ben Yaír ben Shimí ben Kish, ish Yeminí.',
+    '8:15': 'U-Mordechai yatzá milifnéi hamélech bilvúsh malchút techélet vachúr, vaatéret zaháv guedolá, vetachríkh butz veargamán, vehaír Shushán tzahalá vesamécha.',
+    '8:16': 'LaYehudím haytá orá vesimchá vesassón vikár.',
+    '10:3': 'Ki Mordechai haYehudí mishné lamélech Achashverósh, vegadól laYehudím veratzúi leróv echáv, dorésh tov leamó vedovér shalóm lechól zaró.',
+  },
+  it: {
+    '2:5': 'Ish Yehudì hayà be-Shushàn habiràh, ushmò Mordechai ben Yaìr ben Shimì ben Kish, ish Yeminì.',
+    '8:15': 'U-Mordechai yatzà milifnèi hamèlech bilvùsh malchùt techèlet vachùr, vaatèret zahàv ghedolàh, vetachrìch butz veargamàn, vehaìr Shushàn tzahalàh vesamècha.',
+    '8:16': 'LaYehudìm haytà oràh vesimchàh vesassòn vikàr.',
+    '10:3': 'Ki Mordechai haYehudì mishnè lamèlech Achashveròsh, vegadòl laYehudìm veratzùi leròv echàv, dorèsh tov leamò vedovèr shalòm lechòl zarò.',
+  },
+  hu: {
+    '2:5': 'Is Jehudi hájá be-Susán hábirá, usmó Mordecháj ben Jáir ben Simi ben Kis, is Jemini.',
+    '8:15': 'U-Mordecháj jácá milifné hámelech bilvus málchut tchélet váchur, vááteret záháv gdolá, vetáchrich buc veárgámán, veháir Susán cáhálá veszáméchá.',
+    '8:16': 'LáJehudim hájtá orá veszimchá veszászon vikár.',
+    '10:3': 'Ki Mordecháj háJehudi misne lámelech Áchásverós, vegádol láJehudim verácuj lerov echáv, dorés tov leámó vedovér sálom lechol záro.',
+  },
+  de: {
+    '2:5': 'Isch Jehudi haja be-Schuschan habira, uschmo Mordechai ben Jair ben Schimi ben Kisch, isch Jemini.',
+    '8:15': 'U-Mordechai jatza milifnei hamelech bilwusch malchut techelet wachur, waateret sahaw gedola, wetachrich buz weargaman, wehair Schuschan zahala wesamecha.',
+    '8:16': 'LaJehudim hajta ora wesimcha wesasson wikar.',
+    '10:3': 'Ki Mordechai haJehudi mischne lamelech Achaschverosch, wegadol laJehudim weratzui lerow echaw, doresch tow leamo wedower schalom lechol saro.',
+  },
 };
 const BNEI_HAMAN_VERSES = new Set(['9:7', '9:8', '9:9']);
 const BNEI_HAMAN_SPLIT_VERSE = '9:6';
@@ -627,7 +671,7 @@ function renderVerse(
     }</span>
   );
 
-  const transliteration = isLoud && lang === 'en' ? LOUD_TRANSLITERATIONS[verseKey] : null;
+  const transliteration = isLoud && lang !== 'he' ? LOUD_TRANSLITERATIONS[lang]?.[verseKey] ?? LOUD_TRANSLITERATIONS['en']?.[verseKey] : null;
 
   const verseContent = sideBySide ? (
     <div class={`verse verse-row${isLoud ? ' loud-verse' : ''}${isVerseActive ? ' verse-active' : ''}`} data-verse={verseKey}>
@@ -1550,7 +1594,16 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
                     ),
                     <span key="bnei-haman-block" class="verse loud-verse bnei-haman" data-verse="9:7">
                       <span class="loud-label" dir={lang === 'he' ? 'rtl' : 'ltr'}>{t.bneiHamanLabel}</span>
-                      {lang === 'en' && <span class="transliteration-box" dir="ltr">Chamesh me'ot ish. V'et Parshandatha, v'et Dalfon, v'et Aspatha, v'et Poratha, v'et Adalya, v'et Aridatha, v'et Parmashta, v'et Arisai, v'et Aridai, v'et Vayzatha. Aseret...</span>}
+                      {lang !== 'he' && <span class="transliteration-box" dir="ltr">{({
+                        en: "Chamesh me'ot ish. V'et Parshandatha, v'et Dalfon, v'et Aspatha, v'et Poratha, v'et Adalya, v'et Aridatha, v'et Parmashta, v'et Arisai, v'et Aridai, v'et Vayzatha. Aseret...",
+                        es: "Jamesh meot ish. Veet Parshandatá, veet Dalfón, veet Aspatá, veet Poratá, veet Adalyá, veet Aridatá, veet Parmashtá, veet Arisái, veet Aridái, veet Vayzatá. Aséret...",
+                        fr: "Hamesh méot ish. Veète Parshandatha, veète Dalfone, veète Aspatha, veète Poratha, veète Adalya, veète Aridatha, veète Parmashta, veète Arisaï, veète Aridaï, veète Vayzatha. Assérète...",
+                        ru: "Хамеш меот иш. Веэт Паршандата, веэт Дальфон, веэт Аспата, веэт Пората, веэт Адалья, веэт Аридата, веэт Пармашта, веэт Арисай, веэт Аридай, веэт Вайзата. Асерет...",
+                        pt: "Chamesh meot ish. Veet Parshandatá, veet Dalfón, veet Aspatá, veet Poratá, veet Adalyá, veet Aridatá, veet Parmashtá, veet Arisái, veet Aridái, veet Vayzatá. Asséret...",
+                        it: "Chamesh meòt ish. Veèt Parshandathà, veèt Dalfòn, veèt Aspathà, veèt Porathà, veèt Adalyà, veèt Aridathà, veèt Parmashtà, veèt Arisài, veèt Aridài, veèt Vayzathà. Assèret...",
+                        hu: "Hámes méot is. Veét Pársándátá, veét Dálfon, veét Ászpátá, veét Porátá, veét Ádáljá, veét Áridátá, veét Pármástá, veét Áriszáj, veét Áridáj, veét Vájzátá. Ászeret...",
+                        de: "Chamesch meot isch. Weet Parschandatha, weet Dalfon, weet Aspatha, weet Poratha, weet Adalja, weet Aridatha, weet Parmaschta, weet Arisai, weet Aridai, weet Waisatha. Asseret...",
+                      } as Record<string, string>)[lang] || "Chamesh me'ot ish. V'et Parshandatha, v'et Dalfon, v'et Aspatha, v'et Poratha, v'et Adalya, v'et Aridatha, v'et Parmashta, v'et Arisai, v'et Aridai, v'et Vayzatha. Aseret..."}</span>}
                       {translationMode !== 'translation' && <>
                         <span class="haman-son">{splitText}</span>
                         {sonsVerses.map(sv => {
