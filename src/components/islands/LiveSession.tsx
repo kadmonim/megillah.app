@@ -288,16 +288,18 @@ const lobbyText = {
   },
 } as const;
 
+const SUPPORTED_LANGS: Lang[] = ['he', 'en', 'es', 'ru', 'fr', 'pt', 'it', 'hu', 'de'];
+
 function detectLang(): Lang {
-  const navLang = navigator.language;
-  if (navLang.startsWith('he')) return 'he';
-  if (navLang.startsWith('es')) return 'es';
-  if (navLang.startsWith('ru')) return 'ru';
-  if (navLang.startsWith('fr')) return 'fr';
-  if (navLang.startsWith('pt')) return 'pt';
-  if (navLang.startsWith('it')) return 'it';
-  if (navLang.startsWith('hu')) return 'hu';
-  if (navLang.startsWith('de')) return 'de';
+  if (typeof window === 'undefined') return 'en';
+  try {
+    const stored = localStorage.getItem('megillah-lang');
+    if (stored && SUPPORTED_LANGS.includes(stored as Lang)) return stored as Lang;
+  } catch {}
+  const dataLang = document.documentElement.dataset.lang;
+  if (dataLang && SUPPORTED_LANGS.includes(dataLang as Lang)) return dataLang as Lang;
+  const navLang = navigator.language.split('-')[0].toLowerCase();
+  if (SUPPORTED_LANGS.includes(navLang as Lang)) return navLang as Lang;
   return 'en';
 }
 
@@ -374,8 +376,7 @@ export default function LiveSession() {
   const { session, loading, error, joinSession } =
     useSession(handleRemoteScroll, handleRemoteTime, undefined, handleRemoteWord, handleRemoteSetting);
 
-  const [lang, setLang] = useState<Lang>('en');
-  useEffect(() => { setLang(detectLang()); }, []);
+  const [lang, setLang] = useState<Lang>(detectLang);
 
   // Restore a previously created session from localStorage
   useEffect(() => {

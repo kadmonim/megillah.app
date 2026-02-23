@@ -709,6 +709,22 @@ function renderVerse(
   return verseContent;
 }
 
+const LANG_STORAGE_KEY = 'megillah-lang';
+const SUPPORTED_LANGS: Lang[] = ['he', 'en', 'es', 'ru', 'fr', 'pt', 'it', 'hu', 'de'];
+
+function getInitialLang(): Lang {
+  if (typeof window === 'undefined') return 'en';
+  try {
+    const stored = localStorage.getItem(LANG_STORAGE_KEY);
+    if (stored && SUPPORTED_LANGS.includes(stored as Lang)) return stored as Lang;
+  } catch {}
+  const dataLang = document.documentElement.dataset.lang;
+  if (dataLang && SUPPORTED_LANGS.includes(dataLang as Lang)) return dataLang as Lang;
+  const navLang = navigator.language.split('-')[0].toLowerCase();
+  if (SUPPORTED_LANGS.includes(navLang as Lang)) return navLang as Lang;
+  return 'en';
+}
+
 export default function MegillahReader({ standalone = false, showTitle = false, session, remoteMinutes, activeWord: remoteActiveWord, activeVerse: remoteActiveVerse, onWordTap, remoteSettings, syncEnabled = true, onToggleSync }: { standalone?: boolean; showTitle?: boolean; session?: Session; remoteMinutes?: number | null; activeWord?: string | null; activeVerse?: string | null; onWordTap?: (wordId: string) => void; remoteSettings?: Record<string, unknown>; syncEnabled?: boolean; onToggleSync?: () => void }) {
   const dragging = useRef(false);
   const lastBroadcastTime = useRef(0);
@@ -723,11 +739,11 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
   const [showTimeEdit, setShowTimeEdit] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [showTrackingMenu, setShowTrackingMenu] = useState(false);
-  const [lang, setLang] = useState<Lang>('he');
+  const [lang, setLang] = useState<Lang>(getInitialLang);
   const [translationMode, setTranslationMode] = useState<'hebrew' | 'both' | 'translation'>('hebrew');
   const [loadedTranslations, setLoadedTranslations] = useState<TranslationMap | null>(null);
   const translationCache = useRef<Record<string, TranslationMap>>({});
-  const deviceLang = useRef<Lang>('he');
+  const deviceLang = useRef<Lang>(getInitialLang);
   const [showIllustrations, setShowIllustrations] = useState(false);
   const [activeWord, setActiveWord] = useState<string | null>(null);
   const [activeVerse, setActiveVerse] = useState<string | null>(null);
@@ -761,21 +777,6 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
     translationKey === 'en' ? translationsEn :
     loadedTranslations;
 
-  // Auto-detect device language on mount
-  useEffect(() => {
-    const navLang = navigator.language;
-    let detected: Lang = 'en';
-    if (navLang.startsWith('he')) detected = 'he';
-    else if (navLang.startsWith('es')) detected = 'es';
-    else if (navLang.startsWith('ru')) detected = 'ru';
-    else if (navLang.startsWith('fr')) detected = 'fr';
-    else if (navLang.startsWith('pt')) detected = 'pt';
-    else if (navLang.startsWith('it')) detected = 'it';
-    else if (navLang.startsWith('hu')) detected = 'hu';
-    else if (navLang.startsWith('de')) detected = 'de';
-    deviceLang.current = detected;
-    setLang(detected);
-  }, []);
 
   // Lazy-load non-English translations when needed
   useEffect(() => {
@@ -864,6 +865,12 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
       setCustomTapHint(remoteSettings.customTapHint as string | null);
     }
   }, [remoteSettings?.customTapHint]);
+
+  useEffect(() => {
+    if (remoteSettings?.lang !== undefined && SUPPORTED_LANGS.includes(remoteSettings.lang as Lang)) {
+      setLang(remoteSettings.lang as Lang);
+    }
+  }, [remoteSettings?.lang]);
 
   // Load TinyMCE when editor opens
   useEffect(() => {
@@ -1445,6 +1452,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
                 onChange={(e) => {
                   const newLang = (e.target as HTMLSelectElement).value as Lang;
                   setLang(newLang);
+                  try { localStorage.setItem(LANG_STORAGE_KEY, newLang); } catch {}
                   if (session?.role === 'admin') session.broadcastSetting('lang', newLang);
                 }}
               >
