@@ -406,13 +406,7 @@ export default function LiveSession() {
   const { session, loading, error, joinSession } =
     useSession(handleRemoteScroll, handleRemoteTime, undefined, handleRemoteWord, handleRemoteSetting);
 
-  const [lang, setLang] = useState<Lang>('he');
-
-  // Detect language after hydration to avoid SSR mismatch
-  useEffect(() => {
-    const detected = detectLang();
-    if (detected !== 'he') setLang(detected);
-  }, []);
+  const [lang, setLang] = useState<Lang>(detectLang);
 
   // Restore a previously created session from localStorage
   useEffect(() => {

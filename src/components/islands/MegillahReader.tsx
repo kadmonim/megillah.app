@@ -785,8 +785,15 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
   const [showTimeEdit, setShowTimeEdit] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [showTrackingMenu, setShowTrackingMenu] = useState(false);
-  const [lang, setLang] = useState<Lang>('he');
-  const [translationMode, setTranslationMode] = useState<'hebrew' | 'both' | 'translation'>('hebrew');
+  const [lang, setLang] = useState<Lang>(getInitialLang);
+  const [translationMode, setTranslationMode] = useState<'hebrew' | 'both' | 'translation'>(() => {
+    if (typeof window === 'undefined') return 'hebrew';
+    try {
+      const stored = localStorage.getItem('megillah-translation-mode');
+      if (stored === 'hebrew' || stored === 'both' || stored === 'translation') return stored;
+    } catch {}
+    return 'hebrew';
+  });
   const [loadedTranslations, setLoadedTranslations] = useState<TranslationMap | null>(null);
   const translationCache = useRef<Record<string, TranslationMap>>({});
   const deviceLang = useRef<Lang>(getInitialLang);
@@ -808,15 +815,6 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
   const scrollTextRef = useRef<HTMLDivElement>(null);
   const confettiFired = useRef(false);
 
-  // Detect language & translation mode after hydration to avoid SSR mismatch
-  useEffect(() => {
-    const detected = getInitialLang();
-    if (detected !== 'he') setLang(detected);
-    try {
-      const stored = localStorage.getItem('megillah-translation-mode');
-      if (stored === 'both' || stored === 'translation') setTranslationMode(stored);
-    } catch {}
-  }, []);
 
   const t = translations[lang];
   // Only create per-word spans when word tracking is active or a remote word is highlighted
