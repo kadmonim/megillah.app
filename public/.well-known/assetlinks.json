@@ -1,0 +1,8 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "app.megillah",
+    "sha256_cert_fingerprints": ["01:99:94:F1:2E:3E:E7:99:B9:53:51:87:1F:13:51:B2:D1:9C:B9:00:53:CE:38:C3:29:7B:28:EC:3C:D8:55:C6"]
+  }
+}]
