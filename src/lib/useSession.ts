@@ -244,6 +244,9 @@ export function useSession(
         if (fetchErr || !data) throw new Error('Session not found');
         const role: SessionRole =
           password && data.password === password ? 'admin' : 'follower';
+        if (role === 'follower') {
+          sb.from('session_joins').insert({ session_code: code }).then(() => {});
+        }
         saveToStorage(code, password);
         subscribe(code, role, (data.settings as SessionSettings) || {});
       } catch (e: any) {
