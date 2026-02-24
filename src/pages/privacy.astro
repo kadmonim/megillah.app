@@ -1,0 +1,141 @@
+---
+import '../styles/global.css';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#660a23" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    <title>Privacy Policy — The Megillah App</title>
+  </head>
+  <body>
+    <main class="container">
+      <div class="privacy-page">
+        <a href="/" class="back-link">&larr; Back to Megillah</a>
+
+        <h1>Privacy Policy</h1>
+        <p class="updated">Last updated: February 2026</p>
+
+        <section>
+          <h2>Overview</h2>
+          <p>The Megillah App is a free tool for following along with the Megillah reading. We respect your privacy and collect as little data as possible.</p>
+        </section>
+
+        <section>
+          <h2>What we don't collect</h2>
+          <ul>
+            <li>No personal information (no name, email, or phone number)</li>
+            <li>No user accounts or login</li>
+            <li>No analytics or tracking</li>
+            <li>No cookies for advertising</li>
+            <li>No location data</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Data stored on your device</h2>
+          <p>Your preferences (language, display settings) are saved locally on your device using your browser's storage. This data never leaves your device and is not accessible to us.</p>
+        </section>
+
+        <section>
+          <h2>Live sessions</h2>
+          <p>When you create or join a live session, the app connects to a server (<a href="https://supabase.com" target="_blank" rel="noopener noreferrer">Supabase</a>) to sync the reading position in real time. During a live session:</p>
+          <ul>
+            <li>A session code and password are stored on the server to manage the session.</li>
+            <li>When a follower joins a session, a record of the join is saved (session code and timestamp only — no personal information).</li>
+            <li>Scroll position and display settings are broadcast in real time and are not stored permanently.</li>
+          </ul>
+          <p>As with any internet service, the server provider may log technical data such as IP addresses as part of normal infrastructure operations. This is governed by <a href="https://supabase.com/privacy" target="_blank" rel="noopener noreferrer">Supabase's privacy policy</a>.</p>
+        </section>
+
+        <section>
+          <h2>Third-party services</h2>
+          <ul>
+            <li><strong>Supabase</strong> — powers live session sync. <a href="https://supabase.com/privacy" target="_blank" rel="noopener noreferrer">Privacy policy</a></li>
+            <li><strong>Google Fonts</strong> — provides the app's typeface. <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Privacy policy</a></li>
+            <li><strong>Netlify</strong> — hosts the website. Aggregate, server-side analytics are enabled (page views by country, top pages — no individual tracking or cookies). <a href="https://www.netlify.com/privacy/" target="_blank" rel="noopener noreferrer">Privacy policy</a></li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Changes to this policy</h2>
+          <p>If this policy changes, the updated version will be posted on this page.</p>
+        </section>
+
+        <section>
+          <h2>Contact</h2>
+          <p>Questions about this policy? Reach out at <a href="https://github.com/kadmonim/megillah.app/issues" target="_blank" rel="noopener noreferrer">github.com/kadmonim/megillah.app</a>.</p>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>
+
+<style>
+  .privacy-page {
+    padding: 24px 0 48px;
+  }
+
+  .back-link {
+    display: inline-block;
+    font-size: 0.9rem;
+    color: var(--color-burgundy);
+    text-decoration: none;
+    font-weight: 500;
+    margin-bottom: 24px;
+  }
+  .back-link:hover {
+    text-decoration: underline;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+    color: var(--color-burgundy);
+    margin-bottom: 4px;
+  }
+
+  .updated {
+    font-size: 0.9rem;
+    color: var(--color-text-light);
+    margin-bottom: 32px;
+  }
+
+  section {
+    margin-bottom: 24px;
+  }
+
+  h2 {
+    font-size: 1.1rem;
+    color: var(--color-burgundy);
+    margin-bottom: 8px;
+  }
+
+  p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--color-text);
+    margin-bottom: 8px;
+  }
+
+  ul {
+    margin: 8px 0 8px 20px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--color-text);
+  }
+
+  li {
+    margin-bottom: 4px;
+  }
+
+  a {
+    color: var(--color-burgundy);
+    font-weight: 500;
+  }
+</style>
