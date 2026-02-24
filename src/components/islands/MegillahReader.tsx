@@ -783,7 +783,8 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
   const [totalMinutes, setTotalMinutes] = useState(DEFAULT_READING_MINUTES);
   const [draftMinutes, setDraftMinutes] = useState(DEFAULT_READING_MINUTES);
   const [showTimeEdit, setShowTimeEdit] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(true);
+  const menuDismissedByScroll = useRef(false);
   const [showTrackingMenu, setShowTrackingMenu] = useState(false);
   const [lang, setLang] = useState<Lang>(getInitialLang);
   const [translationMode, setTranslationMode] = useState<'hebrew' | 'both' | 'translation'>('hebrew');
@@ -1154,6 +1155,17 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
       const viewportHeight = window.innerHeight;
       const scrolled = -rect.top;
       const scrollable = totalHeight - viewportHeight;
+      if (scrolled > 50) {
+        if (!menuDismissedByScroll.current) {
+          menuDismissedByScroll.current = true;
+          setMenuOpen(false);
+        }
+      } else {
+        if (menuDismissedByScroll.current) {
+          menuDismissedByScroll.current = false;
+          setMenuOpen(true);
+        }
+      }
       if (scrollable <= 0) { setScrollProgress(1); return; }
       const progress = Math.min(1, Math.max(0, scrolled / scrollable));
       setScrollProgress(progress);
