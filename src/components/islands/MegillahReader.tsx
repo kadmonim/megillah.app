@@ -67,10 +67,10 @@ const LOUD_TRANSLITERATIONS: Record<string, Record<string, string>> = {
     '10:3': 'Ki Mordechai haJehudi mischne lamelech Achaschverosch, wegadol laJehudim weratzui lerow echaw, doresch tow leamo wedower schalom lechol saro.',
   },
   el: {
-    '2:5': 'Ις Γιεχουντί χαγιά μπε-Σουσάν χαμπιρά, ουσμό Μορντοχάι μπεν Γιαΐρ μπεν Σιμΐ μπεν Κις, ις Γιεμινί.',
-    '8:15': 'Ου-Μορντοχάι γιατζά μιλιφνέι χαμέλεχ μπιλβούς μαλχούτ τεχέλετ βαχούρ, βααταρέτ ζαχάβ γκεντολά, βεταχρίχ μπουτζ βεαργαμάν, βεχαΐρ Σουσάν τζαχαλά βεσαμέχα.',
-    '8:16': 'Λα-Γιεχουντίμ χαϊτά ορά βεσιμχά βεσασόν βικάρ.',
-    '10:3': 'Κι Μορντοχάι χα-Γιεχουντί μισνέ λαμέλεχ Αχασβερός, βεγκαντόλ λα-Γιεχουντίμ βερατζούι λερόβ εχάβ, ντορές τοβ λεαμό βεντοβέρ σαλόμ λεχόλ ζαρό.',
+    '2:5': 'Ισς Γιεουντί αγιά μπε-Σσουσσάν αμπιρά, ουσσμό Μορντοάι μπεν Γιαΐρ μπεν Σσιμΐ μπεν Κισς, ισς Γιεμινί.',
+    '8:15': 'Ου-Μορντοάι γιατζά μιλιφνέι αμέλε μπιλβούσς μαλούτ τεέλετ βαούρ, βααταρέτ ζαάβ γκεντολά, βεταρί μπουτζ βεαργαμάν, βεαΐρ Σσουσσάν τζααλά βεσαμέα.',
+    '8:16': 'Λα-Γιεουντίμ αϊτά ορά βεσιμά βεσασόν βικάρ.',
+    '10:3': 'Κι Μορντοάι α-Γιεουντί μισσνέ λαμέλε Αασσβερόσς, βεγκαντόλ λα-Γιεουντίμ βερατζούι λερόβ εάβ, ντορέσς τοβ λεαμό βεντοβέρ σσαλόμ λεόλ ζαρό.',
   },
 };
 const BNEI_HAMAN_VERSES = new Set(['9:7', '9:8', '9:9']);
@@ -1692,7 +1692,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
                         it: "Chamesh meòt ish. Veèt Parshandathà, veèt Dalfòn, veèt Aspathà, veèt Porathà, veèt Adalyà, veèt Aridathà, veèt Parmashtà, veèt Arisài, veèt Aridài, veèt Vayzathà. Assèret...",
                         hu: "Hámes méot is. Veét Pársándátá, veét Dálfon, veét Ászpátá, veét Porátá, veét Ádáljá, veét Áridátá, veét Pármástá, veét Áriszáj, veét Áridáj, veét Vájzátá. Ászeret...",
                         de: "Chamesch meot isch. Weet Parschandatha, weet Dalfon, weet Aspatha, weet Poratha, weet Adalja, weet Aridatha, weet Parmaschta, weet Arisai, weet Aridai, weet Waisatha. Asseret...",
-                        el: "Χαμές μεότ ις. Βεέτ Παρσαντάτα, βεέτ Νταλφόν, βεέτ Ασπατά, βεέτ Ποράτα, βεέτ Ανταλγιά, βεέτ Αριντάτα, βεέτ Παρμαστά, βεέτ Αρισάι, βεέτ Αριντάι, βεέτ Βαϊζατά. Ασέρετ...",
+                        el: "Αμέσς μεότ ισς. Βεέτ Παρσσαντάτα, βεέτ Νταλφόν, βεέτ Ασπατά, βεέτ Ποράτα, βεέτ Ανταλγιά, βεέτ Αριντάτα, βεέτ Παρμασστά, βεέτ Αρισάι, βεέτ Αριντάι, βεέτ Βαϊζατά. Ασέρετ...",
                       } as Record<string, string>)[lang] || "Chamesh me'ot ish. V'et Parshandatha, v'et Dalfon, v'et Aspatha, v'et Poratha, v'et Adalya, v'et Aridatha, v'et Parmashta, v'et Arisai, v'et Aridai, v'et Vayzatha. Aseret..."}</span>}
                       {translationMode !== 'translation' && <>
                         <span class="haman-son">{splitText}</span>
