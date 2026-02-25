@@ -38,12 +38,102 @@ const description = 'Follow along with a live Megillah reading — auto-scroll s
     <main class="container">
       <LiveSession client:load />
     </main>
+
+    <footer class="footer">
+      <div class="container">
+        <button class="credits-btn" id="credits-btn">Credits</button>
+        <div class="credits-popover" id="credits-popover">
+          <p>Powered by <a href="https://karmiel.co.il" class="credit-link" target="_blank" rel="noopener noreferrer">Chabad of Karmiel</a></p>
+          <p>Hebrew text via <a href="https://www.sefaria.org" class="credit-link" target="_blank" rel="noopener noreferrer">Sefaria</a></p>
+          <p class="credit-detail">Hebrew commentary: Steinsaltz Tanakh HaMevoar © Steinsaltz Center</p>
+          <p class="credit-detail">English: Metsudah Five Megillot (2001) · CC-BY</p>
+          <p class="credit-detail">Spanish: Seminario Rabínico Latinoamericano · CC-BY</p>
+          <p class="credit-detail">French: Bible du Rabbinat (1899) · CC-BY</p>
+          <p class="credit-detail">Russian: Da Project, D. Slivniak (2011) · CC-BY</p>
+          <p class="credit-detail">German: Dr. Simon Bernfeld (1902) · CC-BY</p>
+          <p class="credit-detail">Italian: S.D. Luzzatto (1872) · CC-BY</p>
+          <p class="credit-detail">Portuguese: Saymon Pires da Silva (5784) · CC-BY</p>
+          <p class="credit-detail">Hungarian: Chabad of Hungary</p>
+          <p class="credit-detail">Greek: Chabad of Greece</p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      const btn = document.getElementById('credits-btn')!;
+      const popover = document.getElementById('credits-popover')!;
+      btn.addEventListener('click', () => {
+        popover.classList.toggle('open');
+      });
+      document.addEventListener('click', (e) => {
+        if (!btn.contains(e.target as Node) && !popover.contains(e.target as Node)) {
+          popover.classList.remove('open');
+        }
+      });
+    </script>
   </body>
 </html>
 
-<style>
+<style is:global>
   main {
     padding-top: 0;
     padding-bottom: 24px;
+  }
+
+  .footer {
+    text-align: center;
+    padding: 20px 0;
+    color: var(--color-text-light);
+    font-size: 0.8rem;
+    position: relative;
+    z-index: 150;
+  }
+
+  .credits-btn {
+    background: none;
+    border: none;
+    color: var(--color-text-light);
+    font-size: 0.8rem;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .credits-popover {
+    display: none;
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    border-radius: 10px;
+    padding: 12px 20px;
+    box-shadow: 0 2px 12px rgba(102, 10, 35, 0.15);
+    white-space: normal;
+    min-width: 260px;
+    margin-bottom: 6px;
+  }
+
+  .credits-popover.open {
+    display: block;
+  }
+
+  .credits-popover p {
+    margin: 4px 0;
+  }
+
+  .credit-detail {
+    font-size: 0.75rem;
+    color: var(--color-text-light);
+  }
+
+  .credit-link {
+    color: var(--color-burgundy);
+    text-decoration: none;
+    font-weight: 400;
+  }
+
+  .credit-link:hover {
+    text-decoration: underline;
   }
 </style>
