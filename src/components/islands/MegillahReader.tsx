@@ -824,13 +824,18 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
     if (session?.role === 'admin') setTrackingMode('verse');
   }, [session?.role]);
 
-  // Restore translationMode after hydration; default to side-by-side for non-Hebrew
+  // Detect real language and restore settings after hydration
   useEffect(() => {
+    const detected = getInitialLang();
+    if (detected !== lang) {
+      setLang(detected);
+      deviceLang.current = detected;
+    }
     try {
       const stored = localStorage.getItem('megillah-translation-mode');
       if (stored === 'both' || stored === 'translation') {
         setTranslationMode(stored);
-      } else if (lang !== 'he') {
+      } else if (detected !== 'he') {
         setTranslationMode('both');
       }
     } catch {}
@@ -1274,7 +1279,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
   }, []);
 
   return (
-    <div class="megillah-reader" dir={lang === 'he' ? 'rtl' : 'ltr'}>
+    <div class="megillah-reader" dir={lang === 'he' ? 'rtl' : 'ltr'} ref={(el: HTMLDivElement | null) => { if (el) { const expected = lang === 'he' ? 'rtl' : 'ltr'; if (el.dir !== expected) setTimeout(() => { el.dir = expected; el.querySelectorAll('[dir]').forEach(child => { (child as HTMLElement).dir = expected; }); }, 0); } }}>
       {standalone && (
         <header class="reader-header">
           <span class="logo-main">{t.headerTitle}</span>
@@ -1383,21 +1388,19 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
             class="size-slider"
           />
         </div>
-        <div class="toolbar-translation-toggle" dir={lang === 'he' ? 'rtl' : 'ltr'}>
-          {(['hebrew', 'translation', 'both'] as const).map((mode) => (
-            <button
-              key={mode}
-              class={`toolbar-trans-btn${translationMode === mode ? ' active' : ''}`}
-              onClick={() => {
-                setTranslationMode(mode);
-                try { localStorage.setItem('megillah-translation-mode', mode); } catch {}
-                if (session?.role === 'admin') session.broadcastSetting('translationMode', mode);
-              }}
-            >
-              {mode === 'hebrew' ? t.hebrewName : mode === 'both' ? t.both : t.langName}
-            </button>
-          ))}
-        </div>
+        {lang === 'he' ? (
+          <div class="toolbar-translation-toggle">
+            <button class={`toolbar-trans-btn${translationMode === 'hebrew' ? ' active' : ''}`} onClick={() => { setTranslationMode('hebrew'); try { localStorage.setItem('megillah-translation-mode', 'hebrew'); } catch {} if (session?.role === 'admin') session.broadcastSetting('translationMode', 'hebrew'); }}>מקור</button>
+            <button class={`toolbar-trans-btn${translationMode === 'translation' ? ' active' : ''}`} onClick={() => { setTranslationMode('translation'); try { localStorage.setItem('megillah-translation-mode', 'translation'); } catch {} if (session?.role === 'admin') session.broadcastSetting('translationMode', 'translation'); }}>ביאור</button>
+            <button class={`toolbar-trans-btn${translationMode === 'both' ? ' active' : ''}`} onClick={() => { setTranslationMode('both'); try { localStorage.setItem('megillah-translation-mode', 'both'); } catch {} if (session?.role === 'admin') session.broadcastSetting('translationMode', 'both'); }}>שניהם</button>
+          </div>
+        ) : (
+          <div class="toolbar-translation-toggle">
+            <button class={`toolbar-trans-btn${translationMode === 'hebrew' ? ' active' : ''}`} onClick={() => { setTranslationMode('hebrew'); try { localStorage.setItem('megillah-translation-mode', 'hebrew'); } catch {} if (session?.role === 'admin') session.broadcastSetting('translationMode', 'hebrew'); }}>{t.hebrewName}</button>
+            <button class={`toolbar-trans-btn${translationMode === 'translation' ? ' active' : ''}`} onClick={() => { setTranslationMode('translation'); try { localStorage.setItem('megillah-translation-mode', 'translation'); } catch {} if (session?.role === 'admin') session.broadcastSetting('translationMode', 'translation'); }}>{t.langName}</button>
+            <button class={`toolbar-trans-btn${translationMode === 'both' ? ' active' : ''}`} onClick={() => { setTranslationMode('both'); try { localStorage.setItem('megillah-translation-mode', 'both'); } catch {} if (session?.role === 'admin') session.broadcastSetting('translationMode', 'both'); }}>{t.both}</button>
+          </div>
+        )}
         <div class="toolbar-right">
           {session?.role === 'admin' && (
             <button
