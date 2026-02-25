@@ -145,6 +145,8 @@ const translations = {
     joinLive: 'שידור חי',
     syncOn: 'עוקב אחרי השידור החי',
     syncOff: 'הפסקת מעקב — גלול בקצב שלך',
+    copyLink: 'העתק קישור',
+    copied: 'הועתק!',
   },
   en: {
     showCantillation: 'Show cantillation signs',
@@ -185,6 +187,8 @@ const translations = {
     joinLive: 'Join Live',
     syncOn: 'Following the live broadcast',
     syncOff: 'Unfollowed — read at your own pace',
+    copyLink: 'Copy Link',
+    copied: 'Copied!',
   },
   es: {
     showCantillation: 'Mostrar signos de cantilación',
@@ -225,6 +229,8 @@ const translations = {
     joinLive: 'En vivo',
     syncOn: 'Siguiendo la transmisión en vivo',
     syncOff: 'Dejaste de seguir — lee a tu ritmo',
+    copyLink: 'Copiar enlace',
+    copied: '¡Copiado!',
   },
   ru: {
     showCantillation: 'Показать знаки кантилляции',
@@ -265,6 +271,8 @@ const translations = {
     joinLive: 'Эфир',
     syncOn: 'Следите за прямой трансляцией',
     syncOff: 'Отписались — читайте в своём темпе',
+    copyLink: 'Копировать ссылку',
+    copied: 'Скопировано!',
   },
   fr: {
     showCantillation: 'Afficher les signes de cantillation',
@@ -305,6 +313,8 @@ const translations = {
     joinLive: 'En direct',
     syncOn: 'Vous suivez la diffusion en direct',
     syncOff: 'Plus de suivi — lisez à votre rythme',
+    copyLink: 'Copier le lien',
+    copied: 'Copié !',
   },
   pt: {
     showCantillation: 'Mostrar sinais de cantilação',
@@ -345,6 +355,8 @@ const translations = {
     joinLive: 'Ao vivo',
     syncOn: 'Seguindo a transmissão ao vivo',
     syncOff: 'Deixou de seguir — leia no seu ritmo',
+    copyLink: 'Copiar link',
+    copied: 'Copiado!',
   },
   it: {
     showCantillation: 'Mostra segni di cantillazione',
@@ -385,6 +397,8 @@ const translations = {
     joinLive: 'Dal vivo',
     syncOn: 'Stai seguendo la trasmissione in diretta',
     syncOff: 'Non segui più — leggi al tuo ritmo',
+    copyLink: 'Copia link',
+    copied: 'Copiato!',
   },
   hu: {
     showCantillation: 'Kantilláció jelzések mutatása',
@@ -425,6 +439,8 @@ const translations = {
     joinLive: 'Élő',
     syncOn: 'Követi az élő közvetítést',
     syncOff: 'Nem követ — olvasson a saját tempójában',
+    copyLink: 'Link másolása',
+    copied: 'Másolva!',
   },
   de: {
     showCantillation: 'Kantillationszeichen anzeigen',
@@ -465,6 +481,8 @@ const translations = {
     joinLive: 'Live',
     syncOn: 'Sie folgen der Live-Übertragung',
     syncOff: 'Nicht mehr folgen — lesen Sie in Ihrem Tempo',
+    copyLink: 'Link kopieren',
+    copied: 'Kopiert!',
   },
   el: {
     showCantillation: 'Εμφάνιση σημείων καντιλασιόν',
@@ -505,6 +523,8 @@ const translations = {
     joinLive: 'Ζωντανά',
     syncOn: 'Ακολουθείτε τη ζωντανή μετάδοση',
     syncOff: 'Δεν ακολουθείτε πλέον — διαβάστε με το δικό σας ρυθμό',
+    copyLink: 'Αντιγραφή συνδέσμου',
+    copied: 'Αντιγράφηκε!',
   },
 } as const;
 
@@ -844,6 +864,8 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
   const [showTapHintEdit, setShowTapHintEdit] = useState(false);
   const tinymceRef = useRef<HTMLDivElement | null>(null);
   const [showHelp, setShowHelp] = useState(false);
+  const [showQR, setShowQR] = useState(false);
+  const [qrCopied, setQrCopied] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [muted, setMuted] = useState(false);
@@ -1383,12 +1405,12 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
       {/* Session info bar */}
       {session && (
         <div class="session-bar">
-          <span class="session-code">
+          <button class="session-code" onClick={() => setShowQR(true)}>
             <span class="material-icons" style="font-size:16px;vertical-align:middle;margin:0 4px">
               {session.role === 'admin' ? 'cast' : 'cast_connected'}
             </span>
             {t.sessionCode}: {session.code}
-          </span>
+          </button>
           <span class="session-role">
             {session.role === 'admin' ? t.broadcasting : t.following}
           </span>
@@ -2094,6 +2116,33 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           </span>
         </button>
       )}
+
+      {showQR && session && (() => {
+        const shareUrl = `https://megillah.app/live/join?code=${session.code}`;
+        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(shareUrl)}`;
+        return (
+          <div class="qr-overlay" onClick={() => setShowQR(false)}>
+            <div class="qr-modal" dir="ltr" onClick={(e: Event) => e.stopPropagation()}>
+              <button class="qr-close" onClick={() => setShowQR(false)}>
+                <span class="material-icons">close</span>
+              </button>
+              <img class="qr-img" src={qrUrl} alt="QR Code" width={260} height={260} />
+              <div class="qr-url-box">
+                <span class="qr-url">{shareUrl}</span>
+                <button class="qr-copy-btn" onClick={() => {
+                  navigator.clipboard.writeText(shareUrl).then(() => {
+                    setQrCopied(true);
+                    setTimeout(() => setQrCopied(false), 2000);
+                  });
+                }}>
+                  <span class="material-icons">{qrCopied ? 'check' : 'content_copy'}</span>
+                  {qrCopied ? t.copied : t.copyLink}
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
 
       {toast && (
         <div class="sync-toast">{toast}</div>
@@ -3017,8 +3066,101 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
         }
 
         .session-code {
+          background: none;
+          border: none;
+          color: var(--color-white);
           font-weight: 700;
+          font-size: 0.85rem;
           letter-spacing: 0.05em;
+          cursor: pointer;
+          padding: 0;
+          text-decoration: underline;
+          text-underline-offset: 2px;
+        }
+
+        .qr-overlay {
+          position: fixed;
+          inset: 0;
+          background: rgba(0,0,0,0.5);
+          z-index: 200;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 24px;
+        }
+
+        .qr-modal {
+          background: white;
+          border-radius: 16px;
+          padding: 28px 24px 20px;
+          max-width: 340px;
+          width: 100%;
+          text-align: center;
+          position: relative;
+          box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        }
+
+        .qr-close {
+          position: absolute;
+          top: 8px;
+          right: 8px;
+          background: none;
+          border: none;
+          color: var(--color-text-light);
+          cursor: pointer;
+          padding: 4px;
+        }
+
+        .qr-close:hover {
+          color: var(--color-text);
+        }
+
+        .qr-img {
+          display: block;
+          margin: 0 auto 16px;
+          border-radius: 8px;
+        }
+
+        .qr-url-box {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          background: var(--color-cream, #f9f5f0);
+          border: 2px solid var(--color-cream-dark, #e8ddd0);
+          border-radius: 8px;
+          padding: 8px 12px;
+        }
+
+        .qr-url {
+          flex: 1;
+          font-size: 0.8rem;
+          color: var(--color-text);
+          word-break: break-all;
+          text-align: start;
+        }
+
+        .qr-copy-btn {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          background: var(--color-burgundy);
+          color: var(--color-white);
+          border: none;
+          border-radius: 6px;
+          padding: 6px 10px;
+          font-size: 0.75rem;
+          font-weight: 600;
+          cursor: pointer;
+          white-space: nowrap;
+          transition: background 0.2s;
+        }
+
+        .qr-copy-btn .material-icons {
+          font-size: 16px;
+        }
+
+        .qr-copy-btn:hover {
+          background: var(--color-burgundy-light);
         }
 
         .session-role {
