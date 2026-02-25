@@ -2990,13 +2990,12 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
         .bnei-haman {
           display: block;
           text-align: center;
-          overflow-wrap: break-word;
-          word-break: break-word;
         }
 
         .haman-son {
           display: block;
           line-height: 2;
+          white-space: nowrap;
         }
 
         .haman-verse-group {
@@ -3006,6 +3005,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
         .haman-verse-group .haman-son {
           display: inline;
           margin-inline-end: 6px;
+          white-space: nowrap;
         }
 
         .verse-translation {
