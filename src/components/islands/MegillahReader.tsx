@@ -3327,10 +3327,8 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
 
         @keyframes sync-glow {
           0% { color: var(--color-burgundy); }
-          20% { color: rgba(102, 10, 35, 0.3); }
-          40% { color: var(--color-burgundy); }
-          60% { color: rgba(102, 10, 35, 0.35); }
-          80% { color: var(--color-burgundy); }
+          50% { color: rgba(102, 10, 35, 0.7); }
+          100% { color: var(--color-burgundy); }
         }
 
         .tracking-popover {
