@@ -114,6 +114,7 @@ const translations = {
     langName: 'ביאור',
     hebrewName: 'מקור',
     only: 'בלבד',
+    both: 'שניהם',
     fontSize: 'גודל גופן',
     minLeft: 'דק׳ נותרו',
     readingTime: 'זמן קריאה (דקות):',
@@ -151,6 +152,7 @@ const translations = {
     langName: 'English',
     hebrewName: 'Hebrew',
     only: 'Only',
+    both: 'Both',
     fontSize: 'Font size',
     minLeft: 'min left',
     readingTime: 'Reading time (min):',
@@ -188,6 +190,7 @@ const translations = {
     langName: 'Español',
     hebrewName: 'Hebreo',
     only: 'Solo',
+    both: 'Ambos',
     fontSize: 'Tamaño de fuente',
     minLeft: 'min restantes',
     readingTime: 'Tiempo de lectura (min):',
@@ -225,6 +228,7 @@ const translations = {
     langName: 'Русский',
     hebrewName: 'Иврит',
     only: 'Только',
+    both: 'Оба',
     fontSize: 'Размер шрифта',
     minLeft: 'мин осталось',
     readingTime: 'Время чтения (мин):',
@@ -262,6 +266,7 @@ const translations = {
     langName: 'Français',
     hebrewName: 'Hébreu',
     only: 'Seul',
+    both: 'Les deux',
     fontSize: 'Taille de police',
     minLeft: 'min restantes',
     readingTime: 'Temps de lecture (min) :',
@@ -299,6 +304,7 @@ const translations = {
     langName: 'Português',
     hebrewName: 'Hebraico',
     only: 'Só',
+    both: 'Ambos',
     fontSize: 'Tamanho da fonte',
     minLeft: 'min restantes',
     readingTime: 'Tempo de leitura (min):',
@@ -336,6 +342,7 @@ const translations = {
     langName: 'Italiano',
     hebrewName: 'Ebraico',
     only: 'Solo',
+    both: 'Entrambi',
     fontSize: 'Dimensione carattere',
     minLeft: 'min rimasti',
     readingTime: 'Tempo di lettura (min):',
@@ -373,6 +380,7 @@ const translations = {
     langName: 'Magyar',
     hebrewName: 'Héber',
     only: 'Csak',
+    both: 'Mindkettő',
     fontSize: 'Betűméret',
     minLeft: 'perc van hátra',
     readingTime: 'Olvasási idő (perc):',
@@ -410,6 +418,7 @@ const translations = {
     langName: 'Deutsch',
     hebrewName: 'Hebräisch',
     only: 'Nur',
+    both: 'Beide',
     fontSize: 'Schriftgröße',
     minLeft: 'Min. übrig',
     readingTime: 'Lesezeit (Min.):',
@@ -447,6 +456,7 @@ const translations = {
     langName: 'Ελληνικά',
     hebrewName: 'Εβραϊκά',
     only: 'Μόνο',
+    both: 'Και τα δύο',
     fontSize: 'Μέγεθος γραμματοσειράς',
     minLeft: 'λεπτά απομ.',
     readingTime: 'Χρόνος ανάγνωσης (λεπτά):',
@@ -783,7 +793,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
   const [totalMinutes, setTotalMinutes] = useState(DEFAULT_READING_MINUTES);
   const [draftMinutes, setDraftMinutes] = useState(DEFAULT_READING_MINUTES);
   const [showTimeEdit, setShowTimeEdit] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(true);
+  const [menuOpen, setMenuOpen] = useState(false);
   const menuDismissedByScroll = useRef(false);
   const [showTrackingMenu, setShowTrackingMenu] = useState(false);
   const [lang, setLang] = useState<Lang>(getInitialLang);
@@ -1373,7 +1383,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
             class="size-slider"
           />
         </div>
-        <div class="toolbar-translation-toggle">
+        <div class="toolbar-translation-toggle" dir={lang === 'he' ? 'rtl' : 'ltr'}>
           {(['hebrew', 'translation', 'both'] as const).map((mode) => (
             <button
               key={mode}
@@ -1384,7 +1394,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
                 if (session?.role === 'admin') session.broadcastSetting('translationMode', mode);
               }}
             >
-              {mode === 'hebrew' ? t.hebrewName : mode === 'both' ? (lang === 'he' ? 'שניהם' : 'Both') : t.langName}
+              {mode === 'hebrew' ? t.hebrewName : mode === 'both' ? t.both : t.langName}
             </button>
           ))}
         </div>
@@ -2037,6 +2047,8 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
 
       <style>{`
         .megillah-reader {
+          overflow-x: hidden;
+          max-width: 100vw;
         }
 
         .reader-header {
@@ -2147,17 +2159,21 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           display: flex;
           align-items: center;
           justify-content: space-between;
-          gap: 12px;
+          gap: 6px;
           background: var(--color-white);
           border-radius: 0 0 12px 12px;
-          padding: 8px 14px;
+          padding: 6px 10px;
           box-shadow: 0 2px 8px rgba(102, 10, 35, 0.08);
+          max-width: 100%;
+          overflow: hidden;
         }
 
         .toolbar-left {
           display: flex;
           align-items: center;
-          gap: 6px;
+          gap: 4px;
+          flex-shrink: 1;
+          min-width: 0;
         }
 
         .toolbar-translation-toggle {
@@ -2165,15 +2181,14 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           background: var(--color-cream-dark, #f0e8e0);
           border-radius: 6px;
           overflow: hidden;
-          flex-shrink: 0;
         }
 
         .toolbar-trans-btn {
           border: none;
           background: none;
           cursor: pointer;
-          padding: 4px 8px;
-          font-size: 0.7rem;
+          padding: 4px 6px;
+          font-size: 0.65rem;
           font-weight: 600;
           color: var(--color-text-light);
           transition: background 0.2s, color 0.2s;
@@ -2188,7 +2203,8 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
         .toolbar-right {
           display: flex;
           align-items: center;
-          gap: 4px;
+          gap: 2px;
+          flex-shrink: 0;
         }
 
         .toolbar-icon-btn {
@@ -2411,7 +2427,9 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
         .size-slider {
           -webkit-appearance: none;
           appearance: none;
-          width: 140px;
+          flex: 1;
+          min-width: 30px;
+          max-width: 80px;
           height: 6px;
           background: var(--color-cream-dark);
           border-radius: 3px;
