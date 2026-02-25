@@ -1538,6 +1538,13 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
                 onChange={(e) => {
                   const newLang = (e.target as HTMLSelectElement).value as Lang;
                   setLang(newLang);
+                  if (newLang === 'he') {
+                    setTranslationMode('hebrew');
+                    try { localStorage.setItem('megillah-translation-mode', 'hebrew'); } catch {}
+                  } else if (translationMode === 'hebrew') {
+                    setTranslationMode('both');
+                    try { localStorage.setItem('megillah-translation-mode', 'both'); } catch {}
+                  }
                   try { localStorage.setItem(LANG_STORAGE_KEY, newLang); } catch {}
                   if (session?.role === 'admin') session.broadcastSetting('lang', newLang);
                 }}
