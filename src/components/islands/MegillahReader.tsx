@@ -1383,7 +1383,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
         {lang === 'he' ? (
           <div class="toolbar-translation-toggle">
             <button class={`toolbar-trans-btn${translationMode === 'hebrew' ? ' active' : ''}`} onClick={() => { setTranslationMode('hebrew'); try { localStorage.setItem('megillah-translation-mode', 'hebrew'); } catch {} if (session?.role === 'admin') session.broadcastSetting('translationMode', 'hebrew'); }}>מקור</button>
-            <button class={`toolbar-trans-btn${translationMode === 'translation' ? ' active' : ''}`} onClick={() => { setTranslationMode('translation'); try { localStorage.setItem('megillah-translation-mode', 'translation'); } catch {} if (session?.role === 'admin') session.broadcastSetting('translationMode', 'translation'); }}>ביאור</button>
+            <button class={`toolbar-trans-btn${translationMode === 'translation' ? ' active' : ''}`} onClick={() => { setTranslationMode('translation'); try { localStorage.setItem('megillah-translation-mode', 'translation'); } catch {} if (session?.role === 'admin') session.broadcastSetting('translationMode', 'translation'); }}>ביאור משולב</button>
             <button class={`toolbar-trans-btn${translationMode === 'both' ? ' active' : ''}`} onClick={() => { setTranslationMode('both'); try { localStorage.setItem('megillah-translation-mode', 'both'); } catch {} if (session?.role === 'admin') session.broadcastSetting('translationMode', 'both'); }}>שניהם</button>
           </div>
         ) : (
@@ -2371,6 +2371,11 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           font-family: Arial, 'Heebo', sans-serif;
           font-weight: 400;
           line-height: 1.8;
+        }
+
+        .verses-container:not(.with-translation) .verse {
+          display: block;
+          margin-bottom: 4px;
         }
 
         .translation-only .verse {
