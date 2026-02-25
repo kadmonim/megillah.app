@@ -895,6 +895,9 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
     if (s.customTapHint) {
       setCustomTapHint(s.customTapHint);
     }
+    if (s.showIllustrations) {
+      setShowIllustrations(true);
+    }
   }, [session]);
 
   // Follower: apply real-time reading time from admin
@@ -1514,7 +1517,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
             <input
               type="checkbox"
               checked={showIllustrations}
-              onChange={() => setShowIllustrations(!showIllustrations)}
+              onChange={() => { const next = !showIllustrations; setShowIllustrations(next); if (session?.role === 'admin') session.broadcastSetting('showIllustrations', next); }}
             />
             <span class="toggle-switch"></span>
             <span class="option-label">{t.displayIllustrations}</span>
