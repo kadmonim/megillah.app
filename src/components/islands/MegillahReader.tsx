@@ -1182,16 +1182,8 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
       const viewportHeight = window.innerHeight;
       const scrolled = -rect.top;
       const scrollable = totalHeight - viewportHeight;
-      if (scrolled > 50) {
-        if (!menuDismissedByScroll.current) {
-          menuDismissedByScroll.current = true;
-          setMenuOpen(false);
-        }
-      } else {
-        if (menuDismissedByScroll.current) {
-          menuDismissedByScroll.current = false;
-          setMenuOpen(true);
-        }
+      if (scrolled > 50 && menuOpen) {
+        setMenuOpen(false);
       }
       if (scrollable <= 0) { setScrollProgress(1); return; }
       const progress = Math.min(1, Math.max(0, scrolled / scrollable));
