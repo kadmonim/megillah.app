@@ -690,7 +690,7 @@ function wrapWords(
 }
 
 // Person names in English translations for emphasis
-const NAMES_RE = /\b(Achashverosh|Vashti|Mordechai|Esther|Hadassah|Haman|Mehuman|Bizesa|Charvona|Charvonah|Bigsa|Avagsa|Zeisar|Charkas|Karshena|Sheisar|Admasa|Sarshish|Meres|Marsena|Memuchan|Heige|Heigai|Sha'ashgaz|Bigsan|Seresh|Hasach|Yair|Shim'i|Kish|Yechaniah|Avichayil|Zeresh|Parshandasa|Dalfon|Aspasa|Porasa|Adalia|Aridasa|Parmashta|Arisai|Aridai|Vaizasa|Nevuchadnezzar|Hamdasa)\b/;
+const NAMES_RE = /\b(Achashverosh|Achashveirosh|Vashti|Mordechai|Esther|Hadassah|Haman|Mehuman|Bizzeta|Charvona|Charvonah|Bigta|Avagta|Zeitar|Charkas|Carshina|Sheitar|Admata|Tarshish|Meress|Marsina|Memuchan|Heigai|Shaashgaz|Bigtan|Teresh|Hatach|Yair|Shim'iy|Kish|Jechoniah|Nebuchadnezzar|Avichayil|Zeresh|Parshandata|Dalfon|Aspata|Porata|Adalya|Aridata|Parmashta|Arisai|Aridai|Vaizata|Hamdata)\b/;
 
 function highlightNames(text: string): (string | preact.JSX.Element)[] {
   const parts = text.split(new RegExp(NAMES_RE.source, 'g'));
