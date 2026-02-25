@@ -1373,6 +1373,21 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
             class="size-slider"
           />
         </div>
+        <div class="toolbar-translation-toggle">
+          {(['hebrew', 'translation', 'both'] as const).map((mode) => (
+            <button
+              key={mode}
+              class={`toolbar-trans-btn${translationMode === mode ? ' active' : ''}`}
+              onClick={() => {
+                setTranslationMode(mode);
+                try { localStorage.setItem('megillah-translation-mode', mode); } catch {}
+                if (session?.role === 'admin') session.broadcastSetting('translationMode', mode);
+              }}
+            >
+              {mode === 'hebrew' ? t.hebrewName : mode === 'both' ? (lang === 'he' ? 'שניהם' : 'Both') : t.langName}
+            </button>
+          ))}
+        </div>
         <div class="toolbar-right">
           {session?.role === 'admin' && (
             <button
@@ -1471,24 +1486,6 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
       {/* Settings menu */}
       {menuOpen && (
         <div class="settings-menu" dir={lang === 'he' ? 'rtl' : 'ltr'}>
-          <div class="translation-mode-control">
-            <span class="option-label">{t.showTranslation}</span>
-            <div class="segmented-control">
-              {(['hebrew', 'both', 'translation'] as const).map((mode) => (
-                <button
-                  key={mode}
-                  class={`segmented-btn${translationMode === mode ? ' active' : ''}`}
-                  onClick={() => {
-                    setTranslationMode(mode);
-                    try { localStorage.setItem('megillah-translation-mode', mode); } catch {}
-                    if (session?.role === 'admin') session.broadcastSetting('translationMode', mode);
-                  }}
-                >
-                  {mode === 'hebrew' ? t.hebrewOnly : mode === 'both' ? (lang === 'he' ? `${t.hebrewName} ו${t.langName}` : `${t.hebrewName} & ${t.langName}`) : `${t.langName} ${t.only}`}
-                </button>
-              ))}
-            </div>
-          </div>
           <label class="option-toggle">
             <input
               type="checkbox"
@@ -2163,6 +2160,31 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           gap: 6px;
         }
 
+        .toolbar-translation-toggle {
+          display: flex;
+          background: var(--color-cream-dark, #f0e8e0);
+          border-radius: 6px;
+          overflow: hidden;
+          flex-shrink: 0;
+        }
+
+        .toolbar-trans-btn {
+          border: none;
+          background: none;
+          cursor: pointer;
+          padding: 4px 8px;
+          font-size: 0.7rem;
+          font-weight: 600;
+          color: var(--color-text-light);
+          transition: background 0.2s, color 0.2s;
+          white-space: nowrap;
+        }
+
+        .toolbar-trans-btn.active {
+          background: var(--color-burgundy);
+          color: var(--color-white);
+        }
+
         .toolbar-right {
           display: flex;
           align-items: center;
@@ -2325,39 +2347,6 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           font-size: 0.9rem;
           font-weight: 500;
           color: var(--color-text);
-        }
-
-        .translation-mode-control {
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-          margin-bottom: 4px;
-        }
-
-        .segmented-control {
-          display: flex;
-          background: var(--color-cream-dark);
-          border-radius: 8px;
-          padding: 2px;
-          gap: 2px;
-        }
-
-        .segmented-btn {
-          flex: 1;
-          padding: 5px 8px;
-          border: none;
-          border-radius: 6px;
-          background: transparent;
-          font-size: 0.8rem;
-          font-weight: 500;
-          color: var(--color-text-light);
-          cursor: pointer;
-          transition: background 0.2s, color 0.2s;
-        }
-
-        .segmented-btn.active {
-          background: var(--color-burgundy);
-          color: var(--color-white);
         }
 
         .verses-container.translation-only {
@@ -2701,6 +2690,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           flex: 2;
           text-align: right;
           line-height: 2;
+          font-weight: 500;
         }
 
         .blessing-text {
@@ -2713,6 +2703,11 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           font-weight: 500;
           font-size: 0.85em;
           line-height: 1.8;
+        }
+
+        .blessing-side-by-side .blessing-text {
+          font-weight: inherit;
+          line-height: inherit;
         }
 
         .blessing-text p {
