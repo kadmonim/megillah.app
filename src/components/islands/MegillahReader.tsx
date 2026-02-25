@@ -1598,6 +1598,14 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
             <p>בָּרוּךְ אַתָּה אֲ-דוֹנָי אֱ-לֹהֵינוּ מֶלֶךְ הָעוֹלָם, שֶׁעָשָׂה נִסִּים לַאֲבוֹתֵינוּ בַּיָּמִים הָהֵם בַּזְּמַן הַזֶּה.</p>
             <p>בָּרוּךְ אַתָּה אֲ-דוֹנָי אֱ-לֹהֵינוּ מֶלֶךְ הָעוֹלָם, שֶׁהֶחֱיָנוּ וְקִיְּמָנוּ וְהִגִּיעָנוּ לַזְּמַן הַזֶּה.</p>
           </div>
+          {lang === 'en' && translationMode !== 'hebrew' && (
+            <div class="blessing-transliteration">
+              <p>Bah-rookh ah-tah ah-doh-noi eh-loh-hay-noo meh-lekh hah-oh-lahm ah-shehr kahd-sah-noo bi-meetz-voh-taiv vi-tzee-vah-noo. ahl meek-rah mi-glah.</p>
+              <p>Bah-rookh ah-tah ah-doh-noi eh-loh-hay-noo meh-lekh hah-oh-lahm sheh-ah-sah-h ni-seem lah-ah-voh-tay-noo bah-yah-meem hah-haym beez-mahn hah-zeh.</p>
+              <p>Bah-rookh ah-tah ah-doh-noi eh-loh-hay-noo meh-lekh hah-oh-lahm sheh-heh-kheh-ah-noo vi-kee-mah-noo vi-hee-gee-ah-noo leez-mahn hah-zeh.</p>
+              <p class="blessing-response">Respond: Amein</p>
+            </div>
+          )}
         </div>
 
         {megillahText.map((ch) => (
@@ -2442,6 +2450,28 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
 
         .blessing-text p {
           margin-bottom: 12px;
+        }
+
+        .blessing-transliteration {
+          font-size: 0.95rem;
+          font-style: italic;
+          line-height: 1.8;
+          color: var(--color-text-light, #555);
+          margin-top: 8px;
+          direction: ltr;
+          text-align: left;
+        }
+
+        .blessing-transliteration p {
+          margin-bottom: 8px;
+        }
+
+        .blessing-response {
+          text-align: center;
+          font-style: normal;
+          font-weight: 700;
+          color: var(--color-burgundy);
+          margin-top: 12px;
         }
 
         .shoshanat-yaakov p {
