@@ -1273,7 +1273,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
   return (
     <div class="megillah-reader" dir={lang === 'he' ? 'rtl' : 'ltr'} ref={(el: HTMLDivElement | null) => { if (el) { const expected = lang === 'he' ? 'rtl' : 'ltr'; if (el.dir !== expected) setTimeout(() => { el.dir = expected; el.querySelectorAll('[dir]').forEach(child => { (child as HTMLElement).dir = expected; }); }, 0); } }}>
       {standalone && (
-        <header class="reader-header">
+        <header class={`reader-header${session ? ' has-session-bar' : ''}`}>
           <span class="logo-main">{t.headerTitle}</span>
           <span class="logo-sub">
             {customSubtitle ? (customSubtitle.url ? <a href={customSubtitle.url} target="_blank" rel="noopener noreferrer" class="header-link">{customSubtitle.text}</a> : customSubtitle.text) : t.headerSub}
@@ -2059,6 +2059,11 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           box-shadow: 0 2px 8px rgba(102, 10, 35, 0.3);
           margin: 0 -16px 0;
           position: relative;
+          border-radius: 0 0 12px 12px;
+        }
+
+        .reader-header.has-session-bar {
+          border-radius: 0;
         }
 
         .reader-header .logo-main {
@@ -2929,6 +2934,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           font-size: 0.85rem;
           font-weight: 500;
           margin: 0 -16px;
+          border-radius: 0 0 12px 12px;
         }
 
         .session-code {
