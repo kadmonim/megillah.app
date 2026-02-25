@@ -2047,7 +2047,6 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
 
       <style>{`
         .megillah-reader {
-          overflow-x: hidden;
           max-width: 100vw;
         }
 
