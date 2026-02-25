@@ -874,6 +874,8 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
   const [qrCopied, setQrCopied] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [syncPulse, setSyncPulse] = useState(false);
+  const syncPulseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [muted, setMuted] = useState(false);
   const [soundActive, setSoundActive] = useState(false);
   const audioPool = useRef<HTMLAudioElement[]>([]);
@@ -1024,6 +1026,15 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
       setFontSize(remoteSettings.fontSize as number);
     }
   }, [remoteSettings?.fontSize]);
+
+  // Pulse sync button when receiving remote updates
+  useEffect(() => {
+    if (!syncEnabled || session?.role !== 'follower') return;
+    if (!remoteActiveWord && !remoteActiveVerse) return;
+    setSyncPulse(true);
+    if (syncPulseTimer.current) clearTimeout(syncPulseTimer.current);
+    syncPulseTimer.current = setTimeout(() => setSyncPulse(false), 1200);
+  }, [remoteActiveWord, remoteActiveVerse]);
 
   // Load TinyMCE when editor opens
   useEffect(() => {
@@ -1475,7 +1486,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           )}
           {session?.role === 'follower' && onToggleSync && (
             <button
-              class={`toolbar-icon-btn${syncEnabled ? ' tracking-active' : ''}`}
+              class={`toolbar-icon-btn${syncEnabled ? ' tracking-active' : ''}${syncPulse ? ' sync-pulse' : ''}`}
               onClick={() => {
                 onToggleSync();
                 const msg = syncEnabled ? t.syncOff : t.syncOn;
@@ -3308,6 +3319,18 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
 
         .toolbar-icon-btn.tracking-active {
           color: var(--color-burgundy);
+        }
+
+        .toolbar-icon-btn.sync-pulse {
+          animation: sync-glow 1.2s ease-out;
+        }
+
+        @keyframes sync-glow {
+          0% { color: var(--color-burgundy); }
+          20% { color: rgba(102, 10, 35, 0.3); }
+          40% { color: var(--color-burgundy); }
+          60% { color: rgba(102, 10, 35, 0.35); }
+          80% { color: var(--color-burgundy); }
         }
 
         .tracking-popover {
