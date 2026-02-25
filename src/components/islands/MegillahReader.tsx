@@ -2101,6 +2101,26 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
         </div>
       </div>
 
+      {lang === 'en' && (
+        <div class="whats-next">
+          <h2 class="whats-next-title">What's Next?</h2>
+          <p class="whats-next-intro">Now that you finished hearing the Megillah, here are the other 3 Purim Mitzvot to remember:</p>
+          <div class="whats-next-item">
+            <h3>1. Give to the Needy (Matanot LaEvyonim)</h3>
+            <p>On Purim day, give money or food to at least two needy people. This mitzvah highlights Jewish unity and caring for others. If you don't know anyone personally, you can give through your synagogue or place money in a charity box. Even children should participate.</p>
+          </div>
+          <div class="whats-next-item">
+            <h3>2. Send Food Gifts (Mishloach Manot)</h3>
+            <p>On Purim day, send at least two ready-to-eat food or drink items to at least one friend. This strengthens friendship and community bonds. It's ideal to send the package through a messenger, and children are encouraged to take part.</p>
+          </div>
+          <div class="whats-next-item">
+            <h3>3. Celebrate with a Festive Meal</h3>
+            <p>During Purim day, have a joyful meal with family and possibly guests. Traditionally, it includes bread, meat, wine, songs, Torah thoughts, and a spirit of celebration, continuing into the evening.</p>
+          </div>
+          <p class="whats-next-happy">Happy Purim!</p>
+        </div>
+      )}
+
       {customTapHint && (
         <div class="bottom-announcement custom-hint" dangerouslySetInnerHTML={{ __html: customTapHint }} />
       )}
@@ -2991,6 +3011,59 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
 
         .person-name {
           color: var(--color-text);
+        }
+
+        .whats-next {
+          background: var(--color-cream, #f9f5f0);
+          border-radius: 12px;
+          padding: 24px 20px;
+          margin: 32px 0 16px;
+          text-align: start;
+          dir: ltr;
+        }
+
+        .whats-next-title {
+          font-size: 1.2rem;
+          font-weight: 900;
+          color: var(--color-burgundy);
+          margin: 0 0 8px;
+        }
+
+        .whats-next-intro {
+          font-size: 0.9rem;
+          color: var(--color-text);
+          margin: 0 0 16px;
+          line-height: 1.5;
+        }
+
+        .whats-next-item {
+          margin-bottom: 14px;
+        }
+
+        .whats-next-item:last-child {
+          margin-bottom: 0;
+        }
+
+        .whats-next-item h3 {
+          font-size: 0.95rem;
+          font-weight: 700;
+          color: var(--color-burgundy);
+          margin: 0 0 4px;
+        }
+
+        .whats-next-item p {
+          font-size: 0.85rem;
+          color: var(--color-text);
+          margin: 0;
+          line-height: 1.55;
+        }
+
+        .whats-next-happy {
+          font-size: 1.1rem;
+          font-weight: 900;
+          color: var(--color-burgundy);
+          text-align: center;
+          margin: 18px 0 0;
         }
 
         .sync-toast {
