@@ -1591,19 +1591,94 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
       </div>
 
       <div class={`scroll-text${session?.role === 'admin' ? ' admin-session' : ''}${trackingMode !== 'off' ? ' tracking-on' : ''}`} dir="rtl" ref={scrollTextRef}>
-        <div class="blessings-block" data-verse="blessings-before">
+        <div class="blessings-block" data-verse="blessings-before" style={{ fontSize: `${fontSize}rem` }}>
           <h2 class="chapter-heading">{lang === 'he' ? 'ברכות לפני קריאת המגילה' : 'Blessings Before the Reading'}</h2>
-          <div class="blessing-text">
-            <p>בָּרוּךְ אַתָּה אֲ-דוֹנָי אֱ-לֹהֵינוּ מֶלֶךְ הָעוֹלָם, אֲשֶׁר קִדְּשָׁנוּ בְּמִצְוֹתָיו וְצִוָּנוּ עַל מִקְרָא מְגִלָּה.</p>
-            <p>בָּרוּךְ אַתָּה אֲ-דוֹנָי אֱ-לֹהֵינוּ מֶלֶךְ הָעוֹלָם, שֶׁעָשָׂה נִסִּים לַאֲבוֹתֵינוּ בַּיָּמִים הָהֵם בַּזְּמַן הַזֶּה.</p>
-            <p>בָּרוּךְ אַתָּה אֲ-דוֹנָי אֱ-לֹהֵינוּ מֶלֶךְ הָעוֹלָם, שֶׁהֶחֱיָנוּ וְקִיְּמָנוּ וְהִגִּיעָנוּ לַזְּמַן הַזֶּה.</p>
-          </div>
-          {lang === 'en' && translationMode !== 'hebrew' && (
-            <div class="blessing-transliteration">
-              <p>Bah-rookh ah-tah ah-doh-noi eh-loh-hay-noo meh-lekh hah-oh-lahm ah-shehr kahd-sah-noo bi-meetz-voh-taiv vi-tzee-vah-noo. ahl meek-rah mi-glah.</p>
-              <p>Bah-rookh ah-tah ah-doh-noi eh-loh-hay-noo meh-lekh hah-oh-lahm sheh-ah-sah-h ni-seem lah-ah-voh-tay-noo bah-yah-meem hah-haym beez-mahn hah-zeh.</p>
-              <p>Bah-rookh ah-tah ah-doh-noi eh-loh-hay-noo meh-lekh hah-oh-lahm sheh-heh-kheh-ah-noo vi-kee-mah-noo vi-hee-gee-ah-noo leez-mahn hah-zeh.</p>
-              <p class="blessing-response">Respond: Amein</p>
+          {lang === 'en' && translationMode === 'translation' ? (
+            <>
+              <div class="blessing-unit">
+                <div class="blessing-translation">
+                  <p>Blessed are You, G‑d our L-rd, King of the universe, Who has sanctified us with His commandments and commanded us concerning the reading of the Megillah.</p>
+                </div>
+                <div class="blessing-transliteration">
+                  <p>Bah-rookh ah-tah ah-doh-noi eh-loh-hay-noo meh-lekh hah-oh-lahm ah-shehr kahd-sah-noo bi-meetz-voh-taiv vi-tzee-vah-noo. ahl meek-rah mi-glah.</p>
+                </div>
+                <p class="blessing-response">Respond: Amein</p>
+              </div>
+              <div class="blessing-unit">
+                <div class="blessing-translation">
+                  <p>Blessed are You, G‑d our L-rd, King of the universe, Who performed miracles for our ancestors in those days, at this time.</p>
+                </div>
+                <div class="blessing-transliteration">
+                  <p>Bah-rookh ah-tah ah-doh-noi eh-loh-hay-noo meh-lekh hah-oh-lahm sheh-ah-sah-h ni-seem lah-ah-voh-tay-noo bah-yah-meem hah-haym beez-mahn hah-zeh.</p>
+                </div>
+                <p class="blessing-response">Respond: Amein</p>
+              </div>
+              <div class="blessing-unit">
+                <div class="blessing-translation">
+                  <p>Blessed are You, G‑d our L-rd, King of the universe, Who has granted us life, sustained us, and enabled us to reach this occasion.</p>
+                </div>
+                <div class="blessing-transliteration">
+                  <p>Bah-rookh ah-tah ah-doh-noi eh-loh-hay-noo meh-lekh hah-oh-lahm sheh-heh-kheh-ah-noo vi-kee-mah-noo vi-hee-gee-ah-noo leez-mahn hah-zeh.</p>
+                </div>
+                <p class="blessing-response">Respond: Amein</p>
+              </div>
+            </>
+          ) : lang === 'en' && translationMode === 'both' ? (
+            <div class="blessing-side-by-side">
+              <div class="blessing-row">
+                <div class="blessing-col blessing-col-translation" dir="ltr">
+                  <div class="blessing-translation">
+                    <p>Blessed are You, G‑d our L-rd, King of the universe, Who has sanctified us with His commandments and commanded us concerning the reading of the Megillah.</p>
+                  </div>
+                </div>
+                <div class="blessing-col blessing-col-hebrew" dir="rtl">
+                  <div class="blessing-text">
+                    <p>בָּרוּךְ אַתָּה אֲ-דוֹנָי אֱ-לֹהֵינוּ מֶלֶךְ הָעוֹלָם, אֲשֶׁר קִדְּשָׁנוּ בְּמִצְוֹתָיו וְצִוָּנוּ עַל מִקְרָא מְגִלָּה.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="blessing-transliteration blessing-transliteration-row">
+                <p>Bah-rookh ah-tah ah-doh-noi eh-loh-hay-noo meh-lekh hah-oh-lahm ah-shehr kahd-sah-noo bi-meetz-voh-taiv vi-tzee-vah-noo. ahl meek-rah mi-glah.</p>
+              </div>
+              <p class="blessing-response-full">Respond: Amein</p>
+              <div class="blessing-row">
+                <div class="blessing-col blessing-col-translation" dir="ltr">
+                  <div class="blessing-translation">
+                    <p>Blessed are You, G‑d our L-rd, King of the universe, Who performed miracles for our ancestors in those days, at this time.</p>
+                  </div>
+                </div>
+                <div class="blessing-col blessing-col-hebrew" dir="rtl">
+                  <div class="blessing-text">
+                    <p>בָּרוּךְ אַתָּה אֲ-דוֹנָי אֱ-לֹהֵינוּ מֶלֶךְ הָעוֹלָם, שֶׁעָשָׂה נִסִּים לַאֲבוֹתֵינוּ בַּיָּמִים הָהֵם בַּזְּמַן הַזֶּה.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="blessing-transliteration blessing-transliteration-row">
+                <p>Bah-rookh ah-tah ah-doh-noi eh-loh-hay-noo meh-lekh hah-oh-lahm sheh-ah-sah-h ni-seem lah-ah-voh-tay-noo bah-yah-meem hah-haym beez-mahn hah-zeh.</p>
+              </div>
+              <p class="blessing-response-full">Respond: Amein</p>
+              <div class="blessing-row">
+                <div class="blessing-col blessing-col-translation" dir="ltr">
+                  <div class="blessing-translation">
+                    <p>Blessed are You, G‑d our L-rd, King of the universe, Who has granted us life, sustained us, and enabled us to reach this occasion.</p>
+                  </div>
+                </div>
+                <div class="blessing-col blessing-col-hebrew" dir="rtl">
+                  <div class="blessing-text">
+                    <p>בָּרוּךְ אַתָּה אֲ-דוֹנָי אֱ-לֹהֵינוּ מֶלֶךְ הָעוֹלָם, שֶׁהֶחֱיָנוּ וְקִיְּמָנוּ וְהִגִּיעָנוּ לַזְּמַן הַזֶּה.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="blessing-transliteration blessing-transliteration-row">
+                <p>Bah-rookh ah-tah ah-doh-noi eh-loh-hay-noo meh-lekh hah-oh-lahm sheh-heh-kheh-ah-noo vi-kee-mah-noo vi-hee-gee-ah-noo leez-mahn hah-zeh.</p>
+              </div>
+              <p class="blessing-response-full">Respond: Amein</p>
+            </div>
+          ) : (
+            <div class="blessing-text">
+              <p>בָּרוּךְ אַתָּה אֲ-דוֹנָי אֱ-לֹהֵינוּ מֶלֶךְ הָעוֹלָם, אֲשֶׁר קִדְּשָׁנוּ בְּמִצְוֹתָיו וְצִוָּנוּ עַל מִקְרָא מְגִלָּה.</p>
+              <p>בָּרוּךְ אַתָּה אֲ-דוֹנָי אֱ-לֹהֵינוּ מֶלֶךְ הָעוֹלָם, שֶׁעָשָׂה נִסִּים לַאֲבוֹתֵינוּ בַּיָּמִים הָהֵם בַּזְּמַן הַזֶּה.</p>
+              <p>בָּרוּךְ אַתָּה אֲ-דוֹנָי אֱ-לֹהֵינוּ מֶלֶךְ הָעוֹלָם, שֶׁהֶחֱיָנוּ וְקִיְּמָנוּ וְהִגִּיעָנוּ לַזְּמַן הַזֶּה.</p>
             </div>
           )}
         </div>
@@ -1774,24 +1849,173 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           </div>
         ))}
 
-        <div class="blessings-block" data-verse="blessings-after">
+        <div class="blessings-block" data-verse="blessings-after" style={{ fontSize: `${fontSize}rem` }}>
           <h2 class="chapter-heading">{lang === 'he' ? 'ברכה לאחר קריאת המגילה' : 'Blessing After the Reading'}</h2>
-          <div class="blessing-text">
-            <p>בָּרוּךְ אַתָּה אֲ-דוֹנָי אֱ-לֹהֵינוּ מֶלֶךְ הָעוֹלָם, הָרָב אֶת רִיבֵנוּ, וְהַדָּן אֶת דִּינֵנוּ, וְהַנּוֹקֵם אֶת נִקְמָתֵנוּ, וְהַנִּפְרָע לָנוּ מִצָּרֵינוּ, וְהַמְשַׁלֵּם גְּמוּל לְכָל אוֹיְבֵי נַפְשֵׁנוּ, בָּרוּךְ אַתָּה אֲ-דוֹנָי, הַנִּפְרָע לְעַמּוֹ יִשְׂרָאֵל מִכָּל צָרֵיהֶם, הָאֵ-ל הַמּוֹשִׁיעַ.</p>
-          </div>
+          {lang === 'en' && translationMode === 'translation' ? (
+            <>
+              <div class="blessing-translation">
+                <p>Blessed are You, G‑d our L-rd, King of the universe, Who champions our cause, judges our case, avenges our wrongs, exacts retribution for us from our adversaries, and repays all the enemies of our soul. Blessed are You, G‑d, Who exacts retribution for His people Israel from all their oppressors, the G‑d Who delivers.</p>
+              </div>
+              <div class="blessing-transliteration">
+                <p>Bah-rookh ah-tah ah-doh-noi eh-loh-hay-noo meh-lekh hah-oh-lahm hah-rahv eht ree-vay-noo vi-hah-dahn eht dee-nay-noo vi-hah-noh-kaym eht neek-mah-tay-noo vi-hah-neef-rah lah-noo mee-tzah-ray-noo vi-hahm-shah-laym gi-mool li-khohl ohvay nahf-shay-noo. bah-rookh ah-tah ah-doh-noi hah-neef-rah lah-moh yee-sׂrah-ayl mee-kahl tzah-ray-hehm hah-ayl hah-moh-shee-ah.</p>
+              </div>
+              <p class="blessing-response">Respond: Amein</p>
+            </>
+          ) : lang === 'en' && translationMode === 'both' ? (
+            <div class="blessing-side-by-side">
+              <div class="blessing-row">
+                <div class="blessing-col blessing-col-translation" dir="ltr">
+                  <div class="blessing-translation">
+                    <p>Blessed are You, G‑d our L-rd, King of the universe, Who champions our cause, judges our case, avenges our wrongs, exacts retribution for us from our adversaries, and repays all the enemies of our soul. Blessed are You, G‑d, Who exacts retribution for His people Israel from all their oppressors, the G‑d Who delivers.</p>
+                  </div>
+                </div>
+                <div class="blessing-col blessing-col-hebrew" dir="rtl">
+                  <div class="blessing-text">
+                    <p>בָּרוּךְ אַתָּה אֲ-דוֹנָי אֱ-לֹהֵינוּ מֶלֶךְ הָעוֹלָם, הָרָב אֶת רִיבֵנוּ, וְהַדָּן אֶת דִּינֵנוּ, וְהַנּוֹקֵם אֶת נִקְמָתֵנוּ, וְהַנִּפְרָע לָנוּ מִצָּרֵינוּ, וְהַמְשַׁלֵּם גְּמוּל לְכָל אוֹיְבֵי נַפְשֵׁנוּ, בָּרוּךְ אַתָּה אֲ-דוֹנָי, הַנִּפְרָע לְעַמּוֹ יִשְׂרָאֵל מִכָּל צָרֵיהֶם, הָאֵ-ל הַמּוֹשִׁיעַ.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="blessing-transliteration blessing-transliteration-row">
+                <p>Bah-rookh ah-tah ah-doh-noi eh-loh-hay-noo meh-lekh hah-oh-lahm hah-rahv eht ree-vay-noo vi-hah-dahn eht dee-nay-noo vi-hah-noh-kaym eht neek-mah-tay-noo vi-hah-neef-rah lah-noo mee-tzah-ray-noo vi-hahm-shah-laym gi-mool li-khohl ohvay nahf-shay-noo. bah-rookh ah-tah ah-doh-noi hah-neef-rah lah-moh yee-sׂrah-ayl mee-kahl tzah-ray-hehm hah-ayl hah-moh-shee-ah.</p>
+              </div>
+              <p class="blessing-response-full">Respond: Amein</p>
+            </div>
+          ) : (
+            <div class="blessing-text">
+              <p>בָּרוּךְ אַתָּה אֲ-דוֹנָי אֱ-לֹהֵינוּ מֶלֶךְ הָעוֹלָם, הָרָב אֶת רִיבֵנוּ, וְהַדָּן אֶת דִּינֵנוּ, וְהַנּוֹקֵם אֶת נִקְמָתֵנוּ, וְהַנִּפְרָע לָנוּ מִצָּרֵינוּ, וְהַמְשַׁלֵּם גְּמוּל לְכָל אוֹיְבֵי נַפְשֵׁנוּ, בָּרוּךְ אַתָּה אֲ-דוֹנָי, הַנִּפְרָע לְעַמּוֹ יִשְׂרָאֵל מִכָּל צָרֵיהֶם, הָאֵ-ל הַמּוֹשִׁיעַ.</p>
+            </div>
+          )}
         </div>
 
-        <div class="blessings-block" data-verse="shoshanat">
+        <div class="blessings-block loud-verse" data-verse="shoshanat" style={{ fontSize: `${fontSize}rem` }}>
           <h2 class="chapter-heading">{lang === 'he' ? 'שׁוֹשַׁנַּת יַעֲקֹב' : 'Shoshanat Yaakov'}</h2>
-          <div class="blessing-text shoshanat-yaakov">
-            <p>שׁוֹשַׁנַּת יַעֲקֹב צָהֲלָה וְשָׂמֵחָה, בִּרְאוֹתָם יַחַד תְּכֵלֶת מָרְדְּכָי,</p>
-            <p>תְּשׁוּעָתָם הָיִיתָ לָנֶצַח, וְתִקְוָתָם בְּכָל דּוֹר וָדוֹר.</p>
-            <p>לְהוֹדִיעַ שֶׁכָּל קֹוֶיךָ לֹא יֵבֹשׁוּ וְלֹא יִכָּלְמוּ לָנֶצַח כָּל הַחוֹסִים בָּךְ.</p>
-            <p>אָרוּר הָמָן אֲשֶׁר בִּקֵשׁ לְאַבְּדִי, בָּרוּךְ מָרְדְּכַי הַיְּהוּדִי.</p>
-            <p>אֲרוּרָה זֶרֶשׁ אֵשֶׁת מַפְחִידִי, בְּרוּכָה אֶסְתֵּר בַּעֲדִי.</p>
-            <p>אֲרוּרִים כָּל הָרְשָׁעִים, בְּרוּכִים כָּל הַצַּדִּיקִים,</p>
-            <p>וְגַם חַרְבוֹנָה זָכוּר לַטּוֹב.</p>
-          </div>
+          {lang === 'en' && translationMode !== 'hebrew' && (
+            <span class="loud-label">Everyone says this together</span>
+          )}
+          {lang === 'en' && translationMode === 'translation' ? (
+            <>
+              <div class="blessing-translation">
+                <p>The rose of Jacob rejoiced and was glad when they together beheld the sky-blue garments of Mordechai.</p>
+                <p>You were their salvation forever, and their hope throughout every generation.</p>
+                <p>To proclaim that all who hope in You shall never be put to shame, nor shall all who take refuge in You ever be disgraced.</p>
+                <p>Cursed is Haman who sought to destroy me; blessed is Mordechai the Jew.</p>
+                <p>Cursed is Zeresh, the wife of my terror; blessed is Esther who pleaded for me.</p>
+                <p>Cursed are all the wicked; blessed are all the righteous—and also Charvonah is remembered for good.</p>
+              </div>
+              <div class="blessing-transliteration">
+                <p>Shoh-shah-naht yah-ah-kohv tzah-hah-lah vi-sׂah-may-khah. bee-roh-tahm yah-khahd ti-khay-leht mahr-dkhai.</p>
+                <p>ti-shoo-ah-tahm hah-yee-tah lah-neh-tzakh vi-teek-vah-tahm bi-khohl dohr vah-dohr.</p>
+                <p>li-hoh-dee-ah sheh-kahl koh-veh-khah loh yay-voh-shoo vi-loh yee-kahl-moo lah-neh-tzakh kohl hah-khoh-seem bakh.</p>
+                <p>ah-roor hah-mahn ah-shehr bee-kaysh lahb-dee bah-rookh mahr-dkhai hah-yhoo-dee.</p>
+                <p>ah-roo-rah zeh-resh ay-sheht mahf-khee-dee bi-roo-khah ehs-tayr bah-ah-dee.</p>
+                <p>ah-roo-reem kohl hahr-shah-eem bi-roo-kheem kohl hah-tzah-dee-keem vi-gahm khahr-voh-nah zah-khoor lah-tohv.</p>
+              </div>
+            </>
+          ) : lang === 'en' && translationMode === 'both' ? (
+            <div class="blessing-side-by-side">
+              <div class="blessing-row">
+                <div class="blessing-col blessing-col-translation" dir="ltr">
+                  <div class="blessing-translation">
+                    <p>The rose of Jacob rejoiced and was glad when they together beheld the sky-blue garments of Mordechai.</p>
+                  </div>
+                </div>
+                <div class="blessing-col blessing-col-hebrew" dir="rtl">
+                  <div class="blessing-text shoshanat-yaakov">
+                    <p>שׁוֹשַׁנַּת יַעֲקֹב צָהֲלָה וְשָׂמֵחָה, בִּרְאוֹתָם יַחַד תְּכֵלֶת מָרְדְּכָי,</p>
+                  </div>
+                </div>
+              </div>
+              <div class="blessing-transliteration blessing-transliteration-row">
+                <p>Shoh-shah-naht yah-ah-kohv tzah-hah-lah vi-sׂah-may-khah. bee-roh-tahm yah-khahd ti-khay-leht mahr-dkhai.</p>
+              </div>
+              <div class="blessing-row">
+                <div class="blessing-col blessing-col-translation" dir="ltr">
+                  <div class="blessing-translation">
+                    <p>You were their salvation forever, and their hope throughout every generation.</p>
+                  </div>
+                </div>
+                <div class="blessing-col blessing-col-hebrew" dir="rtl">
+                  <div class="blessing-text shoshanat-yaakov">
+                    <p>תְּשׁוּעָתָם הָיִיתָ לָנֶצַח, וְתִקְוָתָם בְּכָל דּוֹר וָדוֹר.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="blessing-transliteration blessing-transliteration-row">
+                <p>ti-shoo-ah-tahm hah-yee-tah lah-neh-tzakh vi-teek-vah-tahm bi-khohl dohr vah-dohr.</p>
+              </div>
+              <div class="blessing-row">
+                <div class="blessing-col blessing-col-translation" dir="ltr">
+                  <div class="blessing-translation">
+                    <p>To proclaim that all who hope in You shall never be put to shame, nor shall all who take refuge in You ever be disgraced.</p>
+                  </div>
+                </div>
+                <div class="blessing-col blessing-col-hebrew" dir="rtl">
+                  <div class="blessing-text shoshanat-yaakov">
+                    <p>לְהוֹדִיעַ שֶׁכָּל קֹוֶיךָ לֹא יֵבֹשׁוּ וְלֹא יִכָּלְמוּ לָנֶצַח כָּל הַחוֹסִים בָּךְ.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="blessing-transliteration blessing-transliteration-row">
+                <p>li-hoh-dee-ah sheh-kahl koh-veh-khah loh yay-voh-shoo vi-loh yee-kahl-moo lah-neh-tzakh kohl hah-khoh-seem bakh.</p>
+              </div>
+              <div class="blessing-row">
+                <div class="blessing-col blessing-col-translation" dir="ltr">
+                  <div class="blessing-translation">
+                    <p>Cursed is Haman who sought to destroy me; blessed is Mordechai the Jew.</p>
+                  </div>
+                </div>
+                <div class="blessing-col blessing-col-hebrew" dir="rtl">
+                  <div class="blessing-text shoshanat-yaakov">
+                    <p>אָרוּר הָמָן אֲשֶׁר בִּקֵשׁ לְאַבְּדִי, בָּרוּךְ מָרְדְּכַי הַיְּהוּדִי.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="blessing-transliteration blessing-transliteration-row">
+                <p>ah-roor hah-mahn ah-shehr bee-kaysh lahb-dee bah-rookh mahr-dkhai hah-yhoo-dee.</p>
+              </div>
+              <div class="blessing-row">
+                <div class="blessing-col blessing-col-translation" dir="ltr">
+                  <div class="blessing-translation">
+                    <p>Cursed is Zeresh, the wife of my terror; blessed is Esther who pleaded for me.</p>
+                  </div>
+                </div>
+                <div class="blessing-col blessing-col-hebrew" dir="rtl">
+                  <div class="blessing-text shoshanat-yaakov">
+                    <p>אֲרוּרָה זֶרֶשׁ אֵשֶׁת מַפְחִידִי, בְּרוּכָה אֶסְתֵּר בַּעֲדִי.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="blessing-transliteration blessing-transliteration-row">
+                <p>ah-roo-rah zeh-resh ay-sheht mahf-khee-dee bi-roo-khah ehs-tayr bah-ah-dee.</p>
+              </div>
+              <div class="blessing-row">
+                <div class="blessing-col blessing-col-translation" dir="ltr">
+                  <div class="blessing-translation">
+                    <p>Cursed are all the wicked; blessed are all the righteous—and also Charvonah is remembered for good.</p>
+                  </div>
+                </div>
+                <div class="blessing-col blessing-col-hebrew" dir="rtl">
+                  <div class="blessing-text shoshanat-yaakov">
+                    <p>אֲרוּרִים כָּל הָרְשָׁעִים, בְּרוּכִים כָּל הַצַּדִּיקִים,</p>
+                    <p>וְגַם חַרְבוֹנָה זָכוּר לַטּוֹב.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="blessing-transliteration blessing-transliteration-row">
+                <p>ah-roo-reem kohl hahr-shah-eem bi-roo-kheem kohl hah-tzah-dee-keem vi-gahm khahr-voh-nah zah-khoor lah-tohv.</p>
+              </div>
+            </div>
+          ) : (
+            <div class="blessing-text shoshanat-yaakov">
+              <p>שׁוֹשַׁנַּת יַעֲקֹב צָהֲלָה וְשָׂמֵחָה, בִּרְאוֹתָם יַחַד תְּכֵלֶת מָרְדְּכָי,</p>
+              <p>תְּשׁוּעָתָם הָיִיתָ לָנֶצַח, וְתִקְוָתָם בְּכָל דּוֹר וָדוֹר.</p>
+              <p>לְהוֹדִיעַ שֶׁכָּל קֹוֶיךָ לֹא יֵבֹשׁוּ וְלֹא יִכָּלְמוּ לָנֶצַח כָּל הַחוֹסִים בָּךְ.</p>
+              <p>אָרוּר הָמָן אֲשֶׁר בִּקֵשׁ לְאַבְּדִי, בָּרוּךְ מָרְדְּכַי הַיְּהוּדִי.</p>
+              <p>אֲרוּרָה זֶרֶשׁ אֵשֶׁת מַפְחִידִי, בְּרוּכָה אֶסְתֵּר בַּעֲדִי.</p>
+              <p>אֲרוּרִים כָּל הָרְשָׁעִים, בְּרוּכִים כָּל הַצַּדִּיקִים,</p>
+              <p>וְגַם חַרְבוֹנָה זָכוּר לַטּוֹב.</p>
+            </div>
+          )}
         </div>
       </div>
 
@@ -2437,8 +2661,38 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
         }
 
         .blessings-block {
-          margin-bottom: 36px;
+          margin-bottom: 24px;
           text-align: center;
+        }
+
+        .blessing-side-by-side {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          direction: ltr;
+          text-align: initial;
+        }
+
+        .blessing-row {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 16px;
+          align-items: flex-start;
+        }
+
+        .blessing-row .blessing-col {
+          flex: 1;
+          min-width: 0;
+        }
+
+        .blessing-row .blessing-col-translation {
+          flex: 3;
+          text-align: left;
+        }
+
+        .blessing-row .blessing-col-hebrew {
+          flex: 2;
+          text-align: right;
         }
 
         .blessing-text {
@@ -2449,29 +2703,62 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
         }
 
         .blessing-text p {
-          margin-bottom: 12px;
+          margin-bottom: 6px;
         }
 
-        .blessing-transliteration {
-          font-size: 0.95rem;
-          font-style: italic;
-          line-height: 1.8;
-          color: var(--color-text-light, #555);
-          margin-top: 8px;
+        .blessing-unit {
+          margin-bottom: 18px;
+          padding-bottom: 4px;
+          border-bottom: 1px solid rgba(102, 10, 35, 0.1);
+        }
+
+        .blessing-unit:last-child {
+          border-bottom: none;
+          margin-bottom: 0;
+          padding-bottom: 0;
+        }
+
+        .blessing-translation {
+          font-size: 1rem;
+          line-height: 1.6;
           direction: ltr;
           text-align: left;
         }
 
-        .blessing-transliteration p {
+        .blessing-translation p {
+          margin-bottom: 6px;
+        }
+
+        .blessing-transliteration-row {
+          margin-top: -4px;
           margin-bottom: 8px;
         }
 
-        .blessing-response {
+        .blessing-transliteration {
+          font-size: 0.85rem;
+          font-style: italic;
+          line-height: 1.6;
+          color: var(--color-text-light, #555);
+          margin-top: 4px;
+          direction: ltr;
           text-align: center;
-          font-style: normal;
+        }
+
+        .blessing-transliteration p {
+          margin-bottom: 4px;
+        }
+
+        .blessing-response,
+        .blessing-response-full {
+          text-align: center;
+          display: block;
+          font-size: 0.85rem;
           font-weight: 700;
-          color: var(--color-burgundy);
-          margin-top: 12px;
+          color: var(--color-gold);
+          background: linear-gradient(135deg, rgba(232, 190, 80, 0.15), rgba(232, 190, 80, 0.25));
+          border-radius: 6px;
+          padding: 6px 10px;
+          margin: 6px 0 12px;
         }
 
         .shoshanat-yaakov p {
