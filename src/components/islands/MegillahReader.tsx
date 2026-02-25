@@ -935,7 +935,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
     }
     if (s.translationMode) {
       setTranslationMode(s.translationMode);
-    } else if (s.showTranslation) {
+    } else if (s.showTranslation || (s.lang && s.lang !== 'he') || (!s.lang && lang !== 'he')) {
       setTranslationMode('both');
     }
     if (s.customSubtitle) {
