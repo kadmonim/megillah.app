@@ -924,6 +924,9 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
     if (s.showIllustrations) {
       setShowIllustrations(true);
     }
+    if (s.fontSize != null) {
+      setFontSize(s.fontSize);
+    }
   }, [session]);
 
   // Follower: apply real-time reading time from admin
@@ -964,6 +967,12 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
       setLang(remoteSettings.lang as Lang);
     }
   }, [remoteSettings?.lang]);
+
+  useEffect(() => {
+    if (remoteSettings?.fontSize != null) {
+      setFontSize(remoteSettings.fontSize as number);
+    }
+  }, [remoteSettings?.fontSize]);
 
   // Load TinyMCE when editor opens
   useEffect(() => {
@@ -1387,7 +1396,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
             max="2.2"
             step="0.05"
             value={fontSize}
-            onInput={(e) => setFontSize(parseFloat((e.target as HTMLInputElement).value))}
+            onInput={(e) => { const v = parseFloat((e.target as HTMLInputElement).value); setFontSize(v); if (session?.role === 'admin') session.broadcastSetting('fontSize', v); }}
             class="size-slider"
           />
         </div>
