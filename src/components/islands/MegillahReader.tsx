@@ -2679,8 +2679,10 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
         .blessing-row {
           display: flex;
           flex-wrap: wrap;
+          direction: ltr;
           gap: 16px;
           align-items: flex-start;
+          font-size: 0.85em;
         }
 
         .blessing-row .blessing-col {
@@ -2691,18 +2693,26 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
         .blessing-row .blessing-col-translation {
           flex: 3;
           text-align: left;
+          font-weight: 400;
+          line-height: 1.6;
         }
 
         .blessing-row .blessing-col-hebrew {
           flex: 2;
           text-align: right;
+          line-height: 2;
         }
 
         .blessing-text {
           font-family: Arial, 'Heebo', sans-serif;
-          font-size: 1.15rem;
           font-weight: 700;
-          line-height: 2.2;
+          line-height: 2.4;
+        }
+
+        .blessing-unit .blessing-text {
+          font-weight: 500;
+          font-size: 0.85em;
+          line-height: 1.8;
         }
 
         .blessing-text p {
@@ -2722,8 +2732,10 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
         }
 
         .blessing-translation {
-          font-size: 1rem;
-          line-height: 1.6;
+          font-size: 0.95em;
+          font-weight: 400;
+          color: var(--color-text-light);
+          line-height: 1.5;
           direction: ltr;
           text-align: left;
         }
@@ -2738,7 +2750,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
         }
 
         .blessing-transliteration {
-          font-size: 0.85rem;
+          font-size: 0.7em;
           font-style: italic;
           line-height: 1.6;
           color: var(--color-text-light, #555);
@@ -2755,7 +2767,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
         .blessing-response-full {
           text-align: center;
           display: block;
-          font-size: 0.85rem;
+          font-size: 0.65em;
           font-weight: 700;
           color: var(--color-gold);
           background: linear-gradient(135deg, rgba(232, 190, 80, 0.15), rgba(232, 190, 80, 0.25));
