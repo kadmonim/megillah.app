@@ -669,6 +669,17 @@ function wrapWords(
   return { nodes, nextIdx: idx };
 }
 
+// Person names in English translations for emphasis
+const NAMES_RE = /\b(Achashverosh|Vashti|Mordechai|Esther|Hadassah|Haman|Mehuman|Bizesa|Charvona|Charvonah|Bigsa|Avagsa|Zeisar|Charkas|Karshena|Sheisar|Admasa|Sarshish|Meres|Marsena|Memuchan|Heige|Heigai|Sha'ashgaz|Bigsan|Seresh|Hasach|Yair|Shim'i|Kish|Yechaniah|Avichayil|Zeresh|Parshandasa|Dalfon|Aspasa|Porasa|Adalia|Aridasa|Parmashta|Arisai|Aridai|Vaizasa|Nevuchadnezzar|Hamdasa)\b/;
+
+function highlightNames(text: string): (string | preact.JSX.Element)[] {
+  const parts = text.split(new RegExp(NAMES_RE.source, 'g'));
+  if (parts.length === 1) return [text];
+  return parts.map((part, i) =>
+    NAMES_RE.test(part) ? <span key={i} class="person-name">{part}</span> : part
+  );
+}
+
 function renderVerse(
   text: string,
   chapterNum: number,
@@ -732,7 +743,7 @@ function renderVerse(
                 ? <HamanWord key={`tr-${chapterNum}-${verseNum}-${j}`} text={seg} onTap={onHamanTap} />
                 : seg
             )
-          : translation
+          : highlightNames(translation)
     }</span>
   );
 
@@ -2093,7 +2104,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           top: 50%;
           transform: translateY(-50%);
           font-size: 0.65rem;
-          font-weight: 500;
+          font-weight: 400;
           color: var(--color-white);
           text-decoration: none;
           background: rgba(255, 255, 255, 0.15);
@@ -2366,7 +2377,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
 
         .option-label {
           font-size: 0.9rem;
-          font-weight: 500;
+          font-weight: 400;
           color: var(--color-text);
         }
 
@@ -2475,7 +2486,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           gap: 6px;
           font-size: 0.9rem;
           color: var(--color-gold);
-          font-weight: 500;
+          font-weight: 400;
           margin-bottom: 20px;
           text-align: center;
         }
@@ -2497,7 +2508,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           display: block;
           color: var(--color-gold);
           font-size: 0.9rem;
-          font-weight: 500;
+          font-weight: 400;
         }
         .custom-hint p { margin: 4px 0; }
         .custom-hint a { color: var(--color-gold); text-decoration: underline; }
@@ -2542,7 +2553,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           cursor: pointer;
           font-family: inherit;
           font-size: 0.85rem;
-          font-weight: 500;
+          font-weight: 400;
         }
         .tap-hint-editor-actions .save-btn {
           background: var(--color-gold);
@@ -2592,7 +2603,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
 
         .verses-container.with-translation {
           line-height: 1.8;
-          font-weight: 500;
+          font-weight: 400;
           font-size: 0.85em;
         }
 
@@ -2718,7 +2729,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           flex: 2;
           text-align: right;
           line-height: 2;
-          font-weight: 500;
+          font-weight: 400;
         }
 
         .blessing-text {
@@ -2728,7 +2739,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
         }
 
         .blessing-unit .blessing-text {
-          font-weight: 500;
+          font-weight: 400;
           font-size: 0.85em;
           line-height: 1.8;
         }
@@ -2887,6 +2898,10 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           text-align: start;
         }
 
+        .person-name {
+          color: var(--color-text);
+        }
+
         .sound-fab {
           position: fixed;
           bottom: 24px;
@@ -2932,7 +2947,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           color: var(--color-white);
           padding: 8px 16px;
           font-size: 0.85rem;
-          font-weight: 500;
+          font-weight: 400;
           margin: 0 -16px;
           border-radius: 0 0 12px 12px;
         }
@@ -2954,7 +2969,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           border-radius: 6px;
           padding: 4px 10px;
           font-size: 0.8rem;
-          font-weight: 500;
+          font-weight: 400;
           cursor: pointer;
           transition: background 0.2s;
         }
@@ -3028,7 +3043,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           background: transparent;
           color: var(--color-text);
           font-size: 0.85rem;
-          font-weight: 500;
+          font-weight: 400;
           cursor: pointer;
           transition: background 0.2s, color 0.2s;
           text-align: start;
