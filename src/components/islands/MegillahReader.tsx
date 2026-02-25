@@ -2084,7 +2084,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
 
         .join-live-btn {
           position: absolute;
-          left: 12px;
+          left: 16px;
           top: 50%;
           transform: translateY(-50%);
           font-size: 0.65rem;
@@ -2100,7 +2100,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
 
         [dir="rtl"] .join-live-btn {
           left: auto;
-          right: 12px;
+          right: 16px;
         }
 
         .page-title-block {
