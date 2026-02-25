@@ -52,7 +52,10 @@ export default function LiveFollower() {
       const el = document.querySelector(`[data-verse="${verseKey}"]`);
       if (el) {
         const stickyHeight = document.querySelector('.toolbar-sticky')?.getBoundingClientRect().bottom ?? 60;
-        const y = el.getBoundingClientRect().top + window.scrollY - stickyHeight - 40;
+        const availableHeight = window.innerHeight - stickyHeight;
+        const elRect = el.getBoundingClientRect();
+        const offset = elRect.height < availableHeight ? (availableHeight - elRect.height) / 2 : 40;
+        const y = elRect.top + window.scrollY - stickyHeight - offset;
         window.scrollTo({ top: y, behavior: 'smooth' });
       }
     }
