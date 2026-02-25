@@ -814,11 +814,15 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
     if (session?.role === 'admin') setTrackingMode('verse');
   }, [session?.role]);
 
-  // Restore translationMode after hydration to avoid SSR mismatch
+  // Restore translationMode after hydration; default to side-by-side for non-Hebrew
   useEffect(() => {
     try {
       const stored = localStorage.getItem('megillah-translation-mode');
-      if (stored === 'both' || stored === 'translation') setTranslationMode(stored);
+      if (stored === 'both' || stored === 'translation') {
+        setTranslationMode(stored);
+      } else if (lang !== 'he') {
+        setTranslationMode('both');
+      }
     } catch {}
   }, []);
 
