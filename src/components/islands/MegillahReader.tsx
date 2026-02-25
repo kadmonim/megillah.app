@@ -545,6 +545,10 @@ function hasTitleAfter(textAfter: string): boolean {
   return /(האגגי|הרע|צרר|צורר)/.test(plain);
 }
 
+function hasEnglishTitle(before: string, after: string): boolean {
+  return /\b(evil|wicked)\s*$/i.test(before) || /^\s*[,]?\s*(the Agagite|son of Hamdata|persecutor)/i.test(after);
+}
+
 // Strip cantillation marks (U+0591–U+05AF) and paseq (U+05C0) but keep nikkud vowels
 function stripCantillation(s: string): string {
   return s.replace(/[\u0591-\u05AF\u05C0]/g, '');
@@ -778,9 +782,11 @@ function renderVerse(
       lang === 'he'
         ? boldVowelized(translation)
         : (chabadMode ? HAMAN_TITLED_VERSES : HAMAN_VERSES).has(verseKey)
-          ? translation.split(/(Haman)/gi).map((seg, j) =>
+          ? translation.split(/(Haman)/gi).map((seg, j, arr) =>
               /^haman$/i.test(seg)
-                ? <HamanWord key={`tr-${chapterNum}-${verseNum}-${j}`} text={seg} onTap={onHamanTap} />
+                ? (chabadMode && !hasEnglishTitle(arr.slice(0, j).join(''), arr.slice(j + 1).join('')))
+                  ? seg
+                  : <HamanWord key={`tr-${chapterNum}-${verseNum}-${j}`} text={seg} onTap={onHamanTap} />
                 : seg
             )
           : highlightNames(translation)
@@ -2982,7 +2988,10 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
         }
 
         .bnei-haman {
+          display: block;
           text-align: center;
+          overflow-wrap: break-word;
+          word-break: break-word;
         }
 
         .haman-son {
