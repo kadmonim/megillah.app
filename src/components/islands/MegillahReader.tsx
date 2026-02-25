@@ -143,6 +143,8 @@ const translations = {
     endSession: 'סיום',
     leaveSession: 'יציאה',
     joinLive: 'שידור חי',
+    syncOn: 'עוקב אחרי השידור החי',
+    syncOff: 'הפסקת מעקב — גלול בקצב שלך',
   },
   en: {
     showCantillation: 'Show cantillation signs',
@@ -181,6 +183,8 @@ const translations = {
     endSession: 'End',
     leaveSession: 'Leave',
     joinLive: 'Join Live',
+    syncOn: 'Following the live broadcast',
+    syncOff: 'Unfollowed — read at your own pace',
   },
   es: {
     showCantillation: 'Mostrar signos de cantilación',
@@ -219,6 +223,8 @@ const translations = {
     endSession: 'Finalizar',
     leaveSession: 'Salir',
     joinLive: 'En vivo',
+    syncOn: 'Siguiendo la transmisión en vivo',
+    syncOff: 'Dejaste de seguir — lee a tu ritmo',
   },
   ru: {
     showCantillation: 'Показать знаки кантилляции',
@@ -257,6 +263,8 @@ const translations = {
     endSession: 'Завершить',
     leaveSession: 'Выйти',
     joinLive: 'Эфир',
+    syncOn: 'Следите за прямой трансляцией',
+    syncOff: 'Отписались — читайте в своём темпе',
   },
   fr: {
     showCantillation: 'Afficher les signes de cantillation',
@@ -295,6 +303,8 @@ const translations = {
     endSession: 'Terminer',
     leaveSession: 'Quitter',
     joinLive: 'En direct',
+    syncOn: 'Vous suivez la diffusion en direct',
+    syncOff: 'Plus de suivi — lisez à votre rythme',
   },
   pt: {
     showCantillation: 'Mostrar sinais de cantilação',
@@ -333,6 +343,8 @@ const translations = {
     endSession: 'Encerrar',
     leaveSession: 'Sair',
     joinLive: 'Ao vivo',
+    syncOn: 'Seguindo a transmissão ao vivo',
+    syncOff: 'Deixou de seguir — leia no seu ritmo',
   },
   it: {
     showCantillation: 'Mostra segni di cantillazione',
@@ -371,6 +383,8 @@ const translations = {
     endSession: 'Termina',
     leaveSession: 'Esci',
     joinLive: 'Dal vivo',
+    syncOn: 'Stai seguendo la trasmissione in diretta',
+    syncOff: 'Non segui più — leggi al tuo ritmo',
   },
   hu: {
     showCantillation: 'Kantilláció jelzések mutatása',
@@ -409,6 +423,8 @@ const translations = {
     endSession: 'Befejezés',
     leaveSession: 'Kilépés',
     joinLive: 'Élő',
+    syncOn: 'Követi az élő közvetítést',
+    syncOff: 'Nem követ — olvasson a saját tempójában',
   },
   de: {
     showCantillation: 'Kantillationszeichen anzeigen',
@@ -447,6 +463,8 @@ const translations = {
     endSession: 'Beenden',
     leaveSession: 'Verlassen',
     joinLive: 'Live',
+    syncOn: 'Sie folgen der Live-Übertragung',
+    syncOff: 'Nicht mehr folgen — lesen Sie in Ihrem Tempo',
   },
   el: {
     showCantillation: 'Εμφάνιση σημείων καντιλασιόν',
@@ -485,6 +503,8 @@ const translations = {
     endSession: 'Τέλος',
     leaveSession: 'Αποχώρηση',
     joinLive: 'Ζωντανά',
+    syncOn: 'Ακολουθείτε τη ζωντανή μετάδοση',
+    syncOff: 'Δεν ακολουθείτε πλέον — διαβάστε με το δικό σας ρυθμό',
   },
 } as const;
 
@@ -823,6 +843,9 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
   const [customTapHint, setCustomTapHint] = useState<string | null>(null);
   const [showTapHintEdit, setShowTapHintEdit] = useState(false);
   const tinymceRef = useRef<HTMLDivElement | null>(null);
+  const [showHelp, setShowHelp] = useState(false);
+  const [toast, setToast] = useState<string | null>(null);
+  const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [muted, setMuted] = useState(false);
   const [soundActive, setSoundActive] = useState(false);
   const audioPool = useRef<HTMLAudioElement[]>([]);
@@ -1425,7 +1448,13 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           {session?.role === 'follower' && onToggleSync && (
             <button
               class={`toolbar-icon-btn${syncEnabled ? ' tracking-active' : ''}`}
-              onClick={onToggleSync}
+              onClick={() => {
+                onToggleSync();
+                const msg = syncEnabled ? t.syncOff : t.syncOn;
+                setToast(msg);
+                if (toastTimer.current) clearTimeout(toastTimer.current);
+                toastTimer.current = setTimeout(() => setToast(null), 3000);
+              }}
               title={syncEnabled ? 'Unfollow broadcaster' : 'Follow broadcaster'}
             >
               <span class="material-icons">{syncEnabled ? 'sensors' : 'sensors_off'}</span>
@@ -2064,6 +2093,10 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
             {muted ? 'volume_off' : 'volume_up'}
           </span>
         </button>
+      )}
+
+      {toast && (
+        <div class="sync-toast">{toast}</div>
       )}
 
       <style>{`
@@ -2909,6 +2942,28 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
 
         .person-name {
           color: var(--color-text);
+        }
+
+        .sync-toast {
+          position: fixed;
+          bottom: 80px;
+          left: 50%;
+          transform: translateX(-50%);
+          background: var(--color-burgundy);
+          color: var(--color-white);
+          padding: 10px 20px;
+          border-radius: 10px;
+          font-size: 0.85rem;
+          z-index: 200;
+          box-shadow: 0 4px 16px rgba(102, 10, 35, 0.3);
+          animation: toast-in 0.25s ease-out;
+          text-align: center;
+          max-width: 90vw;
+        }
+
+        @keyframes toast-in {
+          from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+          to { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
 
         .sound-fab {
