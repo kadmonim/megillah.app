@@ -799,7 +799,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
   const gapAnimating = useRef(false);
   const [showCantillation, setShowCantillation] = useState(false);
   const [chabadMode, setChabadMode] = useState(false);
-  const [fontSize, setFontSize] = useState(1.25);
+  const [fontSize, setFontSize] = useState(1.15);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [totalMinutes, setTotalMinutes] = useState(DEFAULT_READING_MINUTES);
   const [draftMinutes, setDraftMinutes] = useState(DEFAULT_READING_MINUTES);
