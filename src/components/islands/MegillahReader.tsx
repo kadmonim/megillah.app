@@ -809,6 +809,11 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
   const scrollTextRef = useRef<HTMLDivElement>(null);
   const confettiFired = useRef(false);
 
+  // Default to verse tracking when starting a broadcast
+  useEffect(() => {
+    if (session?.role === 'admin') setTrackingMode('verse');
+  }, [session?.role]);
+
   // Restore translationMode after hydration to avoid SSR mismatch
   useEffect(() => {
     try {
