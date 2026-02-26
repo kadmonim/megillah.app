@@ -10,16 +10,19 @@ const lobbyText = {
   he: {
     title: 'מגילה לייב',
     subtitle: 'עקבו אחרי קריאת מגילה בזמן אמת',
+    tabFollow: 'עוקב',
+    tabBroadcast: 'משדר',
     createSession: 'צור סשן',
     joinSession: 'הצטרף לסשן',
     adminPassword: 'הגדירו סיסמת שידור',
     choosePassword: 'בחרו סיסמה...',
     creating: 'יוצר...',
     sessionCode: 'קוד סשן',
-    passwordAdmins: 'סיסמה (למנהלים בלבד)',
+    password: 'סיסמה',
     optional: 'אופציונלי...',
     joining: 'מצטרף...',
     back: 'חזרה',
+    orCreateNew: 'או צרו סשן חדש',
     logOut: 'התנתק',
     copyLink: 'העתק קישור',
     copied: 'הועתק!',
@@ -42,16 +45,19 @@ const lobbyText = {
   en: {
     title: 'Megillah Live',
     subtitle: 'Follow along with a live Megillah reading',
+    tabFollow: 'Follow',
+    tabBroadcast: 'Broadcast',
     createSession: 'Create Session',
     joinSession: 'Join Session',
     adminPassword: 'Set a Broadcaster Password',
     choosePassword: 'Choose a password...',
     creating: 'Creating...',
     sessionCode: 'Session Code',
-    passwordAdmins: 'Password (admins only)',
+    password: 'Password',
     optional: 'Optional...',
     joining: 'Joining...',
     back: 'Back',
+    orCreateNew: 'Or create a new session',
     logOut: 'Log Out',
     copyLink: 'Copy Link',
     copied: 'Copied!',
@@ -74,16 +80,19 @@ const lobbyText = {
   es: {
     title: 'Meguilá en Vivo',
     subtitle: 'Sigue una lectura en vivo de la Meguilá',
+    tabFollow: 'Seguir',
+    tabBroadcast: 'Transmitir',
     createSession: 'Crear sesión',
     joinSession: 'Unirse a sesión',
     adminPassword: 'Establece una contraseña de transmisión',
     choosePassword: 'Elige una contraseña...',
     creating: 'Creando...',
     sessionCode: 'Código de sesión',
-    passwordAdmins: 'Contraseña (solo admins)',
+    password: 'Contraseña',
     optional: 'Opcional...',
     joining: 'Uniéndose...',
     back: 'Volver',
+    orCreateNew: 'O crear una sesión nueva',
     logOut: 'Cerrar sesión',
     copyLink: 'Copiar enlace',
     copied: '¡Copiado!',
@@ -106,16 +115,19 @@ const lobbyText = {
   ru: {
     title: 'Мегила Лайв',
     subtitle: 'Следите за чтением Мегилы в реальном времени',
+    tabFollow: 'Следить',
+    tabBroadcast: 'Трансляция',
     createSession: 'Создать сессию',
     joinSession: 'Присоединиться',
     adminPassword: 'Задайте пароль трансляции',
     choosePassword: 'Выберите пароль...',
     creating: 'Создание...',
     sessionCode: 'Код сессии',
-    passwordAdmins: 'Пароль (только для админов)',
+    password: 'Пароль',
     optional: 'Необязательно...',
     joining: 'Подключение...',
     back: 'Назад',
+    orCreateNew: 'Или создайте новую сессию',
     logOut: 'Выйти',
     copyLink: 'Копировать ссылку',
     copied: 'Скопировано!',
@@ -138,16 +150,19 @@ const lobbyText = {
   fr: {
     title: 'Méguila en Direct',
     subtitle: 'Suivez une lecture en direct de la Méguila',
+    tabFollow: 'Suivre',
+    tabBroadcast: 'Diffuser',
     createSession: 'Créer une session',
     joinSession: 'Rejoindre une session',
     adminPassword: 'Définir un mot de passe de diffusion',
     choosePassword: 'Choisissez un mot de passe...',
     creating: 'Création...',
     sessionCode: 'Code de session',
-    passwordAdmins: 'Mot de passe (admins uniquement)',
+    password: 'Mot de passe',
     optional: 'Facultatif...',
     joining: 'Connexion...',
     back: 'Retour',
+    orCreateNew: 'Ou créer une nouvelle session',
     logOut: 'Déconnexion',
     copyLink: 'Copier le lien',
     copied: 'Copié !',
@@ -170,16 +185,19 @@ const lobbyText = {
   pt: {
     title: 'Meguilá ao Vivo',
     subtitle: 'Acompanhe uma leitura ao vivo da Meguilá',
+    tabFollow: 'Seguir',
+    tabBroadcast: 'Transmitir',
     createSession: 'Criar sessão',
     joinSession: 'Entrar na sessão',
     adminPassword: 'Defina uma senha de transmissão',
     choosePassword: 'Escolha uma senha...',
     creating: 'Criando...',
     sessionCode: 'Código da sessão',
-    passwordAdmins: 'Senha (apenas admins)',
+    password: 'Senha',
     optional: 'Opcional...',
     joining: 'Entrando...',
     back: 'Voltar',
+    orCreateNew: 'Ou crie uma nova sessão',
     logOut: 'Sair',
     copyLink: 'Copiar link',
     copied: 'Copiado!',
@@ -202,16 +220,19 @@ const lobbyText = {
   it: {
     title: 'Meghillà dal Vivo',
     subtitle: 'Segui una lettura dal vivo della Meghillà',
+    tabFollow: 'Segui',
+    tabBroadcast: 'Trasmetti',
     createSession: 'Crea sessione',
     joinSession: 'Unisciti alla sessione',
     adminPassword: 'Imposta una password di trasmissione',
     choosePassword: 'Scegli una password...',
     creating: 'Creazione...',
     sessionCode: 'Codice sessione',
-    passwordAdmins: 'Password (solo admin)',
+    password: 'Password',
     optional: 'Facoltativo...',
     joining: 'Connessione...',
     back: 'Indietro',
+    orCreateNew: 'O crea una nuova sessione',
     logOut: 'Esci',
     copyLink: 'Copia link',
     copied: 'Copiato!',
@@ -234,16 +255,19 @@ const lobbyText = {
   hu: {
     title: 'Megilla Élő',
     subtitle: 'Kövesse a Megilla felolvasást valós időben',
+    tabFollow: 'Követés',
+    tabBroadcast: 'Közvetítés',
     createSession: 'Munkamenet létrehozása',
     joinSession: 'Csatlakozás',
     adminPassword: 'Közvetítői jelszó beállítása',
     choosePassword: 'Válasszon jelszót...',
     creating: 'Létrehozás...',
     sessionCode: 'Munkamenet kód',
-    passwordAdmins: 'Jelszó (csak adminoknak)',
+    password: 'Jelszó',
     optional: 'Opcionális...',
     joining: 'Csatlakozás...',
     back: 'Vissza',
+    orCreateNew: 'Vagy hozzon létre új munkamenetet',
     logOut: 'Kijelentkezés',
     copyLink: 'Link másolása',
     copied: 'Másolva!',
@@ -266,16 +290,19 @@ const lobbyText = {
   de: {
     title: 'Megilla Live',
     subtitle: 'Folgen Sie einer Live-Megilla-Lesung',
+    tabFollow: 'Folgen',
+    tabBroadcast: 'Übertragen',
     createSession: 'Sitzung erstellen',
     joinSession: 'Sitzung beitreten',
     adminPassword: 'Übertragungspasswort festlegen',
     choosePassword: 'Passwort wählen...',
     creating: 'Erstelle...',
     sessionCode: 'Sitzungscode',
-    passwordAdmins: 'Passwort (nur Admins)',
+    password: 'Passwort',
     optional: 'Optional...',
     joining: 'Beitritt...',
     back: 'Zurück',
+    orCreateNew: 'Oder neue Sitzung erstellen',
     logOut: 'Abmelden',
     copyLink: 'Link kopieren',
     copied: 'Kopiert!',
@@ -298,16 +325,19 @@ const lobbyText = {
   el: {
     title: 'Megillah Live',
     subtitle: 'Ακολουθήστε μια ζωντανή ανάγνωση Μεγιλά',
+    tabFollow: 'Παρακολούθηση',
+    tabBroadcast: 'Μετάδοση',
     createSession: 'Δημιουργία συνεδρίας',
     joinSession: 'Συμμετοχή σε συνεδρία',
     adminPassword: 'Ορισμός κωδικού μετάδοσης',
     choosePassword: 'Επιλέξτε κωδικό...',
     creating: 'Δημιουργία...',
     sessionCode: 'Κωδικός συνεδρίας',
-    passwordAdmins: 'Κωδικός (μόνο για διαχειριστές)',
+    password: 'Κωδικός',
     optional: 'Προαιρετικά...',
     joining: 'Σύνδεση...',
     back: 'Πίσω',
+    orCreateNew: 'Ή δημιουργήστε νέα συνεδρία',
     logOut: 'Αποσύνδεση',
     copyLink: 'Αντιγραφή συνδέσμου',
     copied: 'Αντιγράφηκε!',
@@ -871,10 +901,10 @@ function LobbyScreen({
   lang: Lang;
   onLangChange: (l: Lang) => void;
 }) {
-  const [mode, setMode] = useState<'choose' | 'create' | 'join'>('choose');
+  const [tab, setTab] = useState<'follow' | 'broadcast'>('follow');
+  const [createMode, setCreateMode] = useState(false);
   const [password, setPassword] = useState('');
   const [code, setCode] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
   const passwordRef = useRef<HTMLInputElement>(null);
   const t = lobbyText[lang];
   const dir = lang === 'he' ? 'rtl' : 'ltr';
@@ -887,20 +917,113 @@ function LobbyScreen({
 
         {error && <div class="lobby-error">{error}</div>}
 
-        {mode === 'choose' && (
-          <div class="lobby-choices">
-            <button class="lobby-btn join" onClick={() => setMode('join')}>
-              <span class="material-icons">login</span>
-              {t.joinSession}
+        <div class="lobby-tabs">
+          <button
+            class={`lobby-tab${tab === 'follow' ? ' active' : ''}`}
+            onClick={() => { setTab('follow'); setCreateMode(false); setPassword(''); }}
+          >
+            {t.tabFollow}
+          </button>
+          <button
+            class={`lobby-tab${tab === 'broadcast' ? ' active' : ''}`}
+            onClick={() => { setTab('broadcast'); setCreateMode(false); }}
+          >
+            {t.tabBroadcast}
+          </button>
+        </div>
+
+        {tab === 'follow' && (
+          <form
+            class="lobby-form"
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (code.trim()) onJoinSession(code.trim());
+            }}
+          >
+            <label class="lobby-label">
+              {t.sessionCode}
+              <input
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]{6}"
+                maxLength={6}
+                enterKeyHint="go"
+                class="lobby-input code-input"
+                value={code}
+                placeholder="123456"
+                onInput={(e) => setCode((e.target as HTMLInputElement).value)}
+                required
+                autoFocus
+              />
+            </label>
+            <button class="lobby-btn join" type="submit" disabled={loading}>
+              {loading ? t.joining : t.joinSession}
             </button>
-            <button class="lobby-btn create" onClick={() => setMode('create')}>
-              <span class="material-icons">add_circle</span>
-              {t.createSession}
-            </button>
-          </div>
+          </form>
         )}
 
-        {mode === 'create' && (
+        {tab === 'broadcast' && !createMode && (
+          <form
+            class="lobby-form"
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (code.trim()) onJoinSession(code.trim(), password.trim() || undefined);
+            }}
+          >
+            <label class="lobby-label">
+              {t.sessionCode}
+              <input
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]{6}"
+                maxLength={6}
+                enterKeyHint="next"
+                class="lobby-input code-input"
+                value={code}
+                placeholder="123456"
+                onInput={(e) => {
+                  const val = (e.target as HTMLInputElement).value;
+                  setCode(val);
+                  if (val.length === 6) {
+                    setTimeout(() => passwordRef.current?.focus(), 50);
+                  }
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && code.length === 6) {
+                    e.preventDefault();
+                    passwordRef.current?.focus();
+                  }
+                }}
+                required
+                autoFocus
+              />
+            </label>
+            <label class="lobby-label">
+              {t.password}
+              <input
+                ref={passwordRef}
+                type="password"
+                enterKeyHint="go"
+                class="lobby-input"
+                value={password}
+                placeholder={t.optional}
+                onInput={(e) => setPassword((e.target as HTMLInputElement).value)}
+              />
+            </label>
+            <button class="lobby-btn join" type="submit" disabled={loading}>
+              {loading ? t.joining : t.joinSession}
+            </button>
+            <button
+              type="button"
+              class="lobby-back"
+              onClick={() => setCreateMode(true)}
+            >
+              {t.orCreateNew}
+            </button>
+          </form>
+        )}
+
+        {tab === 'broadcast' && createMode && (
           <form
             class="lobby-form"
             onSubmit={(e) => {
@@ -926,74 +1049,7 @@ function LobbyScreen({
             <button
               type="button"
               class="lobby-back"
-              onClick={() => setMode('choose')}
-            >
-              {t.back}
-            </button>
-          </form>
-        )}
-
-        {mode === 'join' && (
-          <form
-            class="lobby-form"
-            onSubmit={(e) => {
-              e.preventDefault();
-              if (code.trim()) onJoinSession(code.trim(), password.trim() || undefined);
-            }}
-          >
-            <label class="lobby-label">
-              {t.sessionCode}
-              <input
-                type="text"
-                inputMode="numeric"
-                pattern="[0-9]{6}"
-                maxLength={6}
-                enterKeyHint={showPassword ? 'next' : 'go'}
-                class="lobby-input code-input"
-                value={code}
-                placeholder="123456"
-                onInput={(e) => {
-                  const val = (e.target as HTMLInputElement).value;
-                  setCode(val);
-                  if (val.length === 6 && showPassword) {
-                    setTimeout(() => passwordRef.current?.focus(), 50);
-                  }
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && showPassword && code.length === 6) {
-                    e.preventDefault();
-                    passwordRef.current?.focus();
-                  }
-                }}
-                required
-                autoFocus
-              />
-            </label>
-            {showPassword ? (
-              <label class="lobby-label">
-                {t.passwordAdmins}
-                <input
-                  ref={passwordRef}
-                  type="password"
-                  enterKeyHint="go"
-                  class="lobby-input"
-                  value={password}
-                  placeholder={t.optional}
-                  onInput={(e) => setPassword((e.target as HTMLInputElement).value)}
-                />
-              </label>
-            ) : (
-              <button type="button" class="admin-toggle" onClick={() => { setShowPassword(true); setTimeout(() => passwordRef.current?.focus(), 50); }}>
-                {t.passwordAdmins} ▸
-              </button>
-            )}
-            <button class="lobby-btn join" type="submit" disabled={loading}>
-              {loading ? t.joining : t.joinSession}
-            </button>
-            <button
-              type="button"
-              class="lobby-back"
-              onClick={() => { setMode('choose'); setCode(''); }}
+              onClick={() => setCreateMode(false)}
             >
               {t.back}
             </button>
@@ -1044,10 +1100,31 @@ function LobbyScreen({
           margin-bottom: 16px;
         }
 
-        .lobby-choices {
+        .lobby-tabs {
           display: flex;
-          flex-direction: column;
-          gap: 12px;
+          background: var(--color-cream-dark, #f0e8e0);
+          border-radius: 8px;
+          padding: 3px;
+          margin-bottom: 20px;
+        }
+
+        .lobby-tab {
+          flex: 1;
+          padding: 8px 12px;
+          border: none;
+          background: none;
+          border-radius: 6px;
+          font-size: 0.9rem;
+          font-weight: 600;
+          color: var(--color-text-light);
+          cursor: pointer;
+          transition: background 0.2s, color 0.2s;
+        }
+
+        .lobby-tab.active {
+          background: var(--color-white);
+          color: var(--color-burgundy);
+          box-shadow: 0 1px 4px rgba(102, 10, 35, 0.1);
         }
 
         .lobby-btn {
@@ -1141,21 +1218,6 @@ function LobbyScreen({
           color: var(--color-burgundy);
         }
 
-        .admin-toggle {
-          background: none;
-          border: none;
-          color: var(--color-text-light);
-          font-size: 0.8rem;
-          cursor: pointer;
-          padding: 4px 0;
-          text-align: start;
-          opacity: 0.7;
-        }
-
-        .admin-toggle:hover {
-          opacity: 1;
-          color: var(--color-burgundy);
-        }
       `}</style>
     </div>
   );
