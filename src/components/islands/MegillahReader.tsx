@@ -1866,7 +1866,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
       </div>
       {/* Inline toolbar */}
       <div class="toolbar-sticky">
-      <div class="inline-toolbar" dir={lang === 'he' ? 'rtl' : 'ltr'}>
+      <div class={`inline-toolbar${session?.role === 'admin' ? ' toolbar-admin' : ''}`} dir={lang === 'he' ? 'rtl' : 'ltr'}>
         <div class="toolbar-left">
           <span class="material-icons size-icon">text_fields</span>
           <input
@@ -2771,6 +2771,20 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           overflow: hidden;
         }
 
+        .toolbar-admin {
+          gap: 4px;
+          padding: 5px 8px;
+        }
+
+        .toolbar-admin .toolbar-trans-btn {
+          padding: 3px 5px;
+          font-size: 0.6rem;
+        }
+
+        .toolbar-admin .toolbar-icon-btn {
+          padding: 3px;
+        }
+
         .toolbar-left {
           display: flex;
           align-items: center;
@@ -3032,6 +3046,10 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           color: var(--color-burgundy);
         }
 
+        .toolbar-admin .size-icon {
+          font-size: 18px;
+        }
+
         .size-slider {
           -webkit-appearance: none;
           appearance: none;
@@ -3064,6 +3082,21 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           cursor: pointer;
           border: none;
           box-shadow: 0 1px 4px rgba(102, 10, 35, 0.3);
+        }
+
+        .toolbar-admin .size-slider {
+          max-width: 70px;
+          min-width: 24px;
+        }
+
+        .toolbar-admin .size-slider::-webkit-slider-thumb {
+          width: 20px;
+          height: 20px;
+        }
+
+        .toolbar-admin .size-slider::-moz-range-thumb {
+          width: 20px;
+          height: 20px;
         }
 
         .hint-text {
