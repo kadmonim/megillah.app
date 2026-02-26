@@ -45,19 +45,25 @@ export default function LiveFollower() {
   }, []);
 
   const handleRemoteWord = useCallback((wordId: string) => {
-    lastHighlightTime.current = Date.now();
+    // Track last broadcast verse even when sync is off
     let verseKey: string | null = null;
+    if (wordId.startsWith('v:')) {
+      verseKey = wordId.slice(2);
+    } else {
+      const lastDash = wordId.lastIndexOf('-');
+      if (lastDash > 0) verseKey = wordId.slice(0, lastDash);
+    }
+    if (verseKey) lastBroadcastVerse.current = verseKey;
+
+    if (!syncRef.current) return;
+    lastHighlightTime.current = Date.now();
     if (wordId.startsWith('v:')) {
       const verse = wordId.slice(2);
       setRemoteActiveVerse(verse);
       setRemoteWord(null);
-      verseKey = verse;
     } else {
       setRemoteWord(wordId);
       setRemoteActiveVerse(null);
-      // Extract verse key: "3:7-5" → "3:7"
-      const lastDash = wordId.lastIndexOf('-');
-      if (lastDash > 0) verseKey = wordId.slice(0, lastDash);
     }
     if (verseKey) {
       const el = document.querySelector(`[data-verse="${verseKey}"]`);
