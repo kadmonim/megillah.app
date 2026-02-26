@@ -29,6 +29,7 @@ const lobbyText = {
     startBroadcasting: 'התחל שידור',
     scanQR: 'או סרקו קוד QR',
     sessionCreated: 'הלינק נוצר בהצלחה!',
+    sessionRestored: 'יש לכם שידור פעיל',
 
     shareHeading: 'איך נכנסים כמשתתף',
     shareTip1: 'שלחו להם את הקישור הזה:',
@@ -65,6 +66,7 @@ const lobbyText = {
     startBroadcasting: 'Start Broadcasting',
     scanQR: 'Or scan QR code',
     sessionCreated: 'Session created successfully!',
+    sessionRestored: 'You have an active session',
 
     shareHeading: 'Sharing Information',
     shareTip1: 'Send them this link:',
@@ -101,6 +103,7 @@ const lobbyText = {
     startBroadcasting: 'Iniciar transmisión',
     scanQR: 'O escanear código QR',
     sessionCreated: '¡Sesión creada con éxito!',
+    sessionRestored: 'Tiene una sesión activa',
 
     shareHeading: 'Información para compartir',
     shareTip1: 'Envíales este enlace:',
@@ -137,6 +140,7 @@ const lobbyText = {
     startBroadcasting: 'Начать трансляцию',
     scanQR: 'Или отсканируйте QR-код',
     sessionCreated: 'Сессия успешно создана!',
+    sessionRestored: 'У вас есть активная сессия',
 
     shareHeading: 'Информация для обмена',
     shareTip1: 'Отправьте им эту ссылку:',
@@ -173,6 +177,7 @@ const lobbyText = {
     startBroadcasting: 'Commencer la diffusion',
     scanQR: 'Ou scannez le code QR',
     sessionCreated: 'Session créée avec succès !',
+    sessionRestored: 'Vous avez une session active',
 
     shareHeading: 'Informations de partage',
     shareTip1: 'Envoyez-leur ce lien :',
@@ -209,6 +214,7 @@ const lobbyText = {
     startBroadcasting: 'Iniciar transmissão',
     scanQR: 'Ou escaneie o código QR',
     sessionCreated: 'Sessão criada com sucesso!',
+    sessionRestored: 'Você tem uma sessão ativa',
 
     shareHeading: 'Informações de compartilhamento',
     shareTip1: 'Envie este link para eles:',
@@ -245,6 +251,7 @@ const lobbyText = {
     startBroadcasting: 'Inizia la trasmissione',
     scanQR: 'Oppure scansiona il codice QR',
     sessionCreated: 'Sessione creata con successo!',
+    sessionRestored: 'Hai una sessione attiva',
 
     shareHeading: 'Informazioni per la condivisione',
     shareTip1: 'Invia loro questo link:',
@@ -281,6 +288,7 @@ const lobbyText = {
     startBroadcasting: 'Közvetítés indítása',
     scanQR: 'Vagy olvassa be a QR-kódot',
     sessionCreated: 'Munkamenet sikeresen létrehozva!',
+    sessionRestored: 'Van egy aktív munkamenete',
 
     shareHeading: 'Megosztási információk',
     shareTip1: 'Küldje el nekik ezt a linket:',
@@ -317,6 +325,7 @@ const lobbyText = {
     startBroadcasting: 'Übertragung starten',
     scanQR: 'Oder QR-Code scannen',
     sessionCreated: 'Sitzung erfolgreich erstellt!',
+    sessionRestored: 'Sie haben eine aktive Sitzung',
 
     shareHeading: 'Informationen zum Teilen',
     shareTip1: 'Senden Sie ihnen diesen Link:',
@@ -353,6 +362,7 @@ const lobbyText = {
     startBroadcasting: 'Έναρξη μετάδοσης',
     scanQR: 'Ή σαρώστε τον κωδικό QR',
     sessionCreated: 'Η συνεδρία δημιουργήθηκε επιτυχώς!',
+    sessionRestored: 'Έχετε μια ενεργή συνεδρία',
     shareHeading: 'Πληροφορίες κοινοποίησης',
     shareTip1: 'Στείλτε τους αυτόν τον σύνδεσμο:',
     shareTip2: 'Ή ζητήστε τους να ανοίξουν megillah.app/live και να εισάγουν τον κωδικό',
@@ -398,7 +408,7 @@ export default function LiveSession() {
   const syncRef = useRef(true);
   syncRef.current = syncEnabled;
   const lastBroadcastVerse = useRef<string | null>(null);
-  const [pendingSession, setPendingSession] = useState<{ code: string; password: string } | null>(null);
+  const [pendingSession, setPendingSession] = useState<{ code: string; password: string; isNew?: boolean } | null>(null);
   const [createLoading, setCreateLoading] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
   const handleRemoteScroll = useCallback((pos: ScrollPosition) => {
@@ -488,7 +498,7 @@ export default function LiveSession() {
         .insert({ code, password });
       if (insertErr) throw insertErr;
       saveCreatedSession(code, password);
-      setPendingSession({ code, password });
+      setPendingSession({ code, password, isNew: true });
     } catch (e: any) {
       setCreateError(e.message || 'Failed to create session');
     } finally {
@@ -507,6 +517,7 @@ export default function LiveSession() {
     return <ShareScreen
       code={pendingSession.code}
       password={pendingSession.password}
+      isNew={!!pendingSession.isNew}
       lang={lang}
       onLangChange={setLang}
       loading={loading}
@@ -606,6 +617,7 @@ function LangToggle({ lang, onLangChange }: { lang: Lang; onLangChange: (l: Lang
 function ShareScreen({
   code,
   password,
+  isNew,
   lang,
   onLangChange,
   loading,
@@ -614,6 +626,7 @@ function ShareScreen({
 }: {
   code: string;
   password: string;
+  isNew: boolean;
   lang: Lang;
   onLangChange: (l: Lang) => void;
   loading: boolean;
@@ -637,11 +650,17 @@ function ShareScreen({
   return (
     <div class="lobby" dir={dir}>
       <div class="lobby-card">
-        {/* Success banner */}
-        <div class="share-success-banner">
-          <span class="material-icons">check_circle</span>
-          <span>{t.sessionCreated}</span>
-        </div>
+        {isNew ? (
+          <div class="share-success-banner">
+            <span class="material-icons">check_circle</span>
+            <span>{t.sessionCreated}</span>
+          </div>
+        ) : (
+          <div class="share-restored-banner">
+            <h2>{t.sessionRestored}</h2>
+            <p>{t.sessionCode}: <strong>{code}</strong></p>
+          </div>
+        )}
 
         {/* Section 1: Sharing Information */}
         <div class="share-section">
@@ -718,6 +737,25 @@ function ShareScreen({
 
         .share-success-banner .material-icons {
           font-size: 20px;
+        }
+
+        .share-restored-banner {
+          text-align: center;
+          padding: 12px 16px;
+          margin-bottom: 8px;
+        }
+
+        .share-restored-banner h2 {
+          font-size: 1.1rem;
+          font-weight: 700;
+          color: var(--color-burgundy);
+          margin: 0 0 4px;
+        }
+
+        .share-restored-banner p {
+          font-size: 0.9rem;
+          color: var(--color-text-light);
+          margin: 0;
         }
 
         .share-section {
