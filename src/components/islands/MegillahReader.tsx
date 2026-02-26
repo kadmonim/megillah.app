@@ -869,6 +869,8 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
   const [customTapHint, setCustomTapHint] = useState<string | null>(null);
   const [showTapHintEdit, setShowTapHintEdit] = useState(false);
   const tinymceRef = useRef<HTMLDivElement | null>(null);
+  const [customBottomHint, setCustomBottomHint] = useState<string | null>(null);
+  const [showBottomHintEdit, setShowBottomHintEdit] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
   const [showQR, setShowQR] = useState(false);
   const [qrCopied, setQrCopied] = useState(false);
@@ -974,6 +976,9 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
     if (s.customTapHint) {
       setCustomTapHint(s.customTapHint);
     }
+    if (s.customBottomHint) {
+      setCustomBottomHint(s.customBottomHint);
+    }
     if (s.showIllustrations) {
       setShowIllustrations(true);
     }
@@ -1016,6 +1021,12 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
   }, [remoteSettings?.customTapHint]);
 
   useEffect(() => {
+    if (remoteSettings?.customBottomHint !== undefined) {
+      setCustomBottomHint(remoteSettings.customBottomHint as string | null);
+    }
+  }, [remoteSettings?.customBottomHint]);
+
+  useEffect(() => {
     if (remoteSettings?.lang !== undefined && SUPPORTED_LANGS.includes(remoteSettings.lang as Lang)) {
       setLang(remoteSettings.lang as Lang);
     }
@@ -1037,42 +1048,116 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
   }, [remoteActiveWord, remoteActiveVerse]);
 
   // Load TinyMCE when editor opens
-  useEffect(() => {
-    if (!showTapHintEdit) return;
-    const initTinyMCE = () => {
-      const tinymce = (window as any).tinymce;
-      if (!tinymce) return;
-      tinymce.init({
-        selector: '#tap-hint-tinymce',
-        height: 200,
-        menubar: false,
-        branding: false,
-        promotion: false,
-        directionality: lang === 'he' ? 'rtl' as const : 'ltr' as const,
-        plugins: 'link lists directionality',
-        toolbar: 'bold italic underline forecolor | link | bullist numlist | alignleft aligncenter alignright | fontsize | ltr rtl | removeformat',
-        content_style: `body { font-family: Heebo, sans-serif; font-size: 14px; direction: ${lang === 'he' ? 'rtl' : 'ltr'}; }`,
-        setup: (editor: any) => {
-          editor.on('init', () => {
-            editor.setContent(customTapHint || '');
-          });
-        },
-      });
-    };
+  const initHintEditor = (selector: string, content: string, contentStyle?: string) => {
+    const tinymce = (window as any).tinymce;
+    if (!tinymce) return;
+    tinymce.init({
+      selector,
+      height: 200,
+      menubar: false,
+      branding: false,
+      promotion: false,
+      directionality: lang === 'he' ? 'rtl' as const : 'ltr' as const,
+      plugins: 'link lists directionality',
+      toolbar: 'bold italic underline forecolor | link insertbutton | bullist numlist | alignleft aligncenter alignright | fontsize | ltr rtl | removeformat',
+      content_style: contentStyle || `body { font-family: Heebo, sans-serif; font-size: 14px; direction: ${lang === 'he' ? 'rtl' : 'ltr'}; background: #fdf6f0; color: #E8962E; text-align: center; } a { color: #E8962E; } p { margin: 4px 0; }`,
+      setup: (editor: any) => {
+        editor.ui.registry.addButton('insertbutton', {
+          text: 'Button',
+          icon: 'new-tab',
+          onAction: () => {
+            editor.windowManager.open({
+              title: 'Insert Button',
+              body: {
+                type: 'panel',
+                items: [
+                  { type: 'input', name: 'text', label: 'Button text' },
+                  { type: 'input', name: 'url', label: 'Button URL' },
+                ]
+              },
+              buttons: [
+                { type: 'cancel', text: 'Cancel' },
+                { type: 'submit', text: 'Insert', primary: true },
+              ],
+              onSubmit: (api: any) => {
+                const data = api.getData();
+                if (data.text && data.url) {
+                  editor.insertContent(
+                    `<a href="${data.url}" target="_blank" rel="noopener" style="display:inline-block;background:#660a23;color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:600;margin:4px 2px;">${data.text}</a>`
+                  );
+                }
+                api.close();
+              }
+            });
+          }
+        });
+        editor.on('init', () => {
+          editor.setContent(content);
+        });
+      },
+    });
+  };
+
+  const ensureTinyMCELoaded = (callback: () => void) => {
     if ((window as any).tinymce) {
-      initTinyMCE();
+      callback();
     } else {
       const script = document.createElement('script');
       script.src = 'https://cdn.tiny.cloud/1/utcucfgqm71xjbhcb3dgsm1sdjund27o1tylz7nl7llyrfc9/tinymce/7/tinymce.min.js';
       script.referrerPolicy = 'origin';
-      script.onload = initTinyMCE;
+      script.onload = callback;
       document.head.appendChild(script);
     }
+  };
+
+  useEffect(() => {
+    if (!showTapHintEdit) return;
+    ensureTinyMCELoaded(() => initHintEditor('#tap-hint-tinymce', customTapHint || ''));
     return () => {
-      const tinymce = (window as any).tinymce;
-      tinymce?.activeEditor?.destroy();
+      (window as any).tinymce?.get('tap-hint-tinymce')?.destroy();
     };
   }, [showTapHintEdit]);
+
+  const defaultBottomHintHe = `<h2>מה הלאה?</h2>
+<p>חוץ מקריאת המגילה, ישנן עוד שלוש מצוות שיש לקיים אותן ביום פורים:</p>
+<h3>🎁 מתנות לאביונים – איך עושים?</h3>
+<p>במהלך יום הפורים כל איש ואישה – ורצוי שגם הילדים ישתתפו – נותנים סכום כסף או מתנה לשני אנשים נזקקים (איש או אישה). המינימום הוא לתת לשני עניים, ולפחות שווי של פרוטה לכל אחד. כל המרבה – הרי זה משובח.</p>
+<p>יש להרבות במתנות לאביונים יותר מיתר מצוות הפורים, כי השמחה המפוארת והגדולה ביותר היא לשמח את לב העניים, היתומים, האלמנות והגרים.</p>
+<h3>🍱 משלוח מנות – איך עושים?</h3>
+<p>ביום הפורים שולחים לחברים ולידידים – ואפשר גם לכאלה שיהיו ידידים בעתיד 😉 – שני מוצרי מזון לאדם אחד לפחות.</p>
+<p>ניתן לשלוח כל סוג של מזון, ובלבד שיהיה דבר אכיל: פירות או ירקות, משקאות או מאפים, תבשילים או מוצרים קנויים.</p>
+<p>כל גבר צריך לשלוח לגבר אחד לפחות, וכל אישה לאישה אחת לפחות. אפשר, ואף מומלץ, לשלוח ליותר אנשים. כל המרבה – הרי זה משובח.</p>
+<h3>🎉 משתה ושמחה – סעודת פורים</h3>
+<p>ביום הפורים מצווה לקיים סעודה ומשתה מתוך שמחה מיוחדת וגדולה. פורים הוא מהימים השמחים ביותר בלוח השנה היהודי, ואם שמחים בו כראוי – זוכים להמשיך את השמחה גם לימים הבאים.</p>
+<p>חז"ל קבעו: "חייב אדם לבסומי בפוריא עד דלא ידע בין ארור המן לברוך מרדכי".</p>
+<p>סעודת הפורים מתקיימת ביום, ללא עריכת קידוש. מכבדים את היום בפריסת מפה נאה על השולחן, במאכלים משובחים, ויש הנוהגים לבצוע חלות יפות ולהדליק תאורה או נרות חגיגיים (ללא ברכה).</p>
+<p style="text-align:left;font-size:0.75rem;opacity:0.5;">(באדיבות אתר חב"ד.אורג)</p>
+<p style="text-align:center;font-weight:900;font-size:1.1rem;">פורים שמח!</p>`;
+
+  const defaultBottomHintEn = `<h2>What's Next?</h2>
+<p>Now that you finished hearing the Megillah, here are the other 3 Purim Mitzvot to remember:</p>
+<h3>1. Give to the Needy (Matanot LaEvyonim)</h3>
+<p>On Purim day, give money or food to at least two needy people. This mitzvah highlights Jewish unity and caring for others. If you don't know anyone personally, you can give through your synagogue or place money in a charity box. Even children should participate.</p>
+<h3>2. Send Food Gifts (Mishloach Manot)</h3>
+<p>On Purim day, send at least two ready-to-eat food or drink items to at least one friend. This strengthens friendship and community bonds. It's ideal to send the package through a messenger, and children are encouraged to take part.</p>
+<h3>3. Celebrate with a Festive Meal</h3>
+<p>During Purim day, have a joyful meal with family and possibly guests. Traditionally, it includes bread, meat, wine, songs, Torah thoughts, and a spirit of celebration, continuing into the evening.</p>
+<p style="text-align:center;font-weight:900;font-size:1.1rem;">Happy Purim!</p>`;
+
+  const getBottomHintDefault = () => {
+    if (lang === 'he') return defaultBottomHintHe;
+    if (lang === 'en') return defaultBottomHintEn;
+    return '';
+  };
+
+  useEffect(() => {
+    if (!showBottomHintEdit) return;
+    const bottomStyle = `body { font-family: Heebo, sans-serif; font-size: 14px; direction: ${lang === 'he' ? 'rtl' : 'ltr'}; background: #fdf6f0; color: #333; } h2 { font-size: 1.2rem; font-weight: 900; color: #660a23; } h3 { font-size: 0.95rem; font-weight: 700; color: #660a23; } p { font-size: 0.85rem; line-height: 1.55; margin: 0 0 8px; } a { color: #660a23; }`;
+    ensureTinyMCELoaded(() => initHintEditor('#bottom-hint-tinymce', customBottomHint || getBottomHintDefault(), bottomStyle));
+    return () => {
+      (window as any).tinymce?.get('bottom-hint-tinymce')?.destroy();
+    };
+  }, [showBottomHintEdit]);
 
   // Sync remote word/verse highlight from follower callback
   useEffect(() => {
@@ -1669,7 +1754,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
             </div>
             <div class="tap-hint-editor-actions">
               <button class="save-btn" onClick={() => {
-                const editor = (window as any).tinymce?.activeEditor;
+                const editor = (window as any).tinymce?.get('tap-hint-tinymce');
                 const html = editor?.getContent() || '';
                 const val = html.trim() ? html : null;
                 setCustomTapHint(val);
@@ -1681,7 +1766,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
                 setCustomTapHint(null);
                 session.broadcastSetting('customTapHint', null);
                 setShowTapHintEdit(false);
-                const editor = (window as any).tinymce?.activeEditor;
+                const editor = (window as any).tinymce?.get('tap-hint-tinymce');
                 editor?.destroy();
               }}>{t.resetToDefault}</button>
             </div>
@@ -2118,29 +2203,83 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
         </div>
       </div>
 
-      {lang === 'en' && (
-        <div class="whats-next">
-          <h2 class="whats-next-title">What's Next?</h2>
-          <p class="whats-next-intro">Now that you finished hearing the Megillah, here are the other 3 Purim Mitzvot to remember:</p>
-          <div class="whats-next-item">
-            <h3>1. Give to the Needy (Matanot LaEvyonim)</h3>
-            <p>On Purim day, give money or food to at least two needy people. This mitzvah highlights Jewish unity and caring for others. If you don't know anyone personally, you can give through your synagogue or place money in a charity box. Even children should participate.</p>
+      <div class="whats-next-area">
+        {showBottomHintEdit ? null : customBottomHint ? (
+          <div class="whats-next custom-bottom-content" dir={lang === 'he' ? 'rtl' : 'ltr'} dangerouslySetInnerHTML={{ __html: customBottomHint }} />
+        ) : lang !== 'he' && lang !== 'en' ? null : lang === 'he' ? (
+          <div class="whats-next" dir="rtl">
+            <h2 class="whats-next-title">מה הלאה?</h2>
+            <p class="whats-next-intro">חוץ מקריאת המגילה, ישנן עוד שלוש מצוות שיש לקיים אותן ביום פורים:</p>
+            <div class="whats-next-item">
+              <h3>🎁 מתנות לאביונים – איך עושים?</h3>
+              <p>במהלך יום הפורים כל איש ואישה – ורצוי שגם הילדים ישתתפו – נותנים סכום כסף או מתנה לשני אנשים נזקקים (איש או אישה). המינימום הוא לתת לשני עניים, ולפחות שווי של פרוטה לכל אחד. כל המרבה – הרי זה משובח.</p>
+              <p>יש להרבות במתנות לאביונים יותר מיתר מצוות הפורים, כי השמחה המפוארת והגדולה ביותר היא לשמח את לב העניים, היתומים, האלמנות והגרים.</p>
+            </div>
+            <div class="whats-next-item">
+              <h3>🍱 משלוח מנות – איך עושים?</h3>
+              <p>ביום הפורים שולחים לחברים ולידידים – ואפשר גם לכאלה שיהיו ידידים בעתיד 😉 – שני מוצרי מזון לאדם אחד לפחות.</p>
+              <p>ניתן לשלוח כל סוג של מזון, ובלבד שיהיה דבר אכיל: פירות או ירקות, משקאות או מאפים, תבשילים או מוצרים קנויים.</p>
+              <p>כל גבר צריך לשלוח לגבר אחד לפחות, וכל אישה לאישה אחת לפחות. אפשר, ואף מומלץ, לשלוח ליותר אנשים. כל המרבה – הרי זה משובח.</p>
+            </div>
+            <div class="whats-next-item">
+              <h3>🎉 משתה ושמחה – סעודת פורים</h3>
+              <p>ביום הפורים מצווה לקיים סעודה ומשתה מתוך שמחה מיוחדת וגדולה. פורים הוא מהימים השמחים ביותר בלוח השנה היהודי, ואם שמחים בו כראוי – זוכים להמשיך את השמחה גם לימים הבאים.</p>
+              <p>חז"ל קבעו: "חייב אדם לבסומי בפוריא עד דלא ידע בין ארור המן לברוך מרדכי".</p>
+              <p>סעודת הפורים מתקיימת ביום, ללא עריכת קידוש. מכבדים את היום בפריסת מפה נאה על השולחן, במאכלים משובחים, ויש הנוהגים לבצוע חלות יפות ולהדליק תאורה או נרות חגיגיים (ללא ברכה).</p>
+            </div>
+            <p class="whats-next-credit">(באדיבות אתר חב"ד.אורג)</p>
+            <p class="whats-next-happy">פורים שמח!</p>
           </div>
-          <div class="whats-next-item">
-            <h3>2. Send Food Gifts (Mishloach Manot)</h3>
-            <p>On Purim day, send at least two ready-to-eat food or drink items to at least one friend. This strengthens friendship and community bonds. It's ideal to send the package through a messenger, and children are encouraged to take part.</p>
+        ) : (
+          <div class="whats-next" dir="ltr">
+            <h2 class="whats-next-title">What's Next?</h2>
+            <p class="whats-next-intro">Now that you finished hearing the Megillah, here are the other 3 Purim Mitzvot to remember:</p>
+            <div class="whats-next-item">
+              <h3>1. Give to the Needy (Matanot LaEvyonim)</h3>
+              <p>On Purim day, give money or food to at least two needy people. This mitzvah highlights Jewish unity and caring for others. If you don't know anyone personally, you can give through your synagogue or place money in a charity box. Even children should participate.</p>
+            </div>
+            <div class="whats-next-item">
+              <h3>2. Send Food Gifts (Mishloach Manot)</h3>
+              <p>On Purim day, send at least two ready-to-eat food or drink items to at least one friend. This strengthens friendship and community bonds. It's ideal to send the package through a messenger, and children are encouraged to take part.</p>
+            </div>
+            <div class="whats-next-item">
+              <h3>3. Celebrate with a Festive Meal</h3>
+              <p>During Purim day, have a joyful meal with family and possibly guests. Traditionally, it includes bread, meat, wine, songs, Torah thoughts, and a spirit of celebration, continuing into the evening.</p>
+            </div>
+            <p class="whats-next-happy">Happy Purim!</p>
           </div>
-          <div class="whats-next-item">
-            <h3>3. Celebrate with a Festive Meal</h3>
-            <p>During Purim day, have a joyful meal with family and possibly guests. Traditionally, it includes bread, meat, wine, songs, Torah thoughts, and a spirit of celebration, continuing into the evening.</p>
+        )}
+        {session?.role === 'admin' && (
+          <button class="edit-hint-btn edit-bottom-hint-btn" onClick={() => setShowBottomHintEdit(!showBottomHintEdit)} title={t.editTapHint}>
+            <span class="material-icons" style={{ fontSize: '16px' }}>edit</span>
+          </button>
+        )}
+        {showBottomHintEdit && session?.role === 'admin' && (
+          <div class="tap-hint-editor">
+            <div class="tinymce-container">
+              <textarea id="bottom-hint-tinymce" />
+            </div>
+            <div class="tap-hint-editor-actions">
+              <button class="save-btn" onClick={() => {
+                const editor = (window as any).tinymce?.get('bottom-hint-tinymce');
+                const html = editor?.getContent() || '';
+                const val = html.trim() ? html : null;
+                setCustomBottomHint(val);
+                session.broadcastSetting('customBottomHint', val);
+                setShowBottomHintEdit(false);
+                editor?.destroy();
+              }}>{t.save}</button>
+              <button class="reset-btn" onClick={() => {
+                setCustomBottomHint(null);
+                session.broadcastSetting('customBottomHint', null);
+                setShowBottomHintEdit(false);
+                const editor = (window as any).tinymce?.get('bottom-hint-tinymce');
+                editor?.destroy();
+              }}>{t.resetToDefault}</button>
+            </div>
           </div>
-          <p class="whats-next-happy">Happy Purim!</p>
-        </div>
-      )}
-
-      {customTapHint && (
-        <div class="bottom-announcement custom-hint" dangerouslySetInnerHTML={{ __html: customTapHint }} />
-      )}
+        )}
+      </div>
 
       {(soundActive || muted) && (
         <button
@@ -2640,12 +2779,40 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
         }
         .custom-hint p { margin: 4px 0; }
         .custom-hint a { color: var(--color-gold); text-decoration: underline; }
-        .bottom-announcement {
-          text-align: center;
-          margin-top: 24px;
-          padding: 16px 20px;
-          background: rgba(232, 150, 46, 0.1);
-          border-radius: 10px;
+        .custom-hint a[style] { color: #fff; text-decoration: none; }
+        .whats-next-area {
+          position: relative;
+        }
+        .custom-bottom-content h2 {
+          font-size: 1.2rem;
+          font-weight: 900;
+          color: var(--color-burgundy);
+          margin: 0 0 8px;
+        }
+        .custom-bottom-content h3 {
+          font-size: 0.95rem;
+          font-weight: 700;
+          color: var(--color-burgundy);
+          margin: 14px 0 4px;
+        }
+        .custom-bottom-content p {
+          font-size: 0.85rem;
+          color: var(--color-text);
+          margin: 0 0 8px;
+          line-height: 1.55;
+        }
+        .custom-bottom-content a { color: var(--color-burgundy); text-decoration: underline; }
+        .custom-bottom-content a[style] { color: #fff; text-decoration: none; }
+        .whats-next-credit {
+          font-size: 0.75rem;
+          color: var(--color-text);
+          opacity: 0.5;
+          text-align: left;
+          margin: 12px 0 0;
+        }
+        .edit-bottom-hint-btn {
+          top: 8px;
+          right: 8px;
         }
         .edit-hint-btn {
           background: none;
@@ -3077,6 +3244,12 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           margin: 0;
           line-height: 1.55;
         }
+
+        .whats-next[dir="rtl"] .whats-next-intro { font-size: 1rem; }
+        .whats-next[dir="rtl"] .whats-next-item h3 { font-size: 1.05rem; }
+        .whats-next[dir="rtl"] .whats-next-item p { font-size: 0.95rem; }
+        .custom-bottom-content[dir="rtl"] h3 { font-size: 1.05rem; }
+        .custom-bottom-content[dir="rtl"] p { font-size: 0.95rem; }
 
         .whats-next-happy {
           font-size: 1.1rem;
