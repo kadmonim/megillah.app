@@ -148,6 +148,7 @@ const translations = {
     syncOff: 'הפסקת מעקב — גלול בקצב שלך',
     copyLink: 'העתק קישור',
     copied: 'הועתק!',
+    viewAsFollower: 'צפייה כעוקב',
     onboardingFollowerAutoScroll: 'גלילה אוטומטית',
     onboardingFollowerAutoScrollText: 'המגילה תתחיל לגלול מעצמה ברגע שהקורא מתחיל. אם זה מהר מדי, לחצו על הכפתור הזה כדי לעצור את הגלילה — לחצו שוב כדי לחזור לעקוב.',
     onboardingFollowerOptions: 'אפשרויות נוספות',
@@ -214,6 +215,7 @@ const translations = {
     syncOff: 'Unfollowed — read at your own pace',
     copyLink: 'Copy Link',
     copied: 'Copied!',
+    viewAsFollower: 'View as Follower',
     onboardingFollowerAutoScroll: 'Auto-Scroll',
     onboardingFollowerAutoScrollText: 'The Megillah will start scrolling automatically once the reader begins. If it\'s too fast, tap this button to pause auto-scroll — tap again to resume.',
     onboardingFollowerOptions: 'More Options',
@@ -280,6 +282,7 @@ const translations = {
     syncOff: 'Dejaste de seguir — lee a tu ritmo',
     copyLink: 'Copiar enlace',
     copied: '¡Copiado!',
+    viewAsFollower: 'Ver como seguidor',
     onboardingFollowerAutoScroll: 'Desplazamiento automático',
     onboardingFollowerAutoScrollText: 'La Meguilá comenzará a desplazarse automáticamente cuando el lector comience. Si es demasiado rápido, toque este botón para pausar — toque de nuevo para reanudar.',
     onboardingFollowerOptions: 'Más opciones',
@@ -346,6 +349,7 @@ const translations = {
     syncOff: 'Отписались — читайте в своём темпе',
     copyLink: 'Копировать ссылку',
     copied: 'Скопировано!',
+    viewAsFollower: 'Смотреть как зритель',
     onboardingFollowerAutoScroll: 'Автопрокрутка',
     onboardingFollowerAutoScrollText: 'Мегила начнёт прокручиваться автоматически, когда чтец начнёт. Если слишком быстро, нажмите эту кнопку, чтобы приостановить — нажмите снова, чтобы продолжить.',
     onboardingFollowerOptions: 'Дополнительные параметры',
@@ -412,6 +416,7 @@ const translations = {
     syncOff: 'Plus de suivi — lisez à votre rythme',
     copyLink: 'Copier le lien',
     copied: 'Copié !',
+    viewAsFollower: 'Voir en tant que spectateur',
     onboardingFollowerAutoScroll: 'Défilement automatique',
     onboardingFollowerAutoScrollText: 'La Méguila commencera à défiler automatiquement dès que le lecteur commence. Si c\'est trop rapide, appuyez sur ce bouton pour mettre en pause — appuyez à nouveau pour reprendre.',
     onboardingFollowerOptions: 'Plus d\'options',
@@ -478,6 +483,7 @@ const translations = {
     syncOff: 'Deixou de seguir — leia no seu ritmo',
     copyLink: 'Copiar link',
     copied: 'Copiado!',
+    viewAsFollower: 'Ver como seguidor',
     onboardingFollowerAutoScroll: 'Rolagem automática',
     onboardingFollowerAutoScrollText: 'A Meguilá começará a rolar automaticamente quando o leitor iniciar. Se for rápido demais, toque neste botão para pausar — toque novamente para retomar.',
     onboardingFollowerOptions: 'Mais opções',
@@ -544,6 +550,7 @@ const translations = {
     syncOff: 'Non segui più — leggi al tuo ritmo',
     copyLink: 'Copia link',
     copied: 'Copiato!',
+    viewAsFollower: 'Visualizza come spettatore',
     onboardingFollowerAutoScroll: 'Scorrimento automatico',
     onboardingFollowerAutoScrollText: 'La Meghillà inizierà a scorrere automaticamente quando il lettore inizia. Se è troppo veloce, tocca questo pulsante per mettere in pausa — tocca di nuovo per riprendere.',
     onboardingFollowerOptions: 'Altre opzioni',
@@ -610,6 +617,7 @@ const translations = {
     syncOff: 'Nem követ — olvasson a saját tempójában',
     copyLink: 'Link másolása',
     copied: 'Másolva!',
+    viewAsFollower: 'Megtekintés követőként',
     onboardingFollowerAutoScroll: 'Automatikus görgetés',
     onboardingFollowerAutoScrollText: 'A Megilla automatikusan görgetni kezd, amint a felolvasó elkezdi. Ha túl gyors, érintse meg ezt a gombot a szüneteltetéshez — érintse meg újra a folytatáshoz.',
     onboardingFollowerOptions: 'További lehetőségek',
@@ -676,6 +684,7 @@ const translations = {
     syncOff: 'Nicht mehr folgen — lesen Sie in Ihrem Tempo',
     copyLink: 'Link kopieren',
     copied: 'Kopiert!',
+    viewAsFollower: 'Als Zuschauer ansehen',
     onboardingFollowerAutoScroll: 'Automatisches Scrollen',
     onboardingFollowerAutoScrollText: 'Die Megilla beginnt automatisch zu scrollen, sobald der Vorleser anfängt. Wenn es zu schnell ist, tippen Sie auf diese Schaltfläche, um zu pausieren — tippen Sie erneut, um fortzufahren.',
     onboardingFollowerOptions: 'Weitere Optionen',
@@ -742,6 +751,7 @@ const translations = {
     syncOff: 'Δεν ακολουθείτε πλέον — διαβάστε με το δικό σας ρυθμό',
     copyLink: 'Αντιγραφή συνδέσμου',
     copied: 'Αντιγράφηκε!',
+    viewAsFollower: 'Προβολή ως θεατής',
     onboardingFollowerAutoScroll: 'Αυτόματη κύλιση',
     onboardingFollowerAutoScrollText: 'Η Μεγιλά θα αρχίσει να κυλάει αυτόματα μόλις ο αναγνώστης ξεκινήσει. Αν είναι πολύ γρήγορα, πατήστε αυτό το κουμπί για παύση — πατήστε ξανά για συνέχεια.',
     onboardingFollowerOptions: 'Περισσότερες επιλογές',
@@ -2645,6 +2655,12 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
                   {qrCopied ? t.copied : t.copyLink}
                 </button>
               </div>
+              {session.role === 'admin' && (
+                <a class="qr-view-follower" href={shareUrl} target="_blank" rel="noopener noreferrer">
+                  <span class="material-icons">visibility</span>
+                  {t.viewAsFollower}
+                </a>
+              )}
             </div>
           </div>
         );
@@ -3792,6 +3808,30 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
 
         .qr-copy-btn:hover {
           background: var(--color-burgundy-light);
+        }
+
+        .qr-view-follower {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 6px;
+          margin-top: 8px;
+          padding: 8px 16px;
+          font-size: 0.85rem;
+          color: var(--color-burgundy);
+          border: 1px solid var(--color-burgundy);
+          border-radius: 8px;
+          text-decoration: none;
+          font-weight: 600;
+        }
+
+        .qr-view-follower:hover {
+          background: rgba(102, 10, 35, 0.05);
+          text-decoration: none;
+        }
+
+        .qr-view-follower .material-icons {
+          font-size: 16px;
         }
 
         .session-role {
