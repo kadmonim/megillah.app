@@ -21,6 +21,9 @@ export interface SessionSettings {
   translationMode?: 'hebrew' | 'both' | 'translation';
   customSubtitle?: { text: string; url: string };
   customTapHint?: string;
+  customBottomHint?: string;
+  fontSize?: number;
+  showIllustrations?: boolean;
 }
 
 export interface Session {
