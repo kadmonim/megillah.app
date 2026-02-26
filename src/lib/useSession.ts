@@ -96,7 +96,6 @@ export function useSession(
   onRemoteTime?: (minutes: number) => void,
   initialCode?: string,
   onRemoteWord?: (wordId: string) => void,
-  onRemoteSetting?: (key: string, value: unknown) => void,
 ): UseSessionReturn {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(!!initialCode || !!loadFromStorage());
@@ -141,12 +140,6 @@ export function useSession(
         }
       });
 
-      channel.on('broadcast', { event: 'setting' }, (payload) => {
-        if (role === 'follower' && onRemoteSetting) {
-          onRemoteSetting(payload.payload.key, payload.payload.value);
-        }
-      });
-
       channel.subscribe();
       channelRef.current = channel;
 
@@ -187,12 +180,7 @@ export function useSession(
 
       const broadcastSetting = (key: string, value: unknown) => {
         if (role !== 'admin') return;
-        channel.send({
-          type: 'broadcast',
-          event: 'setting',
-          payload: { key, value },
-        });
-        // Persist to DB
+        // Persist to DB only (sets default for new joiners, does not affect active followers)
         const updated = { ...initialSettings, [key]: value };
         const sb = getSupabase();
         sb.from('sessions').update({ settings: updated }).eq('code', code).then(() => {
@@ -208,7 +196,7 @@ export function useSession(
 
       setSession({ code, role, initialSettings, broadcast, broadcastTime, broadcastWord, broadcastSetting, leave });
     },
-    [cleanup, onRemoteScroll, onRemoteTime, onRemoteWord, onRemoteSetting],
+    [cleanup, onRemoteScroll, onRemoteTime, onRemoteWord],
   );
 
   const createSession = useCallback(

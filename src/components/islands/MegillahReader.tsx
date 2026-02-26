@@ -1088,7 +1088,7 @@ function getInitialLang(): Lang {
   return 'en';
 }
 
-export default function MegillahReader({ standalone = false, showTitle = false, session, remoteMinutes, activeWord: remoteActiveWord, activeVerse: remoteActiveVerse, onWordTap, remoteSettings, syncEnabled = true, onToggleSync }: { standalone?: boolean; showTitle?: boolean; session?: Session; remoteMinutes?: number | null; activeWord?: string | null; activeVerse?: string | null; onWordTap?: (wordId: string) => void; remoteSettings?: Record<string, unknown>; syncEnabled?: boolean; onToggleSync?: () => void }) {
+export default function MegillahReader({ standalone = false, showTitle = false, session, remoteMinutes, activeWord: remoteActiveWord, activeVerse: remoteActiveVerse, onWordTap, syncEnabled = true, onToggleSync }: { standalone?: boolean; showTitle?: boolean; session?: Session; remoteMinutes?: number | null; activeWord?: string | null; activeVerse?: string | null; onWordTap?: (wordId: string) => void; syncEnabled?: boolean; onToggleSync?: () => void }) {
   const dragging = useRef(false);
   const lastBroadcastTime = useRef(0);
   const lastDragWord = useRef<string | null>(null);
@@ -1273,49 +1273,6 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
       setDraftMinutes(remoteMinutes);
     }
   }, [remoteMinutes]);
-
-  // Follower: apply real-time settings from admin
-  useEffect(() => {
-    if (remoteSettings?.chabadMode !== undefined) {
-      setChabadMode(remoteSettings.chabadMode as boolean);
-    }
-  }, [remoteSettings?.chabadMode]);
-
-  useEffect(() => {
-    if (remoteSettings?.translationMode !== undefined) {
-      setTranslationMode(remoteSettings.translationMode as 'hebrew' | 'both' | 'translation');
-    }
-  }, [remoteSettings?.translationMode]);
-
-  useEffect(() => {
-    if (remoteSettings?.customSubtitle !== undefined) {
-      setCustomSubtitle(remoteSettings.customSubtitle as { text: string; url: string } | null);
-    }
-  }, [remoteSettings?.customSubtitle]);
-
-  useEffect(() => {
-    if (remoteSettings?.customTapHint !== undefined) {
-      setCustomTapHint(remoteSettings.customTapHint as string | null);
-    }
-  }, [remoteSettings?.customTapHint]);
-
-  useEffect(() => {
-    if (remoteSettings?.customBottomHint !== undefined) {
-      setCustomBottomHint(remoteSettings.customBottomHint as string | null);
-    }
-  }, [remoteSettings?.customBottomHint]);
-
-  useEffect(() => {
-    if (remoteSettings?.lang !== undefined && SUPPORTED_LANGS.includes(remoteSettings.lang as Lang)) {
-      setLang(remoteSettings.lang as Lang);
-    }
-  }, [remoteSettings?.lang]);
-
-  useEffect(() => {
-    if (remoteSettings?.fontSize != null) {
-      setFontSize(remoteSettings.fontSize as number);
-    }
-  }, [remoteSettings?.fontSize]);
 
   // Pulse sync button when receiving remote updates
   useEffect(() => {

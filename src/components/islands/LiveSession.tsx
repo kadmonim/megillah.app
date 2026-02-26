@@ -403,7 +403,6 @@ export default function LiveSession() {
   const [remoteMinutes, setRemoteMinutes] = useState<number | null>(null);
   const [remoteWord, setRemoteWord] = useState<string | null>(null);
   const [remoteActiveVerse, setRemoteActiveVerse] = useState<string | null>(null);
-  const [remoteSettings, setRemoteSettings] = useState<Record<string, unknown>>({});
   const [syncEnabled, setSyncEnabled] = useState(true);
   const syncRef = useRef(true);
   syncRef.current = syncEnabled;
@@ -467,12 +466,8 @@ export default function LiveSession() {
     }
   }, []);
 
-  const handleRemoteSetting = useCallback((key: string, value: unknown) => {
-    setRemoteSettings(prev => ({ ...prev, [key]: value }));
-  }, []);
-
   const { session, loading, error, joinSession } =
-    useSession(handleRemoteScroll, handleRemoteTime, undefined, handleRemoteWord, handleRemoteSetting);
+    useSession(handleRemoteScroll, handleRemoteTime, undefined, handleRemoteWord);
 
   const [lang, setLangState] = useState<Lang>(detectLang);
   const setLang = useCallback((l: Lang) => {
@@ -539,7 +534,7 @@ export default function LiveSession() {
 
   return (
     <div class="live-session">
-      <MegillahReader standalone={true} session={session} remoteMinutes={remoteMinutes} activeWord={remoteWord} activeVerse={remoteActiveVerse} remoteSettings={remoteSettings} syncEnabled={syncEnabled} onToggleSync={() => {
+      <MegillahReader standalone={true} session={session} remoteMinutes={remoteMinutes} activeWord={remoteWord} activeVerse={remoteActiveVerse} syncEnabled={syncEnabled} onToggleSync={() => {
         setSyncEnabled(v => {
           const next = !v;
           if (next && lastBroadcastVerse.current) {
