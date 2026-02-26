@@ -3072,10 +3072,13 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           justify-content: center;
           gap: 6px;
           font-size: 0.9rem;
-          color: var(--color-gold);
           font-weight: 400;
           margin-bottom: 20px;
           text-align: center;
+        }
+
+        .hint-text:not(.custom-hint) {
+          color: var(--color-gold);
         }
 
         .hint-icon {
