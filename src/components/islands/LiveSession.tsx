@@ -377,7 +377,14 @@ function generateCode(): string {
   return String(Math.floor(100000 + Math.random() * 900000));
 }
 
+function getCodeFromURL(): string | undefined {
+  try {
+    return new URLSearchParams(window.location.search).get('code') || undefined;
+  } catch { return undefined; }
+}
+
 export default function LiveSession() {
+  const [urlCode] = useState(getCodeFromURL);
   const lastVerse = useRef<string | null>(null);
   const lastHighlightTime = useRef(0);
   const [remoteMinutes, setRemoteMinutes] = useState<number | null>(null);
@@ -452,7 +459,7 @@ export default function LiveSession() {
   }, []);
 
   const { session, loading, error, joinSession } =
-    useSession(handleRemoteScroll, handleRemoteTime, undefined, handleRemoteWord, handleRemoteSetting);
+    useSession(handleRemoteScroll, handleRemoteTime, urlCode, handleRemoteWord, handleRemoteSetting);
 
   const [lang, setLangState] = useState<Lang>(detectLang);
   const setLang = useCallback((l: Lang) => {
@@ -509,6 +516,15 @@ export default function LiveSession() {
       onStart={handleStartBroadcasting}
       onBack={() => { clearCreatedSession(); setPendingSession(null); }}
     />;
+  }
+
+  if (!session && urlCode) {
+    // Auto-joining via URL code — show error or nothing while loading
+    if (error) {
+      window.location.href = '/live';
+      return null;
+    }
+    return null;
   }
 
   if (!session) {
