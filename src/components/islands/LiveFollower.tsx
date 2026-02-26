@@ -14,11 +14,17 @@ export default function LiveFollower() {
   const lastVerse = useRef<string | null>(null);
   const hadSession = useRef(false);
   const lastHighlightTime = useRef(0);
+  const [syncEnabled, setSyncEnabled] = useState(true);
+  const syncRef = useRef(true);
+  syncRef.current = syncEnabled;
+  const lastBroadcastVerse = useRef<string | null>(null);
   const [remoteMinutes, setRemoteMinutes] = useState<number | null>(null);
   const [remoteWord, setRemoteWord] = useState<string | null>(null);
   const [remoteActiveVerse, setRemoteActiveVerse] = useState<string | null>(null);
 
   const handleRemoteScroll = useCallback((pos: ScrollPosition) => {
+    lastBroadcastVerse.current = pos.verse;
+    if (!syncRef.current) return;
     // Suppress scroll broadcasts while word/verse highlighting is active
     if (Date.now() - lastHighlightTime.current < 3000) return;
     if (pos.verse === lastVerse.current) return;
@@ -151,7 +157,20 @@ export default function LiveFollower() {
 
   return (
     <div class="live-session">
-      <MegillahReader standalone={true} session={session} remoteMinutes={remoteMinutes} activeWord={remoteWord} activeVerse={remoteActiveVerse} onSwitchRole={handleSwitchRole} />
+      <MegillahReader standalone={true} session={session} remoteMinutes={remoteMinutes} activeWord={remoteWord} activeVerse={remoteActiveVerse} syncEnabled={syncEnabled} onSwitchRole={handleSwitchRole} onToggleSync={() => {
+        setSyncEnabled(v => {
+          const next = !v;
+          if (next && lastBroadcastVerse.current) {
+            const el = document.querySelector(`[data-verse="${lastBroadcastVerse.current}"]`);
+            if (el) {
+              const stickyHeight = document.querySelector('.toolbar-sticky')?.getBoundingClientRect().bottom ?? 60;
+              const y = el.getBoundingClientRect().top + window.scrollY - stickyHeight - 40;
+              window.scrollTo({ top: y, behavior: 'smooth' });
+            }
+          }
+          return next;
+        });
+      }} />
     </div>
   );
 }
