@@ -466,8 +466,13 @@ export default function LiveSession() {
     }
   }, []);
 
+  const [remoteChabadMode, setRemoteChabadMode] = useState<boolean | null>(null);
+  const handleRemoteChabadMode = useCallback((enabled: boolean) => {
+    setRemoteChabadMode(enabled);
+  }, []);
+
   const { session, loading, error, joinSession } =
-    useSession(handleRemoteScroll, handleRemoteTime, undefined, handleRemoteWord);
+    useSession(handleRemoteScroll, handleRemoteTime, undefined, handleRemoteWord, handleRemoteChabadMode);
 
   const [lang, setLangState] = useState<Lang>(detectLang);
   const setLang = useCallback((l: Lang) => {
@@ -534,7 +539,7 @@ export default function LiveSession() {
 
   return (
     <div class="live-session">
-      <MegillahReader standalone={true} session={session} remoteMinutes={remoteMinutes} activeWord={remoteWord} activeVerse={remoteActiveVerse} syncEnabled={syncEnabled} onToggleSync={() => {
+      <MegillahReader standalone={true} session={session} remoteMinutes={remoteMinutes} activeWord={remoteWord} activeVerse={remoteActiveVerse} remoteChabadMode={remoteChabadMode} syncEnabled={syncEnabled} onToggleSync={() => {
         setSyncEnabled(v => {
           const next = !v;
           if (next && lastBroadcastVerse.current) {

@@ -1088,7 +1088,7 @@ function getInitialLang(): Lang {
   return 'en';
 }
 
-export default function MegillahReader({ standalone = false, showTitle = false, session, remoteMinutes, activeWord: remoteActiveWord, activeVerse: remoteActiveVerse, onWordTap, syncEnabled = true, onToggleSync }: { standalone?: boolean; showTitle?: boolean; session?: Session; remoteMinutes?: number | null; activeWord?: string | null; activeVerse?: string | null; onWordTap?: (wordId: string) => void; syncEnabled?: boolean; onToggleSync?: () => void }) {
+export default function MegillahReader({ standalone = false, showTitle = false, session, remoteMinutes, activeWord: remoteActiveWord, activeVerse: remoteActiveVerse, onWordTap, remoteChabadMode, syncEnabled = true, onToggleSync }: { standalone?: boolean; showTitle?: boolean; session?: Session; remoteMinutes?: number | null; activeWord?: string | null; activeVerse?: string | null; onWordTap?: (wordId: string) => void; remoteChabadMode?: boolean | null; syncEnabled?: boolean; onToggleSync?: () => void }) {
   const dragging = useRef(false);
   const lastBroadcastTime = useRef(0);
   const lastDragWord = useRef<string | null>(null);
@@ -1273,6 +1273,13 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
       setDraftMinutes(remoteMinutes);
     }
   }, [remoteMinutes]);
+
+  // Follower: apply Chabad mode from broadcaster
+  useEffect(() => {
+    if (remoteChabadMode != null) {
+      setChabadMode(remoteChabadMode);
+    }
+  }, [remoteChabadMode]);
 
   // Pulse sync button when receiving remote updates
   useEffect(() => {
@@ -1993,7 +2000,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
               onChange={() => {
                 const next = !chabadMode;
                 setChabadMode(next);
-                if (session?.role === 'admin') session.broadcastSetting('chabadMode', next);
+                if (session?.role === 'admin') session.broadcastChabadMode(next);
               }}
             />
             <span class="toggle-switch"></span>

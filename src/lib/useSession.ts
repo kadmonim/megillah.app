@@ -39,6 +39,8 @@ export interface Session {
   broadcastWord: (wordId: string) => void;
   /** Call to broadcast a setting change and persist to DB (admin only) */
   broadcastSetting: (key: string, value: unknown) => void;
+  /** Call to broadcast Chabad mode toggle live (admin only) */
+  broadcastChabadMode: (enabled: boolean) => void;
   /** Call to leave/end the session */
   leave: () => void;
 }
@@ -96,6 +98,7 @@ export function useSession(
   onRemoteTime?: (minutes: number) => void,
   initialCode?: string,
   onRemoteWord?: (wordId: string) => void,
+  onRemoteChabadMode?: (enabled: boolean) => void,
 ): UseSessionReturn {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(!!initialCode || !!loadFromStorage());
@@ -137,6 +140,12 @@ export function useSession(
       channel.on('broadcast', { event: 'word-highlight' }, (payload) => {
         if (role === 'follower' && onRemoteWord) {
           onRemoteWord(payload.payload.word);
+        }
+      });
+
+      channel.on('broadcast', { event: 'chabad-mode' }, (payload) => {
+        if (role === 'follower' && onRemoteChabadMode) {
+          onRemoteChabadMode(payload.payload.enabled);
         }
       });
 
@@ -188,15 +197,25 @@ export function useSession(
         });
       };
 
+      const broadcastChabadMode = (enabled: boolean) => {
+        if (role !== 'admin') return;
+        channel.send({
+          type: 'broadcast',
+          event: 'chabad-mode',
+          payload: { enabled },
+        });
+        broadcastSetting('chabadMode', enabled);
+      };
+
       const leave = () => {
         clearStorage();
         clearCreatedSession();
         cleanup();
       };
 
-      setSession({ code, role, initialSettings, broadcast, broadcastTime, broadcastWord, broadcastSetting, leave });
+      setSession({ code, role, initialSettings, broadcast, broadcastTime, broadcastWord, broadcastSetting, broadcastChabadMode, leave });
     },
-    [cleanup, onRemoteScroll, onRemoteTime, onRemoteWord],
+    [cleanup, onRemoteScroll, onRemoteTime, onRemoteWord, onRemoteChabadMode],
   );
 
   const createSession = useCallback(

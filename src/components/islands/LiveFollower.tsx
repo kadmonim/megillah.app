@@ -77,7 +77,12 @@ export default function LiveFollower() {
     if (!code) window.location.href = '/live';
   }, []);
 
-  const { session, error, joinSession } = useSession(handleRemoteScroll, handleRemoteTime, code || undefined, handleRemoteWord);
+  const [remoteChabadMode, setRemoteChabadMode] = useState<boolean | null>(null);
+  const handleRemoteChabadMode = useCallback((enabled: boolean) => {
+    setRemoteChabadMode(enabled);
+  }, []);
+
+  const { session, error, joinSession } = useSession(handleRemoteScroll, handleRemoteTime, code || undefined, handleRemoteWord, handleRemoteChabadMode);
 
   // Hide the server-rendered loading screen once we're ready
   useEffect(() => {
@@ -152,7 +157,7 @@ export default function LiveFollower() {
 
   return (
     <div class="live-session">
-      <MegillahReader standalone={true} session={session} remoteMinutes={remoteMinutes} activeWord={remoteWord} activeVerse={remoteActiveVerse} syncEnabled={syncEnabled} onToggleSync={() => {
+      <MegillahReader standalone={true} session={session} remoteMinutes={remoteMinutes} activeWord={remoteWord} activeVerse={remoteActiveVerse} remoteChabadMode={remoteChabadMode} syncEnabled={syncEnabled} onToggleSync={() => {
         setSyncEnabled(v => {
           const next = !v;
           if (next && lastBroadcastVerse.current) {
