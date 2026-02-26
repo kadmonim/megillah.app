@@ -147,6 +147,29 @@ const translations = {
     syncOff: 'הפסקת מעקב — גלול בקצב שלך',
     copyLink: 'העתק קישור',
     copied: 'הועתק!',
+    onboardingFollowerAutoScroll: 'גלילה אוטומטית',
+    onboardingFollowerAutoScrollText: 'המגילה תתחיל לגלול מעצמה ברגע שהקורא מתחיל. אם זה מהר מדי, לחצו על הכפתור הזה כדי לעצור את הגלילה — לחצו שוב כדי לחזור לעקוב.',
+    onboardingFollowerOptions: 'אפשרויות נוספות',
+    onboardingFollowerOptionsText: 'כאן תוכלו להפעיל איורים, לשנות שפה, ועוד. גודל הגופן ניתן לשינוי בסרגל הכלים.',
+    onboardingAdminInvite: 'הזמנת אנשים',
+    onboardingAdminInviteText: 'לחצו על קוד השידור כדי להציג קוד QR וקישור הזמנה — שתפו אותם כדי שאנשים יצטרפו לשידור.',
+    onboardingAdminHighlight: 'הדגשת פסוקים',
+    onboardingAdminHighlightText: 'לחצו על פסוקים כדי להדגיש אותם עבור כל העוקבים. העוקבים יכולים ללחוץ על כפתור העקיבה {icon} כדי לעצור את הגלילה האוטומטית אם הקריאה מהירה מדי — וללחוץ שוב כדי לחזור.',
+    onboardingAdminTracking: 'מצב מעקב',
+    onboardingAdminTrackingText: 'עברו בין מצב גלילה בלבד, הדגשת פסוקים, או מעקב מילה-אחר-מילה.',
+    onboardingAdminTime: 'זמן קריאה',
+    onboardingAdminTimeText: 'הגדירו את זמן הקריאה המשוער. זה יציג לכל העוקבים כמה דקות נותרו.',
+    onboardingAdminSettings: 'הגדרות לכולם',
+    onboardingAdminSettingsText: 'ההגדרות שתבחרו (שפה, הדגשת המנים, איורים, גודל גופן) יחולו על כל העוקבים.',
+    onboardingAdminReadingMode: 'מצב קריאה',
+    onboardingAdminReadingModeText: 'מצב הקריאה שתבחרו יהיה ברירת המחדל לכל מי שמצטרף, אבל הם יכולים לשנות אותו אצלם.',
+    onboardingAdminSubtitle: 'עריכת כותרת משנה',
+    onboardingAdminSubtitleText: 'לחצו כאן כדי לשנות את הכותרת מתחת לשם האפליקציה — לדוגמה, שם בית הכנסת או קישור.',
+    onboardingAdminAnnouncements: 'עריכת הודעות',
+    onboardingAdminAnnouncementsText: 'לחצו כאן כדי להוסיף או לערוך הודעה שתוצג לכל העוקבים — למשל הוראות, קישורים, או כפתורי תרומה. יש גם אזור נוסף לעריכה בתחתית המגילה.',
+    onboardingSkip: 'דלג',
+    onboardingNext: 'הבא',
+    onboardingGotIt: 'הבנתי!',
   },
   en: {
     showCantillation: 'Show cantillation signs',
@@ -189,6 +212,29 @@ const translations = {
     syncOff: 'Unfollowed — read at your own pace',
     copyLink: 'Copy Link',
     copied: 'Copied!',
+    onboardingFollowerAutoScroll: 'Auto-Scroll',
+    onboardingFollowerAutoScrollText: 'The Megillah will start scrolling automatically once the reader begins. If it\'s too fast, tap this button to pause auto-scroll — tap again to resume.',
+    onboardingFollowerOptions: 'More Options',
+    onboardingFollowerOptionsText: 'Here you can enable illustrations, change the language, and more. Font size can be adjusted in the toolbar.',
+    onboardingAdminInvite: 'Invite People',
+    onboardingAdminInviteText: 'Tap the session code to see a QR code and invite link — share them so people can join your broadcast.',
+    onboardingAdminHighlight: 'Highlight Verses',
+    onboardingAdminHighlightText: 'Tap on verses to highlight them for everyone following along. Followers can tap the follow button {icon} to pause auto-scroll if the reading is too fast — and tap again to resume.',
+    onboardingAdminTracking: 'Tracking Mode',
+    onboardingAdminTrackingText: 'Switch between scrolling only, verse highlighting, or word-by-word tracking.',
+    onboardingAdminTime: 'Reading Time',
+    onboardingAdminTimeText: 'Set the estimated reading time. This shows all followers how many minutes remain.',
+    onboardingAdminSettings: 'Settings for Everyone',
+    onboardingAdminSettingsText: 'The settings you choose (language, Haman highlighting, illustrations, font size) apply to all followers.',
+    onboardingAdminReadingMode: 'Reading Mode',
+    onboardingAdminReadingModeText: 'The reading mode you choose becomes the default for everyone joining, but they can override it.',
+    onboardingAdminSubtitle: 'Edit Subtitle',
+    onboardingAdminSubtitleText: 'Tap here to customize the subtitle below the app name — for example, your synagogue name or a link.',
+    onboardingAdminAnnouncements: 'Edit Announcements',
+    onboardingAdminAnnouncementsText: 'Tap here to add or edit an announcement shown to all followers — like instructions, links, or donation buttons. There\'s also another editable area at the bottom of the Megillah.',
+    onboardingSkip: 'Skip',
+    onboardingNext: 'Next',
+    onboardingGotIt: 'Got it!',
   },
   es: {
     showCantillation: 'Mostrar signos de cantilación',
@@ -231,6 +277,29 @@ const translations = {
     syncOff: 'Dejaste de seguir — lee a tu ritmo',
     copyLink: 'Copiar enlace',
     copied: '¡Copiado!',
+    onboardingFollowerAutoScroll: 'Desplazamiento automático',
+    onboardingFollowerAutoScrollText: 'La Meguilá comenzará a desplazarse automáticamente cuando el lector comience. Si es demasiado rápido, toque este botón para pausar — toque de nuevo para reanudar.',
+    onboardingFollowerOptions: 'Más opciones',
+    onboardingFollowerOptionsText: 'Aquí puede activar ilustraciones, cambiar el idioma y más. El tamaño de fuente se ajusta en la barra de herramientas.',
+    onboardingAdminInvite: 'Invitar personas',
+    onboardingAdminInviteText: 'Toque el código de sesión para ver un código QR y enlace de invitación — compártalos para que otros se unan a su transmisión.',
+    onboardingAdminHighlight: 'Resaltar versículos',
+    onboardingAdminHighlightText: 'Toque los versículos para resaltarlos para todos los seguidores. Los seguidores pueden tocar el botón de seguimiento {icon} para pausar el desplazamiento automático si la lectura es muy rápida — y tocar de nuevo para reanudar.',
+    onboardingAdminTracking: 'Modo de seguimiento',
+    onboardingAdminTrackingText: 'Cambie entre solo desplazamiento, resaltado de versículos o seguimiento palabra por palabra.',
+    onboardingAdminTime: 'Tiempo de lectura',
+    onboardingAdminTimeText: 'Establezca el tiempo estimado de lectura. Esto muestra a todos los seguidores cuántos minutos quedan.',
+    onboardingAdminSettings: 'Configuración para todos',
+    onboardingAdminSettingsText: 'La configuración que elija (idioma, resaltado de Hamán, ilustraciones, tamaño de fuente) se aplica a todos los seguidores.',
+    onboardingAdminReadingMode: 'Modo de lectura',
+    onboardingAdminReadingModeText: 'El modo de lectura que elija será el predeterminado para todos los que se unan, pero pueden cambiarlo.',
+    onboardingAdminSubtitle: 'Editar subtítulo',
+    onboardingAdminSubtitleText: 'Toque aquí para personalizar el subtítulo debajo del nombre de la aplicación — por ejemplo, el nombre de su sinagoga o un enlace.',
+    onboardingAdminAnnouncements: 'Editar anuncios',
+    onboardingAdminAnnouncementsText: 'Toque aquí para agregar o editar un anuncio mostrado a todos los seguidores — como instrucciones, enlaces o botones de donación. También hay otra área editable al final de la Meguilá.',
+    onboardingSkip: 'Omitir',
+    onboardingNext: 'Siguiente',
+    onboardingGotIt: '¡Entendido!',
   },
   ru: {
     showCantillation: 'Показать знаки кантилляции',
@@ -273,6 +342,29 @@ const translations = {
     syncOff: 'Отписались — читайте в своём темпе',
     copyLink: 'Копировать ссылку',
     copied: 'Скопировано!',
+    onboardingFollowerAutoScroll: 'Автопрокрутка',
+    onboardingFollowerAutoScrollText: 'Мегила начнёт прокручиваться автоматически, когда чтец начнёт. Если слишком быстро, нажмите эту кнопку, чтобы приостановить — нажмите снова, чтобы продолжить.',
+    onboardingFollowerOptions: 'Дополнительные параметры',
+    onboardingFollowerOptionsText: 'Здесь можно включить иллюстрации, сменить язык и другое. Размер шрифта регулируется на панели инструментов.',
+    onboardingAdminInvite: 'Пригласить людей',
+    onboardingAdminInviteText: 'Нажмите на код сессии, чтобы увидеть QR-код и ссылку-приглашение — поделитесь ими, чтобы люди присоединились к трансляции.',
+    onboardingAdminHighlight: 'Выделение стихов',
+    onboardingAdminHighlightText: 'Нажимайте на стихи, чтобы выделить их для всех зрителей. Зрители могут нажать кнопку следования {icon}, чтобы приостановить автопрокрутку, если чтение слишком быстрое — и нажать снова, чтобы продолжить.',
+    onboardingAdminTracking: 'Режим отслеживания',
+    onboardingAdminTrackingText: 'Переключайтесь между режимами: только прокрутка, выделение стихов или пословное отслеживание.',
+    onboardingAdminTime: 'Время чтения',
+    onboardingAdminTimeText: 'Установите примерное время чтения. Это покажет всем зрителям, сколько минут осталось.',
+    onboardingAdminSettings: 'Настройки для всех',
+    onboardingAdminSettingsText: 'Выбранные вами настройки (язык, выделение Амана, иллюстрации, размер шрифта) применяются ко всем зрителям.',
+    onboardingAdminReadingMode: 'Режим чтения',
+    onboardingAdminReadingModeText: 'Выбранный вами режим чтения станет режимом по умолчанию для всех присоединяющихся, но они могут изменить его.',
+    onboardingAdminSubtitle: 'Редактировать подзаголовок',
+    onboardingAdminSubtitleText: 'Нажмите здесь, чтобы изменить подзаголовок под названием приложения — например, название синагоги или ссылку.',
+    onboardingAdminAnnouncements: 'Редактировать объявления',
+    onboardingAdminAnnouncementsText: 'Нажмите здесь, чтобы добавить или изменить объявление для всех зрителей — например, инструкции, ссылки или кнопки пожертвований. Также есть редактируемая область внизу Мегилы.',
+    onboardingSkip: 'Пропустить',
+    onboardingNext: 'Далее',
+    onboardingGotIt: 'Понятно!',
   },
   fr: {
     showCantillation: 'Afficher les signes de cantillation',
@@ -315,6 +407,29 @@ const translations = {
     syncOff: 'Plus de suivi — lisez à votre rythme',
     copyLink: 'Copier le lien',
     copied: 'Copié !',
+    onboardingFollowerAutoScroll: 'Défilement automatique',
+    onboardingFollowerAutoScrollText: 'La Méguila commencera à défiler automatiquement dès que le lecteur commence. Si c\'est trop rapide, appuyez sur ce bouton pour mettre en pause — appuyez à nouveau pour reprendre.',
+    onboardingFollowerOptions: 'Plus d\'options',
+    onboardingFollowerOptionsText: 'Ici vous pouvez activer les illustrations, changer la langue, et plus encore. La taille de police se règle dans la barre d\'outils.',
+    onboardingAdminInvite: 'Inviter des personnes',
+    onboardingAdminInviteText: 'Appuyez sur le code de session pour voir un QR code et un lien d\'invitation — partagez-les pour que les gens rejoignent votre diffusion.',
+    onboardingAdminHighlight: 'Surligner les versets',
+    onboardingAdminHighlightText: 'Appuyez sur les versets pour les surligner pour tous les spectateurs. Les spectateurs peuvent appuyer sur le bouton de suivi {icon} pour mettre en pause le défilement automatique si la lecture est trop rapide — et appuyer à nouveau pour reprendre.',
+    onboardingAdminTracking: 'Mode de suivi',
+    onboardingAdminTrackingText: 'Basculez entre défilement seul, surlignage de versets, ou suivi mot par mot.',
+    onboardingAdminTime: 'Temps de lecture',
+    onboardingAdminTimeText: 'Définissez le temps de lecture estimé. Cela montre à tous les spectateurs combien de minutes il reste.',
+    onboardingAdminSettings: 'Paramètres pour tous',
+    onboardingAdminSettingsText: 'Les paramètres que vous choisissez (langue, surlignage d\'Haman, illustrations, taille de police) s\'appliquent à tous les spectateurs.',
+    onboardingAdminReadingMode: 'Mode de lecture',
+    onboardingAdminReadingModeText: 'Le mode de lecture que vous choisissez devient le mode par défaut pour tous ceux qui rejoignent, mais ils peuvent le modifier.',
+    onboardingAdminSubtitle: 'Modifier le sous-titre',
+    onboardingAdminSubtitleText: 'Appuyez ici pour personnaliser le sous-titre sous le nom de l\'application — par exemple, le nom de votre synagogue ou un lien.',
+    onboardingAdminAnnouncements: 'Modifier les annonces',
+    onboardingAdminAnnouncementsText: 'Appuyez ici pour ajouter ou modifier une annonce affichée à tous les spectateurs — comme des instructions, des liens ou des boutons de don. Il y a aussi une autre zone modifiable en bas de la Méguila.',
+    onboardingSkip: 'Passer',
+    onboardingNext: 'Suivant',
+    onboardingGotIt: 'Compris !',
   },
   pt: {
     showCantillation: 'Mostrar sinais de cantilação',
@@ -357,6 +472,29 @@ const translations = {
     syncOff: 'Deixou de seguir — leia no seu ritmo',
     copyLink: 'Copiar link',
     copied: 'Copiado!',
+    onboardingFollowerAutoScroll: 'Rolagem automática',
+    onboardingFollowerAutoScrollText: 'A Meguilá começará a rolar automaticamente quando o leitor iniciar. Se for rápido demais, toque neste botão para pausar — toque novamente para retomar.',
+    onboardingFollowerOptions: 'Mais opções',
+    onboardingFollowerOptionsText: 'Aqui você pode ativar ilustrações, mudar o idioma e mais. O tamanho da fonte pode ser ajustado na barra de ferramentas.',
+    onboardingAdminInvite: 'Convidar pessoas',
+    onboardingAdminInviteText: 'Toque no código da sessão para ver um código QR e link de convite — compartilhe-os para que as pessoas participem da sua transmissão.',
+    onboardingAdminHighlight: 'Destacar versículos',
+    onboardingAdminHighlightText: 'Toque nos versículos para destacá-los para todos os seguidores. Os seguidores podem tocar no botão de seguir {icon} para pausar a rolagem automática se a leitura estiver muito rápida — e tocar novamente para retomar.',
+    onboardingAdminTracking: 'Modo de rastreamento',
+    onboardingAdminTrackingText: 'Alterne entre apenas rolagem, destaque de versículos ou rastreamento palavra por palavra.',
+    onboardingAdminTime: 'Tempo de leitura',
+    onboardingAdminTimeText: 'Defina o tempo estimado de leitura. Isso mostra a todos os seguidores quantos minutos restam.',
+    onboardingAdminSettings: 'Configurações para todos',
+    onboardingAdminSettingsText: 'As configurações que você escolher (idioma, destaque de Hamã, ilustrações, tamanho da fonte) se aplicam a todos os seguidores.',
+    onboardingAdminReadingMode: 'Modo de leitura',
+    onboardingAdminReadingModeText: 'O modo de leitura que você escolher se torna o padrão para todos que entrarem, mas eles podem alterá-lo.',
+    onboardingAdminSubtitle: 'Editar subtítulo',
+    onboardingAdminSubtitleText: 'Toque aqui para personalizar o subtítulo abaixo do nome do aplicativo — por exemplo, o nome da sua sinagoga ou um link.',
+    onboardingAdminAnnouncements: 'Editar anúncios',
+    onboardingAdminAnnouncementsText: 'Toque aqui para adicionar ou editar um anúncio mostrado a todos os seguidores — como instruções, links ou botões de doação. Também há outra área editável na parte inferior da Meguilá.',
+    onboardingSkip: 'Pular',
+    onboardingNext: 'Próximo',
+    onboardingGotIt: 'Entendi!',
   },
   it: {
     showCantillation: 'Mostra segni di cantillazione',
@@ -399,6 +537,29 @@ const translations = {
     syncOff: 'Non segui più — leggi al tuo ritmo',
     copyLink: 'Copia link',
     copied: 'Copiato!',
+    onboardingFollowerAutoScroll: 'Scorrimento automatico',
+    onboardingFollowerAutoScrollText: 'La Meghillà inizierà a scorrere automaticamente quando il lettore inizia. Se è troppo veloce, tocca questo pulsante per mettere in pausa — tocca di nuovo per riprendere.',
+    onboardingFollowerOptions: 'Altre opzioni',
+    onboardingFollowerOptionsText: 'Qui puoi attivare le illustrazioni, cambiare la lingua e altro. La dimensione del carattere si regola nella barra degli strumenti.',
+    onboardingAdminInvite: 'Invita persone',
+    onboardingAdminInviteText: 'Tocca il codice sessione per vedere un codice QR e un link di invito — condividili per far partecipare le persone alla tua trasmissione.',
+    onboardingAdminHighlight: 'Evidenzia versetti',
+    onboardingAdminHighlightText: 'Tocca i versetti per evidenziarli per tutti gli spettatori. Gli spettatori possono toccare il pulsante di seguimento {icon} per mettere in pausa lo scorrimento automatico se la lettura è troppo veloce — e toccare di nuovo per riprendere.',
+    onboardingAdminTracking: 'Modalità di tracciamento',
+    onboardingAdminTrackingText: 'Passa tra solo scorrimento, evidenziazione versetti o tracciamento parola per parola.',
+    onboardingAdminTime: 'Tempo di lettura',
+    onboardingAdminTimeText: 'Imposta il tempo di lettura stimato. Questo mostra a tutti gli spettatori quanti minuti restano.',
+    onboardingAdminSettings: 'Impostazioni per tutti',
+    onboardingAdminSettingsText: 'Le impostazioni che scegli (lingua, evidenziazione di Haman, illustrazioni, dimensione carattere) si applicano a tutti gli spettatori.',
+    onboardingAdminReadingMode: 'Modalità di lettura',
+    onboardingAdminReadingModeText: 'La modalità di lettura che scegli diventa quella predefinita per tutti quelli che si uniscono, ma possono cambiarla.',
+    onboardingAdminSubtitle: 'Modifica sottotitolo',
+    onboardingAdminSubtitleText: 'Tocca qui per personalizzare il sottotitolo sotto il nome dell\'app — ad esempio, il nome della tua sinagoga o un link.',
+    onboardingAdminAnnouncements: 'Modifica annunci',
+    onboardingAdminAnnouncementsText: 'Tocca qui per aggiungere o modificare un annuncio mostrato a tutti gli spettatori — come istruzioni, link o pulsanti per donazioni. C\'è anche un\'altra area modificabile in fondo alla Meghillà.',
+    onboardingSkip: 'Salta',
+    onboardingNext: 'Avanti',
+    onboardingGotIt: 'Capito!',
   },
   hu: {
     showCantillation: 'Kantilláció jelzések mutatása',
@@ -441,6 +602,29 @@ const translations = {
     syncOff: 'Nem követ — olvasson a saját tempójában',
     copyLink: 'Link másolása',
     copied: 'Másolva!',
+    onboardingFollowerAutoScroll: 'Automatikus görgetés',
+    onboardingFollowerAutoScrollText: 'A Megilla automatikusan görgetni kezd, amint a felolvasó elkezdi. Ha túl gyors, érintse meg ezt a gombot a szüneteltetéshez — érintse meg újra a folytatáshoz.',
+    onboardingFollowerOptions: 'További lehetőségek',
+    onboardingFollowerOptionsText: 'Itt bekapcsolhatja az illusztrációkat, megváltoztathatja a nyelvet és egyebeket. A betűméret az eszköztárban állítható.',
+    onboardingAdminInvite: 'Emberek meghívása',
+    onboardingAdminInviteText: 'Érintse meg a munkamenet kódját a QR-kód és meghívó link megtekintéséhez — ossza meg őket, hogy mások csatlakozhassanak.',
+    onboardingAdminHighlight: 'Versek kiemelése',
+    onboardingAdminHighlightText: 'Érintse meg a verseket, hogy kiemelje őket minden követő számára. A követők megérinthetik a követés gombot {icon} az automatikus görgetés szüneteltetéséhez, ha a felolvasás túl gyors — és újra megérinthetik a folytatáshoz.',
+    onboardingAdminTracking: 'Követési mód',
+    onboardingAdminTrackingText: 'Váltson a csak görgetés, vers kiemelés vagy szóról szóra követés között.',
+    onboardingAdminTime: 'Olvasási idő',
+    onboardingAdminTimeText: 'Állítsa be a becsült olvasási időt. Ez megmutatja minden követőnek, hány perc van hátra.',
+    onboardingAdminSettings: 'Beállítások mindenkinek',
+    onboardingAdminSettingsText: 'Az Ön által választott beállítások (nyelv, Hámán kiemelése, illusztrációk, betűméret) minden követőre vonatkoznak.',
+    onboardingAdminReadingMode: 'Olvasási mód',
+    onboardingAdminReadingModeText: 'Az Ön által választott olvasási mód lesz az alapértelmezett minden csatlakozó számára, de megváltoztathatják.',
+    onboardingAdminSubtitle: 'Alcím szerkesztése',
+    onboardingAdminSubtitleText: 'Érintse meg itt az alcím testreszabásához az alkalmazás neve alatt — például a zsinagóga neve vagy egy link.',
+    onboardingAdminAnnouncements: 'Hirdetmények szerkesztése',
+    onboardingAdminAnnouncementsText: 'Érintse meg itt, hogy hirdetményt adjon hozzá vagy szerkesszen minden követő számára — például utasításokat, linkeket vagy adományozási gombokat. Van egy másik szerkeszthető terület is a Megilla alján.',
+    onboardingSkip: 'Kihagyás',
+    onboardingNext: 'Következő',
+    onboardingGotIt: 'Értem!',
   },
   de: {
     showCantillation: 'Kantillationszeichen anzeigen',
@@ -483,6 +667,29 @@ const translations = {
     syncOff: 'Nicht mehr folgen — lesen Sie in Ihrem Tempo',
     copyLink: 'Link kopieren',
     copied: 'Kopiert!',
+    onboardingFollowerAutoScroll: 'Automatisches Scrollen',
+    onboardingFollowerAutoScrollText: 'Die Megilla beginnt automatisch zu scrollen, sobald der Vorleser anfängt. Wenn es zu schnell ist, tippen Sie auf diese Schaltfläche, um zu pausieren — tippen Sie erneut, um fortzufahren.',
+    onboardingFollowerOptions: 'Weitere Optionen',
+    onboardingFollowerOptionsText: 'Hier können Sie Illustrationen aktivieren, die Sprache ändern und mehr. Die Schriftgröße kann in der Symbolleiste angepasst werden.',
+    onboardingAdminInvite: 'Personen einladen',
+    onboardingAdminInviteText: 'Tippen Sie auf den Sitzungscode, um einen QR-Code und Einladungslink zu sehen — teilen Sie diese, damit andere Ihrer Übertragung beitreten können.',
+    onboardingAdminHighlight: 'Verse hervorheben',
+    onboardingAdminHighlightText: 'Tippen Sie auf Verse, um sie für alle Zuschauer hervorzuheben. Zuschauer können die Folgen-Taste {icon} antippen, um das automatische Scrollen zu pausieren, wenn die Lesung zu schnell ist — und erneut tippen, um fortzufahren.',
+    onboardingAdminTracking: 'Verfolgungsmodus',
+    onboardingAdminTrackingText: 'Wechseln Sie zwischen nur Scrollen, Vers-Hervorhebung oder Wort-für-Wort-Verfolgung.',
+    onboardingAdminTime: 'Lesezeit',
+    onboardingAdminTimeText: 'Legen Sie die geschätzte Lesezeit fest. Dies zeigt allen Zuschauern, wie viele Minuten verbleiben.',
+    onboardingAdminSettings: 'Einstellungen für alle',
+    onboardingAdminSettingsText: 'Die von Ihnen gewählten Einstellungen (Sprache, Haman-Hervorhebung, Illustrationen, Schriftgröße) gelten für alle Zuschauer.',
+    onboardingAdminReadingMode: 'Lesemodus',
+    onboardingAdminReadingModeText: 'Der von Ihnen gewählte Lesemodus wird zum Standard für alle Beitretenden, aber sie können ihn ändern.',
+    onboardingAdminSubtitle: 'Untertitel bearbeiten',
+    onboardingAdminSubtitleText: 'Tippen Sie hier, um den Untertitel unter dem App-Namen anzupassen — zum Beispiel den Namen Ihrer Synagoge oder einen Link.',
+    onboardingAdminAnnouncements: 'Ankündigungen bearbeiten',
+    onboardingAdminAnnouncementsText: 'Tippen Sie hier, um eine Ankündigung für alle Zuschauer hinzuzufügen oder zu bearbeiten — wie Anweisungen, Links oder Spenden-Schaltflächen. Es gibt auch einen weiteren bearbeitbaren Bereich am Ende der Megilla.',
+    onboardingSkip: 'Überspringen',
+    onboardingNext: 'Weiter',
+    onboardingGotIt: 'Verstanden!',
   },
   el: {
     showCantillation: 'Εμφάνιση σημείων καντιλασιόν',
@@ -525,6 +732,29 @@ const translations = {
     syncOff: 'Δεν ακολουθείτε πλέον — διαβάστε με το δικό σας ρυθμό',
     copyLink: 'Αντιγραφή συνδέσμου',
     copied: 'Αντιγράφηκε!',
+    onboardingFollowerAutoScroll: 'Αυτόματη κύλιση',
+    onboardingFollowerAutoScrollText: 'Η Μεγιλά θα αρχίσει να κυλάει αυτόματα μόλις ο αναγνώστης ξεκινήσει. Αν είναι πολύ γρήγορα, πατήστε αυτό το κουμπί για παύση — πατήστε ξανά για συνέχεια.',
+    onboardingFollowerOptions: 'Περισσότερες επιλογές',
+    onboardingFollowerOptionsText: 'Εδώ μπορείτε να ενεργοποιήσετε εικονογραφήσεις, να αλλάξετε γλώσσα και άλλα. Το μέγεθος γραμματοσειράς ρυθμίζεται στη γραμμή εργαλείων.',
+    onboardingAdminInvite: 'Πρόσκληση ατόμων',
+    onboardingAdminInviteText: 'Πατήστε τον κωδικό συνεδρίας για να δείτε έναν κωδικό QR και σύνδεσμο πρόσκλησης — μοιραστείτε τους για να συμμετάσχουν άλλοι στη μετάδοσή σας.',
+    onboardingAdminHighlight: 'Επισήμανση στίχων',
+    onboardingAdminHighlightText: 'Πατήστε στους στίχους για να τους επισημάνετε για όλους τους θεατές. Οι θεατές μπορούν να πατήσουν το κουμπί ακολούθησης {icon} για να σταματήσουν την αυτόματη κύλιση αν η ανάγνωση είναι πολύ γρήγορη — και να πατήσουν ξανά για συνέχεια.',
+    onboardingAdminTracking: 'Λειτουργία παρακολούθησης',
+    onboardingAdminTrackingText: 'Εναλλαγή μεταξύ μόνο κύλισης, επισήμανσης στίχων ή παρακολούθησης λέξη προς λέξη.',
+    onboardingAdminTime: 'Χρόνος ανάγνωσης',
+    onboardingAdminTimeText: 'Ορίστε τον εκτιμώμενο χρόνο ανάγνωσης. Αυτό δείχνει σε όλους τους θεατές πόσα λεπτά απομένουν.',
+    onboardingAdminSettings: 'Ρυθμίσεις για όλους',
+    onboardingAdminSettingsText: 'Οι ρυθμίσεις που επιλέγετε (γλώσσα, επισήμανση Αμάν, εικονογραφήσεις, μέγεθος γραμματοσειράς) ισχύουν για όλους τους θεατές.',
+    onboardingAdminReadingMode: 'Λειτουργία ανάγνωσης',
+    onboardingAdminReadingModeText: 'Η λειτουργία ανάγνωσης που επιλέγετε γίνεται η προεπιλογή για όλους όσοι συμμετέχουν, αλλά μπορούν να την αλλάξουν.',
+    onboardingAdminSubtitle: 'Επεξεργασία υπότιτλου',
+    onboardingAdminSubtitleText: 'Πατήστε εδώ για να προσαρμόσετε τον υπότιτλο κάτω από το όνομα της εφαρμογής — για παράδειγμα, το όνομα της συναγωγής σας ή έναν σύνδεσμο.',
+    onboardingAdminAnnouncements: 'Επεξεργασία ανακοινώσεων',
+    onboardingAdminAnnouncementsText: 'Πατήστε εδώ για να προσθέσετε ή να επεξεργαστείτε μια ανακοίνωση για όλους τους θεατές — όπως οδηγίες, συνδέσμους ή κουμπιά δωρεάς. Υπάρχει επίσης μια άλλη επεξεργάσιμη περιοχή στο κάτω μέρος της Μεγιλά.',
+    onboardingSkip: 'Παράλειψη',
+    onboardingNext: 'Επόμενο',
+    onboardingGotIt: 'Κατάλαβα!',
   },
 } as const;
 
@@ -1163,7 +1393,8 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
 <p style="text-align:left;font-size:0.75rem;opacity:0.5;">(באדיבות אתר חב"ד.אורג)</p>
 <p style="text-align:center;font-weight:900;font-size:1.1rem;">פורים שמח!</p>`;
 
-  const defaultBottomHintEn = `<h2>What's Next?</h2>
+  const defaultBottomHints: Record<string, string> = {
+    en: `<h2>What's Next?</h2>
 <p>Now that you finished hearing the Megillah, here are the other 3 Purim Mitzvot to remember:</p>
 <h3>1. Give to the Needy (Matanot LaEvyonim)</h3>
 <p>On Purim day, give money or food to at least two needy people. This mitzvah highlights Jewish unity and caring for others. If you don't know anyone personally, you can give through your synagogue or place money in a charity box. Even children should participate.</p>
@@ -1171,12 +1402,84 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
 <p>On Purim day, send at least two ready-to-eat food or drink items to at least one friend. This strengthens friendship and community bonds. It's ideal to send the package through a messenger, and children are encouraged to take part.</p>
 <h3>3. Celebrate with a Festive Meal</h3>
 <p>During Purim day, have a joyful meal with family and possibly guests. Traditionally, it includes bread, meat, wine, songs, Torah thoughts, and a spirit of celebration, continuing into the evening.</p>
-<p style="text-align:center;font-weight:900;font-size:1.1rem;">Happy Purim!</p>`;
+<p style="text-align:center;font-weight:900;font-size:1.1rem;">Happy Purim!</p>`,
+    es: `<h2>¿Qué sigue?</h2>
+<p>Ahora que terminaste de escuchar la Meguilá, aquí están las otras 3 mitzvot de Purim para recordar:</p>
+<h3>1. Dar a los necesitados (Matanot LaEvyonim)</h3>
+<p>En el día de Purim, da dinero o comida a al menos dos personas necesitadas. Esta mitzvá destaca la unidad judía y el cuidado de los demás. Si no conoces a nadie personalmente, puedes dar a través de tu sinagoga o poner dinero en una caja de caridad. Los niños también deben participar.</p>
+<h3>2. Enviar regalos de comida (Mishloaj Manot)</h3>
+<p>En el día de Purim, envía al menos dos alimentos o bebidas listos para consumir a al menos un amigo. Esto fortalece la amistad y los lazos comunitarios. Es ideal enviar el paquete a través de un mensajero, y se anima a los niños a participar.</p>
+<h3>3. Celebrar con una comida festiva</h3>
+<p>Durante el día de Purim, disfruta de una comida alegre con la familia y posiblemente invitados. Tradicionalmente incluye pan, carne, vino, canciones, pensamientos de Torá y un espíritu de celebración.</p>
+<p style="text-align:center;font-weight:900;font-size:1.1rem;">¡Feliz Purim!</p>`,
+    ru: `<h2>Что дальше?</h2>
+<p>Теперь, когда вы закончили слушать Мегилу, вот ещё 3 заповеди Пурима, которые нужно помнить:</p>
+<h3>1. Подарки бедным (Матанот ЛаЭвьоним)</h3>
+<p>В день Пурима дайте деньги или еду как минимум двум нуждающимся людям. Эта заповедь подчёркивает еврейское единство и заботу о других. Если вы не знаете никого лично, можете передать через синагогу или положить деньги в благотворительную коробку. Дети тоже должны участвовать.</p>
+<h3>2. Отправить подарки с едой (Мишлоах Манот)</h3>
+<p>В день Пурима отправьте хотя бы два готовых к употреблению продукта или напитка как минимум одному другу. Это укрепляет дружбу и общинные связи. Желательно отправить через посланника, и детей поощряют участвовать.</p>
+<h3>3. Праздничная трапеза</h3>
+<p>В день Пурима устройте радостную трапезу с семьёй и, возможно, гостями. Традиционно она включает хлеб, мясо, вино, песни, мысли из Торы и дух празднования.</p>
+<p style="text-align:center;font-weight:900;font-size:1.1rem;">Счастливого Пурима!</p>`,
+    fr: `<h2>Et maintenant ?</h2>
+<p>Maintenant que vous avez fini d'écouter la Méguila, voici les 3 autres mitsvot de Pourim à retenir :</p>
+<h3>1. Donner aux nécessiteux (Matanot LaEvyonim)</h3>
+<p>Le jour de Pourim, donnez de l'argent ou de la nourriture à au moins deux personnes dans le besoin. Cette mitsva souligne l'unité juive et le souci des autres. Si vous ne connaissez personne personnellement, vous pouvez donner par l'intermédiaire de votre synagogue ou mettre de l'argent dans une boîte de charité. Les enfants doivent aussi participer.</p>
+<h3>2. Envoyer des cadeaux de nourriture (Michloah Manot)</h3>
+<p>Le jour de Pourim, envoyez au moins deux aliments ou boissons prêts à consommer à au moins un ami. Cela renforce l'amitié et les liens communautaires. Il est idéal d'envoyer le paquet par un messager, et les enfants sont encouragés à participer.</p>
+<h3>3. Célébrer avec un repas festif</h3>
+<p>Le jour de Pourim, faites un repas joyeux avec la famille et éventuellement des invités. Traditionnellement, il comprend du pain, de la viande, du vin, des chants, des pensées de Torah et un esprit de célébration.</p>
+<p style="text-align:center;font-weight:900;font-size:1.1rem;">Joyeux Pourim !</p>`,
+    pt: `<h2>O que vem a seguir?</h2>
+<p>Agora que você terminou de ouvir a Meguilá, aqui estão as outras 3 mitzvot de Purim para lembrar:</p>
+<h3>1. Dar aos necessitados (Matanot LaEvyonim)</h3>
+<p>No dia de Purim, dê dinheiro ou comida a pelo menos duas pessoas necessitadas. Esta mitzvá destaca a unidade judaica e o cuidado com os outros. Se você não conhece ninguém pessoalmente, pode dar através da sua sinagoga ou colocar dinheiro numa caixa de caridade. As crianças também devem participar.</p>
+<h3>2. Enviar presentes de comida (Mishloach Manot)</h3>
+<p>No dia de Purim, envie pelo menos dois alimentos ou bebidas prontos para consumo a pelo menos um amigo. Isso fortalece a amizade e os laços comunitários. O ideal é enviar o pacote através de um mensageiro, e as crianças são encorajadas a participar.</p>
+<h3>3. Celebrar com uma refeição festiva</h3>
+<p>Durante o dia de Purim, faça uma refeição alegre com a família e possivelmente convidados. Tradicionalmente inclui pão, carne, vinho, canções, pensamentos da Torá e um espírito de celebração.</p>
+<p style="text-align:center;font-weight:900;font-size:1.1rem;">Feliz Purim!</p>`,
+    it: `<h2>E adesso?</h2>
+<p>Ora che hai finito di ascoltare la Meghillà, ecco le altre 3 mitzvot di Purim da ricordare:</p>
+<h3>1. Donare ai bisognosi (Matanot LaEvyonim)</h3>
+<p>Nel giorno di Purim, dai denaro o cibo ad almeno due persone bisognose. Questa mitzvà sottolinea l'unità ebraica e la cura degli altri. Se non conosci nessuno personalmente, puoi dare attraverso la tua sinagoga o mettere denaro in una scatola di beneficenza. Anche i bambini dovrebbero partecipare.</p>
+<h3>2. Inviare regali di cibo (Mishloach Manot)</h3>
+<p>Nel giorno di Purim, invia almeno due cibi o bevande pronti da consumare ad almeno un amico. Questo rafforza l'amicizia e i legami comunitari. È ideale inviare il pacchetto tramite un messaggero, e i bambini sono incoraggiati a partecipare.</p>
+<h3>3. Celebrare con un pasto festivo</h3>
+<p>Durante il giorno di Purim, fai un pasto gioioso con la famiglia e possibilmente ospiti. Tradizionalmente include pane, carne, vino, canti, pensieri di Torah e uno spirito di celebrazione.</p>
+<p style="text-align:center;font-weight:900;font-size:1.1rem;">Buon Purim!</p>`,
+    hu: `<h2>Mi következik?</h2>
+<p>Most, hogy befejezted a Megilla hallgatását, íme a másik 3 purimi micva, amelyet érdemes megjegyezni:</p>
+<h3>1. Adakozás a rászorulóknak (Matanot LaEvjonim)</h3>
+<p>Purim napján adj pénzt vagy ételt legalább két rászoruló embernek. Ez a micva a zsidó egységet és a másokról való gondoskodást emeli ki. Ha nem ismersz senkit személyesen, adhatsz a zsinagógádon keresztül vagy tehetsz pénzt egy jótékonysági dobozba. A gyerekek is vegyenek részt.</p>
+<h3>2. Ételküldemények küldése (Mislóach Mánot)</h3>
+<p>Purim napján küldj legalább két fogyasztásra kész ételt vagy italt legalább egy barátodnak. Ez erősíti a barátságot és a közösségi kötelékeket. Ideális, ha futár viszi a csomagot, és a gyerekeket is bátorítják a részvételre.</p>
+<h3>3. Ünnepi lakoma</h3>
+<p>Purim napján rendezz vidám lakomát a családdal és esetleg vendégekkel. Hagyományosan kenyeret, húst, bort, dalokat, Tóra-gondolatokat és ünneplést foglal magában.</p>
+<p style="text-align:center;font-weight:900;font-size:1.1rem;">Boldog Purimot!</p>`,
+    de: `<h2>Was kommt als Nächstes?</h2>
+<p>Nachdem Sie die Megilla gehört haben, hier sind die anderen 3 Purim-Mizwot zum Erinnern:</p>
+<h3>1. Den Bedürftigen geben (Matanot LaEvjonim)</h3>
+<p>Am Purimtag geben Sie Geld oder Essen an mindestens zwei bedürftige Menschen. Diese Mizwa betont die jüdische Einheit und die Fürsorge für andere. Wenn Sie niemanden persönlich kennen, können Sie über Ihre Synagoge geben oder Geld in eine Wohltätigkeitsbox legen. Auch Kinder sollten teilnehmen.</p>
+<h3>2. Essensgeschenke senden (Mischloach Manot)</h3>
+<p>Am Purimtag senden Sie mindestens zwei verzehrfertige Speisen oder Getränke an mindestens einen Freund. Dies stärkt Freundschaft und Gemeinschaftsbande. Ideal ist es, das Paket durch einen Boten zu senden, und Kinder werden ermutigt teilzunehmen.</p>
+<h3>3. Mit einem Festmahl feiern</h3>
+<p>Am Purimtag veranstalten Sie ein fröhliches Mahl mit Familie und möglicherweise Gästen. Traditionell umfasst es Brot, Fleisch, Wein, Lieder, Tora-Gedanken und einen Geist der Feier.</p>
+<p style="text-align:center;font-weight:900;font-size:1.1rem;">Fröhlichen Purim!</p>`,
+    el: `<h2>Τι ακολουθεί;</h2>
+<p>Τώρα που τελειώσατε να ακούτε τη Μεγιλά, εδώ είναι οι άλλες 3 μιτσβότ του Πουρίμ που πρέπει να θυμάστε:</p>
+<h3>1. Δώρα στους φτωχούς (Ματανότ ΛαΕβγιονίμ)</h3>
+<p>Την ημέρα του Πουρίμ, δώστε χρήματα ή φαγητό σε τουλάχιστον δύο άτομα σε ανάγκη. Αυτή η μιτσβά τονίζει την εβραϊκή ενότητα και τη φροντίδα για τους άλλους. Αν δεν γνωρίζετε κανέναν προσωπικά, μπορείτε να δώσετε μέσω της συναγωγής σας ή να βάλετε χρήματα σε κουτί φιλανθρωπίας. Τα παιδιά πρέπει επίσης να συμμετέχουν.</p>
+<h3>2. Αποστολή δώρων φαγητού (Μισλοάχ Μανότ)</h3>
+<p>Την ημέρα του Πουρίμ, στείλτε τουλάχιστον δύο έτοιμα προς κατανάλωση τρόφιμα ή ποτά σε τουλάχιστον έναν φίλο. Αυτό ενισχύει τη φιλία και τους κοινοτικούς δεσμούς. Είναι ιδανικό να στείλετε το πακέτο μέσω αγγελιοφόρου, και τα παιδιά ενθαρρύνονται να συμμετάσχουν.</p>
+<h3>3. Γιορτάστε με εορταστικό γεύμα</h3>
+<p>Κατά τη διάρκεια της ημέρας του Πουρίμ, κάντε ένα χαρούμενο γεύμα με την οικογένεια και πιθανώς καλεσμένους. Παραδοσιακά περιλαμβάνει ψωμί, κρέας, κρασί, τραγούδια, σκέψεις Τορά και πνεύμα γιορτής.</p>
+<p style="text-align:center;font-weight:900;font-size:1.1rem;">Χαρούμενο Πουρίμ!</p>`,
+  };
 
   const getBottomHintDefault = () => {
     if (lang === 'he') return defaultBottomHintHe;
-    if (lang === 'en') return defaultBottomHintEn;
-    return '';
+    return defaultBottomHints[lang] || defaultBottomHints.en;
   };
 
   useEffect(() => {
@@ -2239,7 +2542,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
       <div class="whats-next-area">
         {showBottomHintEdit ? null : customBottomHint ? (
           <div class="whats-next custom-bottom-content" dir={lang === 'he' ? 'rtl' : 'ltr'} dangerouslySetInnerHTML={{ __html: customBottomHint }} />
-        ) : lang !== 'he' && lang !== 'en' ? null : lang === 'he' ? (
+        ) : lang === 'he' ? (
           <div class="whats-next" dir="rtl">
             <h2 class="whats-next-title">מה הלאה?</h2>
             <p class="whats-next-intro">חוץ מקריאת המגילה, ישנן עוד שלוש מצוות שיש לקיים אותן ביום פורים:</p>
@@ -2264,23 +2567,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
             <p class="whats-next-happy">פורים שמח!</p>
           </div>
         ) : (
-          <div class="whats-next" dir="ltr">
-            <h2 class="whats-next-title">What's Next?</h2>
-            <p class="whats-next-intro">Now that you finished hearing the Megillah, here are the other 3 Purim Mitzvot to remember:</p>
-            <div class="whats-next-item">
-              <h3>1. Give to the Needy (Matanot LaEvyonim)</h3>
-              <p>On Purim day, give money or food to at least two needy people. This mitzvah highlights Jewish unity and caring for others. If you don't know anyone personally, you can give through your synagogue or place money in a charity box. Even children should participate.</p>
-            </div>
-            <div class="whats-next-item">
-              <h3>2. Send Food Gifts (Mishloach Manot)</h3>
-              <p>On Purim day, send at least two ready-to-eat food or drink items to at least one friend. This strengthens friendship and community bonds. It's ideal to send the package through a messenger, and children are encouraged to take part.</p>
-            </div>
-            <div class="whats-next-item">
-              <h3>3. Celebrate with a Festive Meal</h3>
-              <p>During Purim day, have a joyful meal with family and possibly guests. Traditionally, it includes bread, meat, wine, songs, Torah thoughts, and a spirit of celebration, continuing into the evening.</p>
-            </div>
-            <p class="whats-next-happy">Happy Purim!</p>
-          </div>
+          <div class="whats-next custom-bottom-content" dir="ltr" dangerouslySetInnerHTML={{ __html: defaultBottomHints[lang] || defaultBottomHints.en }} />
         )}
         {session?.role === 'admin' && (
           <button class="edit-hint-btn edit-bottom-hint-btn" onClick={() => setShowBottomHintEdit(!showBottomHintEdit)} title={t.editTapHint}>
@@ -3671,80 +3958,25 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
       `}</style>
 
       {onboardingStep >= 0 && session?.role && (() => {
-        const isHe = lang === 'he';
+        const sensorIcon = <span class="material-icons" style="font-size:16px;vertical-align:middle">sensors</span>;
+        const splitAtIcon = (text: string) => {
+          const parts = text.split('{icon}');
+          if (parts.length === 1) return text;
+          return <>{parts[0]}{sensorIcon}{parts[1]}</>;
+        };
         const followerSteps = [
-          {
-            target: '#sync-follow-btn',
-            title: isHe ? 'גלילה אוטומטית' : 'Auto-Scroll',
-            text: isHe
-              ? 'המגילה תתחיל לגלול מעצמה ברגע שהקורא מתחיל. אם זה מהר מדי, לחצו על הכפתור הזה כדי לעצור את הגלילה — לחצו שוב כדי לחזור לעקוב.'
-              : 'The Megillah will start scrolling automatically once the reader begins. If it\'s too fast, tap this button to pause auto-scroll — tap again to resume.',
-          },
-          {
-            target: '#menu-toggle-btn',
-            title: isHe ? 'אפשרויות נוספות' : 'More Options',
-            text: isHe
-              ? 'כאן תוכלו להפעיל איורים, לשנות שפה, ועוד. גודל הגופן ניתן לשינוי בסרגל הכלים.'
-              : 'Here you can enable illustrations, change the language, and more. Font size can be adjusted in the toolbar.',
-          },
+          { target: '#sync-follow-btn', title: t.onboardingFollowerAutoScroll, text: t.onboardingFollowerAutoScrollText },
+          { target: '#menu-toggle-btn', title: t.onboardingFollowerOptions, text: t.onboardingFollowerOptionsText },
         ];
         const adminSteps = [
-          {
-            target: '#session-code-btn',
-            title: isHe ? 'הזמנת אנשים' : 'Invite People',
-            text: isHe
-              ? 'לחצו על קוד השידור כדי להציג קוד QR וקישור הזמנה — שתפו אותם כדי שאנשים יצטרפו לשידור.'
-              : 'Tap the session code to see a QR code and invite link — share them so people can join your broadcast.',
-          },
-          {
-            target: null,
-            title: isHe ? 'הדגשת פסוקים' : 'Highlight Verses',
-            text: isHe
-              ? <>לחצו על פסוקים כדי להדגיש אותם עבור כל העוקבים. העוקבים יכולים ללחוץ על כפתור העקיבה <span class="material-icons" style="font-size:16px;vertical-align:middle">sensors</span> כדי לעצור את הגלילה האוטומטית אם הקריאה מהירה מדי — וללחוץ שוב כדי לחזור.</>
-              : <>Tap on verses to highlight them for everyone following along. Followers can tap the follow button <span class="material-icons" style="font-size:16px;vertical-align:middle">sensors</span> to pause auto-scroll if the reading is too fast — and tap again to resume.</>,
-          },
-          {
-            target: '#tracking-mode-btn',
-            title: isHe ? 'מצב מעקב' : 'Tracking Mode',
-            text: isHe
-              ? 'עברו בין מצב גלילה בלבד, הדגשת פסוקים, או מעקב מילה-אחר-מילה.'
-              : 'Switch between scrolling only, verse highlighting, or word-by-word tracking.',
-          },
-          {
-            target: '#reading-time-btn',
-            title: isHe ? 'זמן קריאה' : 'Reading Time',
-            text: isHe
-              ? 'הגדירו את זמן הקריאה המשוער. זה יציג לכל העוקבים כמה דקות נותרו.'
-              : 'Set the estimated reading time. This shows all followers how many minutes remain.',
-          },
-          {
-            target: '#menu-toggle-btn',
-            title: isHe ? 'הגדרות לכולם' : 'Settings for Everyone',
-            text: isHe
-              ? 'ההגדרות שתבחרו (שפה, הדגשת המנים, איורים, גודל גופן) יחולו על כל העוקבים.'
-              : 'The settings you choose (language, Haman highlighting, illustrations, font size) apply to all followers.',
-          },
-          {
-            target: '#translation-toggle',
-            title: isHe ? 'מצב קריאה' : 'Reading Mode',
-            text: isHe
-              ? 'מצב הקריאה שתבחרו יהיה ברירת המחדל לכל מי שמצטרף, אבל הם יכולים לשנות אותו אצלם.'
-              : 'The reading mode you choose becomes the default for everyone joining, but they can override it.',
-          },
-          {
-            target: '#edit-subtitle-btn',
-            title: isHe ? 'עריכת כותרת משנה' : 'Edit Subtitle',
-            text: isHe
-              ? 'לחצו כאן כדי לשנות את הכותרת מתחת לשם האפליקציה — לדוגמה, שם בית הכנסת או קישור.'
-              : 'Tap here to customize the subtitle below the app name — for example, your synagogue name or a link.',
-          },
-          {
-            target: '#edit-hint-btn',
-            title: isHe ? 'עריכת הודעות' : 'Edit Announcements',
-            text: isHe
-              ? 'לחצו כאן כדי להוסיף או לערוך הודעה שתוצג לכל העוקבים — למשל הוראות, קישורים, או כפתורי תרומה. יש גם אזור נוסף לעריכה בתחתית המגילה.'
-              : 'Tap here to add or edit an announcement shown to all followers — like instructions, links, or donation buttons. There\'s also another editable area at the bottom of the Megillah.',
-          },
+          { target: '#session-code-btn', title: t.onboardingAdminInvite, text: t.onboardingAdminInviteText },
+          { target: null, title: t.onboardingAdminHighlight, text: splitAtIcon(t.onboardingAdminHighlightText) },
+          { target: '#tracking-mode-btn', title: t.onboardingAdminTracking, text: t.onboardingAdminTrackingText },
+          { target: '#reading-time-btn', title: t.onboardingAdminTime, text: t.onboardingAdminTimeText },
+          { target: '#menu-toggle-btn', title: t.onboardingAdminSettings, text: t.onboardingAdminSettingsText },
+          { target: '#translation-toggle', title: t.onboardingAdminReadingMode, text: t.onboardingAdminReadingModeText },
+          { target: '#edit-subtitle-btn', title: t.onboardingAdminSubtitle, text: t.onboardingAdminSubtitleText },
+          { target: '#edit-hint-btn', title: t.onboardingAdminAnnouncements, text: t.onboardingAdminAnnouncementsText },
         ];
         const steps = session.role === 'follower' ? followerSteps : session.role === 'admin' ? adminSteps : [];
         if (onboardingStep >= steps.length || steps.length === 0) return null;
@@ -3766,7 +3998,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
             ) : (
               <div class="onboarding-backdrop" onClick={dismissOnboarding} />
             )}
-            <div class="onboarding-tooltip" dir={isHe ? 'rtl' : 'ltr'} style={{
+            <div class="onboarding-tooltip" dir={lang === 'he' ? 'rtl' : 'ltr'} style={{
               top: rect ? `${rect.bottom + 12}px` : '50%',
               left: rect ? `${Math.max(16, Math.min(rect.left, window.innerWidth - 336))}px` : '50%',
               ...(rect ? {} : { transform: 'translate(-50%, -50%)' }),
@@ -3782,13 +4014,13 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
                 <div>
                   {onboardingStep < steps.length - 1 && (
                     <button class="onboarding-skip-btn" onClick={dismissOnboarding}>
-                      {isHe ? 'דלג' : 'Skip'}
+                      {t.onboardingSkip}
                     </button>
                   )}
                   <button class="onboarding-next-btn" onClick={() => nextOnboardingStep(steps.length)}>
                     {onboardingStep >= steps.length - 1
-                      ? (isHe ? 'הבנתי!' : 'Got it!')
-                      : (isHe ? 'הבא' : 'Next')}
+                      ? t.onboardingGotIt
+                      : t.onboardingNext}
                   </button>
                 </div>
               </div>
