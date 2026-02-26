@@ -1882,7 +1882,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
         {lang === 'he' ? (
           <div id="translation-toggle" class="toolbar-translation-toggle">
             <button class={`toolbar-trans-btn${translationMode === 'hebrew' ? ' active' : ''}`} onClick={() => { setTranslationMode('hebrew'); try { localStorage.setItem('megillah-translation-mode', 'hebrew'); } catch {} if (session?.role === 'admin') session.broadcastSetting('translationMode', 'hebrew'); }}>{t.hebrewName}</button>
-            <button class={`toolbar-trans-btn${translationMode === 'translation' ? ' active' : ''}`} onClick={() => { setTranslationMode('translation'); try { localStorage.setItem('megillah-translation-mode', 'translation'); } catch {} if (session?.role === 'admin') session.broadcastSetting('translationMode', 'translation'); }}>ביאור משולב</button>
+            <button class={`toolbar-trans-btn${translationMode === 'translation' ? ' active' : ''}`} onClick={() => { setTranslationMode('translation'); try { localStorage.setItem('megillah-translation-mode', 'translation'); } catch {} if (session?.role === 'admin') session.broadcastSetting('translationMode', 'translation'); }}>ביאור</button>
           </div>
         ) : (
           <div id="translation-toggle" class="toolbar-translation-toggle">
