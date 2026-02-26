@@ -142,6 +142,11 @@ const translations = {
     following: 'עוקב',
     endSession: 'סיום',
     leaveSession: 'יציאה',
+    switchToBroadcaster: 'עבור לשידור',
+    switchToFollower: 'עבור למעקב',
+    switchEnterPassword: 'הזינו את סיסמת המנהל',
+    switchBtn: 'עבור',
+    cancel: 'ביטול',
     joinLive: 'שידור חי',
     syncOn: 'עוקב אחרי השידור החי',
     syncOff: 'הפסקת מעקב — גלול בקצב שלך',
@@ -207,6 +212,11 @@ const translations = {
     following: 'Following',
     endSession: 'End',
     leaveSession: 'Leave',
+    switchToBroadcaster: 'Switch to Broadcaster',
+    switchToFollower: 'Switch to Follower',
+    switchEnterPassword: 'Enter the broadcaster password',
+    switchBtn: 'Switch',
+    cancel: 'Cancel',
     joinLive: 'Join Live',
     syncOn: 'Following the live broadcast',
     syncOff: 'Unfollowed — read at your own pace',
@@ -272,6 +282,11 @@ const translations = {
     following: 'Siguiendo',
     endSession: 'Finalizar',
     leaveSession: 'Salir',
+    switchToBroadcaster: 'Cambiar a transmisor',
+    switchToFollower: 'Cambiar a seguidor',
+    switchEnterPassword: 'Ingrese la contraseña del transmisor',
+    switchBtn: 'Cambiar',
+    cancel: 'Cancelar',
     joinLive: 'En vivo',
     syncOn: 'Siguiendo la transmisión en vivo',
     syncOff: 'Dejaste de seguir — lee a tu ritmo',
@@ -337,6 +352,11 @@ const translations = {
     following: 'Слежение',
     endSession: 'Завершить',
     leaveSession: 'Выйти',
+    switchToBroadcaster: 'Переключиться на трансляцию',
+    switchToFollower: 'Переключиться на просмотр',
+    switchEnterPassword: 'Введите пароль трансляции',
+    switchBtn: 'Переключить',
+    cancel: 'Отмена',
     joinLive: 'Эфир',
     syncOn: 'Следите за прямой трансляцией',
     syncOff: 'Отписались — читайте в своём темпе',
@@ -402,6 +422,11 @@ const translations = {
     following: 'Suivi',
     endSession: 'Terminer',
     leaveSession: 'Quitter',
+    switchToBroadcaster: 'Passer en diffuseur',
+    switchToFollower: 'Passer en spectateur',
+    switchEnterPassword: 'Entrez le mot de passe du diffuseur',
+    switchBtn: 'Changer',
+    cancel: 'Annuler',
     joinLive: 'En direct',
     syncOn: 'Vous suivez la diffusion en direct',
     syncOff: 'Plus de suivi — lisez à votre rythme',
@@ -467,6 +492,11 @@ const translations = {
     following: 'Seguindo',
     endSession: 'Encerrar',
     leaveSession: 'Sair',
+    switchToBroadcaster: 'Mudar para transmissor',
+    switchToFollower: 'Mudar para seguidor',
+    switchEnterPassword: 'Digite a senha do transmissor',
+    switchBtn: 'Mudar',
+    cancel: 'Cancelar',
     joinLive: 'Ao vivo',
     syncOn: 'Seguindo a transmissão ao vivo',
     syncOff: 'Deixou de seguir — leia no seu ritmo',
@@ -532,6 +562,11 @@ const translations = {
     following: 'Seguendo',
     endSession: 'Termina',
     leaveSession: 'Esci',
+    switchToBroadcaster: 'Passa a trasmettitore',
+    switchToFollower: 'Passa a spettatore',
+    switchEnterPassword: 'Inserisci la password del trasmettitore',
+    switchBtn: 'Cambia',
+    cancel: 'Annulla',
     joinLive: 'Dal vivo',
     syncOn: 'Stai seguendo la trasmissione in diretta',
     syncOff: 'Non segui più — leggi al tuo ritmo',
@@ -597,6 +632,11 @@ const translations = {
     following: 'Követés',
     endSession: 'Befejezés',
     leaveSession: 'Kilépés',
+    switchToBroadcaster: 'Váltás közvetítőre',
+    switchToFollower: 'Váltás követőre',
+    switchEnterPassword: 'Adja meg a közvetítő jelszavát',
+    switchBtn: 'Váltás',
+    cancel: 'Mégse',
     joinLive: 'Élő',
     syncOn: 'Követi az élő közvetítést',
     syncOff: 'Nem követ — olvasson a saját tempójában',
@@ -662,6 +702,11 @@ const translations = {
     following: 'Folgen',
     endSession: 'Beenden',
     leaveSession: 'Verlassen',
+    switchToBroadcaster: 'Zum Sender wechseln',
+    switchToFollower: 'Zum Zuschauer wechseln',
+    switchEnterPassword: 'Geben Sie das Sender-Passwort ein',
+    switchBtn: 'Wechseln',
+    cancel: 'Abbrechen',
     joinLive: 'Live',
     syncOn: 'Sie folgen der Live-Übertragung',
     syncOff: 'Nicht mehr folgen — lesen Sie in Ihrem Tempo',
@@ -727,6 +772,11 @@ const translations = {
     following: 'Παρακολούθηση',
     endSession: 'Τέλος',
     leaveSession: 'Αποχώρηση',
+    switchToBroadcaster: 'Εναλλαγή σε μεταδότη',
+    switchToFollower: 'Εναλλαγή σε θεατή',
+    switchEnterPassword: 'Εισάγετε τον κωδικό μετάδοσης',
+    switchBtn: 'Εναλλαγή',
+    cancel: 'Ακύρωση',
     joinLive: 'Ζωντανά',
     syncOn: 'Ακολουθείτε τη ζωντανή μετάδοση',
     syncOff: 'Δεν ακολουθείτε πλέον — διαβάστε με το δικό σας ρυθμό',
@@ -1068,7 +1118,7 @@ function getInitialLang(): Lang {
   return 'en';
 }
 
-export default function MegillahReader({ standalone = false, showTitle = false, session, remoteMinutes, activeWord: remoteActiveWord, activeVerse: remoteActiveVerse, onWordTap, remoteSettings, syncEnabled = true, onToggleSync }: { standalone?: boolean; showTitle?: boolean; session?: Session; remoteMinutes?: number | null; activeWord?: string | null; activeVerse?: string | null; onWordTap?: (wordId: string) => void; remoteSettings?: Record<string, unknown>; syncEnabled?: boolean; onToggleSync?: () => void }) {
+export default function MegillahReader({ standalone = false, showTitle = false, session, remoteMinutes, activeWord: remoteActiveWord, activeVerse: remoteActiveVerse, onWordTap, remoteSettings, syncEnabled = true, onToggleSync, onSwitchRole }: { standalone?: boolean; showTitle?: boolean; session?: Session; remoteMinutes?: number | null; activeWord?: string | null; activeVerse?: string | null; onWordTap?: (wordId: string) => void; remoteSettings?: Record<string, unknown>; syncEnabled?: boolean; onToggleSync?: () => void; onSwitchRole?: (password?: string) => void }) {
   const dragging = useRef(false);
   const lastBroadcastTime = useRef(0);
   const lastDragWord = useRef<string | null>(null);
@@ -1103,6 +1153,8 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
   const [showBottomHintEdit, setShowBottomHintEdit] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
   const [showQR, setShowQR] = useState(false);
+  const [showSwitchDialog, setShowSwitchDialog] = useState(false);
+  const [switchPassword, setSwitchPassword] = useState('');
   const [qrCopied, setQrCopied] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -1845,9 +1897,13 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
             </span>
             {t.sessionCode}: {session.code}
           </button>
-          <span class="session-role">
+          <button
+            class="session-role"
+            onClick={() => { if (onSwitchRole) { setShowSwitchDialog(true); setSwitchPassword(''); } }}
+            style={onSwitchRole ? { cursor: 'pointer' } : { cursor: 'default' }}
+          >
             {session.role === 'admin' ? t.broadcasting : t.following}
-          </span>
+          </button>
           <button class="session-leave" onClick={session.leave}>
             <span class="material-icons" style={`font-size:16px;vertical-align:middle;margin:0 2px${lang === 'he' && session.role !== 'admin' ? ';transform:scaleX(-1)' : ''}`}>
               {session.role === 'admin' ? 'stop_circle' : 'logout'}
@@ -2639,6 +2695,44 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           </div>
         );
       })()}
+
+      {showSwitchDialog && session && onSwitchRole && (
+        <div class="qr-overlay" onClick={() => setShowSwitchDialog(false)}>
+          <div class="qr-modal switch-dialog" dir={lang === 'he' ? 'rtl' : 'ltr'} onClick={(e: Event) => e.stopPropagation()}>
+            <button class="qr-close" onClick={() => setShowSwitchDialog(false)}>
+              <span class="material-icons">close</span>
+            </button>
+            <p class="switch-dialog-title">
+              {session.role === 'admin' ? t.switchToFollower : t.switchToBroadcaster}
+            </p>
+            {session.role === 'follower' && (
+              <form onSubmit={(e) => { e.preventDefault(); onSwitchRole(switchPassword.trim()); setShowSwitchDialog(false); }}>
+                <label class="switch-dialog-label">
+                  {t.switchEnterPassword}
+                  <input
+                    type="password"
+                    class="switch-dialog-input"
+                    value={switchPassword}
+                    onInput={(e) => setSwitchPassword((e.target as HTMLInputElement).value)}
+                    autoFocus
+                    required
+                  />
+                </label>
+                <div class="switch-dialog-actions">
+                  <button type="button" class="switch-dialog-cancel" onClick={() => setShowSwitchDialog(false)}>{t.cancel}</button>
+                  <button type="submit" class="switch-dialog-btn">{t.switchBtn}</button>
+                </div>
+              </form>
+            )}
+            {session.role === 'admin' && (
+              <div class="switch-dialog-actions">
+                <button type="button" class="switch-dialog-cancel" onClick={() => setShowSwitchDialog(false)}>{t.cancel}</button>
+                <button type="button" class="switch-dialog-btn" onClick={() => { onSwitchRole(); setShowSwitchDialog(false); }}>{t.switchBtn}</button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {toast && (
         <div class="sync-toast">{toast}</div>
@@ -3786,6 +3880,75 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
         .session-role {
           opacity: 0.8;
           font-size: 0.8rem;
+          background: none;
+          border: none;
+          color: inherit;
+          font-family: inherit;
+          padding: 2px 4px;
+        }
+
+        .switch-dialog {
+          text-align: start;
+          padding: 24px 20px;
+        }
+
+        .switch-dialog-title {
+          font-size: 1rem;
+          font-weight: 700;
+          color: var(--color-burgundy);
+          margin: 0 0 16px;
+        }
+
+        .switch-dialog-label {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+          font-size: 0.85rem;
+          font-weight: 600;
+          color: var(--color-text);
+          margin-bottom: 16px;
+        }
+
+        .switch-dialog-input {
+          padding: 10px 12px;
+          border: 2px solid var(--color-cream-dark);
+          border-radius: 8px;
+          font-size: 1rem;
+        }
+
+        .switch-dialog-input:focus {
+          outline: none;
+          border-color: var(--color-burgundy);
+        }
+
+        .switch-dialog-actions {
+          display: flex;
+          justify-content: flex-end;
+          gap: 8px;
+        }
+
+        .switch-dialog-cancel {
+          background: none;
+          border: none;
+          color: var(--color-text-light);
+          font-size: 0.85rem;
+          cursor: pointer;
+          padding: 8px 16px;
+        }
+
+        .switch-dialog-btn {
+          background: var(--color-burgundy);
+          color: var(--color-white);
+          border: none;
+          border-radius: 8px;
+          padding: 8px 20px;
+          font-size: 0.85rem;
+          font-weight: 600;
+          cursor: pointer;
+        }
+
+        .switch-dialog-btn:hover {
+          background: var(--color-burgundy-light);
         }
 
         .session-leave {

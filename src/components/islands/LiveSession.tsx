@@ -30,11 +30,11 @@ const lobbyText = {
     scanQR: 'או סרקו קוד QR',
     sessionCreated: 'הסשן נוצר בהצלחה!',
 
-    shareHeading: 'מידע לשיתוף',
+    shareHeading: 'איך נכנסים כמשתתף',
     shareTip1: 'שלחו להם את הקישור הזה:',
     shareTip2: 'או, בקשו מהם להיכנס ל-megillah.app/live ולהזין את הקוד',
     shareTip3: 'או שיסרקו את קוד ה-QR.',
-    broadcastHeading: 'מידע לשידור',
+    broadcastHeading: 'איך נכנסים כמנהל',
     broadcastTip1: 'לחצו על הכפתור למטה כדי להתחיל לשדר עכשיו.',
     broadcastTip2Pre: 'או, מכל מכשיר אחר, היכנסו ל-megillah.app/live, עברו ללשונית "משדר", הזינו את הקוד',
     broadcastTip2Mid: 'ואת הסיסמה שהגדרתם:',
@@ -492,6 +492,13 @@ export default function LiveSession() {
     setPendingSession(null);
   }, [pendingSession, joinSession]);
 
+  const handleSwitchRole = useCallback(async (password?: string) => {
+    if (!session) return;
+    // Leave current session, then rejoin with/without password
+    session.leave();
+    await joinSession(session.code, password);
+  }, [session, joinSession]);
+
   if (pendingSession && !session) {
     return <ShareScreen
       code={pendingSession.code}
@@ -517,7 +524,7 @@ export default function LiveSession() {
 
   return (
     <div class="live-session">
-      <MegillahReader standalone={true} session={session} remoteMinutes={remoteMinutes} activeWord={remoteWord} activeVerse={remoteActiveVerse} remoteSettings={remoteSettings} syncEnabled={syncEnabled} onToggleSync={() => {
+      <MegillahReader standalone={true} session={session} remoteMinutes={remoteMinutes} activeWord={remoteWord} activeVerse={remoteActiveVerse} remoteSettings={remoteSettings} syncEnabled={syncEnabled} onSwitchRole={handleSwitchRole} onToggleSync={() => {
         setSyncEnabled(v => {
           const next = !v;
           if (next && lastBroadcastVerse.current) {

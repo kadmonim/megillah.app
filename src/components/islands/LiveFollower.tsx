@@ -71,7 +71,7 @@ export default function LiveFollower() {
     if (!code) window.location.href = '/live';
   }, []);
 
-  const { session, error } = useSession(handleRemoteScroll, handleRemoteTime, code || undefined, handleRemoteWord);
+  const { session, error, joinSession } = useSession(handleRemoteScroll, handleRemoteTime, code || undefined, handleRemoteWord);
 
   // Hide the server-rendered loading screen once we're ready
   useEffect(() => {
@@ -144,9 +144,14 @@ export default function LiveFollower() {
 
   if (!session) return null; // still loading from server-rendered screen
 
+  const handleSwitchRole = async (password?: string) => {
+    session.leave();
+    await joinSession(code, password);
+  };
+
   return (
     <div class="live-session">
-      <MegillahReader standalone={true} session={session} remoteMinutes={remoteMinutes} activeWord={remoteWord} activeVerse={remoteActiveVerse} />
+      <MegillahReader standalone={true} session={session} remoteMinutes={remoteMinutes} activeWord={remoteWord} activeVerse={remoteActiveVerse} onSwitchRole={handleSwitchRole} />
     </div>
   );
 }
