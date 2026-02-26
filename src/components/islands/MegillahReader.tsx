@@ -1177,11 +1177,15 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
       deviceLang.current = detected;
     }
     try {
-      const stored = localStorage.getItem('megillah-translation-mode');
-      if (stored === 'both' || stored === 'translation') {
-        setTranslationMode(stored);
-      } else if (detected !== 'he') {
-        setTranslationMode('both');
+      if (detected === 'he') {
+        setTranslationMode('hebrew');
+      } else {
+        const stored = localStorage.getItem('megillah-translation-mode');
+        if (stored === 'both' || stored === 'translation') {
+          setTranslationMode(stored);
+        } else {
+          setTranslationMode('both');
+        }
       }
     } catch {}
   }, []);
@@ -1244,9 +1248,12 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
     if (s.lang) {
       setLang(s.lang as Lang);
     }
-    if (s.translationMode) {
+    const effectiveLang = (s.lang as Lang) || lang;
+    if (effectiveLang === 'he') {
+      setTranslationMode('hebrew');
+    } else if (s.translationMode) {
       setTranslationMode(s.translationMode);
-    } else if (s.showTranslation || (s.lang && s.lang !== 'he') || (!s.lang && lang !== 'he')) {
+    } else if (s.showTranslation || effectiveLang !== 'he') {
       setTranslationMode('both');
     }
     if (s.customSubtitle) {
