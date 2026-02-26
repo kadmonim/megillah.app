@@ -806,6 +806,8 @@ function LobbyScreen({
   const [mode, setMode] = useState<'choose' | 'create' | 'join'>('choose');
   const [password, setPassword] = useState('');
   const [code, setCode] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const passwordRef = useRef<HTMLInputElement>(null);
   const t = lobbyText[lang];
   const dir = lang === 'he' ? 'rtl' : 'ltr';
 
@@ -878,24 +880,45 @@ function LobbyScreen({
                 inputMode="numeric"
                 pattern="[0-9]{6}"
                 maxLength={6}
+                enterKeyHint={showPassword ? 'next' : 'go'}
                 class="lobby-input code-input"
                 value={code}
                 placeholder="123456"
-                onInput={(e) => setCode((e.target as HTMLInputElement).value)}
+                onInput={(e) => {
+                  const val = (e.target as HTMLInputElement).value;
+                  setCode(val);
+                  if (val.length === 6 && showPassword) {
+                    setTimeout(() => passwordRef.current?.focus(), 50);
+                  }
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && showPassword && code.length === 6) {
+                    e.preventDefault();
+                    passwordRef.current?.focus();
+                  }
+                }}
                 required
                 autoFocus
               />
             </label>
-            <label class="lobby-label">
-              {t.passwordAdmins}
-              <input
-                type="password"
-                class="lobby-input"
-                value={password}
-                placeholder={t.optional}
-                onInput={(e) => setPassword((e.target as HTMLInputElement).value)}
-              />
-            </label>
+            {showPassword ? (
+              <label class="lobby-label">
+                {t.passwordAdmins}
+                <input
+                  ref={passwordRef}
+                  type="password"
+                  enterKeyHint="go"
+                  class="lobby-input"
+                  value={password}
+                  placeholder={t.optional}
+                  onInput={(e) => setPassword((e.target as HTMLInputElement).value)}
+                />
+              </label>
+            ) : (
+              <button type="button" class="admin-toggle" onClick={() => { setShowPassword(true); setTimeout(() => passwordRef.current?.focus(), 50); }}>
+                {t.passwordAdmins} ▸
+              </button>
+            )}
             <button class="lobby-btn join" type="submit" disabled={loading}>
               {loading ? t.joining : t.joinSession}
             </button>
@@ -1045,6 +1068,22 @@ function LobbyScreen({
         }
 
         .lobby-back:hover {
+          color: var(--color-burgundy);
+        }
+
+        .admin-toggle {
+          background: none;
+          border: none;
+          color: var(--color-text-light);
+          font-size: 0.8rem;
+          cursor: pointer;
+          padding: 4px 0;
+          text-align: start;
+          opacity: 0.7;
+        }
+
+        .admin-toggle:hover {
+          opacity: 1;
           color: var(--color-burgundy);
         }
       `}</style>
