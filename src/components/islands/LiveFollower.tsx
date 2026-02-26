@@ -150,14 +150,9 @@ export default function LiveFollower() {
 
   if (!session) return null; // still loading from server-rendered screen
 
-  const handleSwitchRole = async (password?: string) => {
-    session.leave();
-    await joinSession(code, password);
-  };
-
   return (
     <div class="live-session">
-      <MegillahReader standalone={true} session={session} remoteMinutes={remoteMinutes} activeWord={remoteWord} activeVerse={remoteActiveVerse} syncEnabled={syncEnabled} onSwitchRole={handleSwitchRole} onToggleSync={() => {
+      <MegillahReader standalone={true} session={session} remoteMinutes={remoteMinutes} activeWord={remoteWord} activeVerse={remoteActiveVerse} syncEnabled={syncEnabled} onToggleSync={() => {
         setSyncEnabled(v => {
           const next = !v;
           if (next && lastBroadcastVerse.current) {

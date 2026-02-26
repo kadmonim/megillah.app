@@ -39,6 +39,7 @@ const lobbyText = {
     broadcastTip2Pre: 'או, מכל מכשיר אחר, היכנסו ל-megillah.app/live, עברו ללשונית "משדר", הזינו את הקוד',
     broadcastTip2Mid: 'ואת הסיסמה שהגדרתם:',
     saveNote: 'הקפידו לזכור את הסיסמה שלכם.',
+    wrongPassword: 'סיסמה שגויה, נסו שנית.',
     showPassword: 'הצג',
     hidePassword: 'הסתר',
   },
@@ -74,6 +75,7 @@ const lobbyText = {
     broadcastTip2Pre: 'Or, from any device, go to megillah.app/live, switch to the "Broadcast" tab, and enter the Session Code',
     broadcastTip2Mid: 'and the password you just created:',
     saveNote: 'Make sure to remember your password.',
+    wrongPassword: 'Wrong password, please try again.',
     showPassword: 'Show',
     hidePassword: 'Hide',
   },
@@ -109,6 +111,7 @@ const lobbyText = {
     broadcastTip2Pre: 'O, desde cualquier dispositivo, ve a megillah.app/live, cambia a la pestaña "Transmitir" e ingresa el código de sesión',
     broadcastTip2Mid: 'y la contraseña que acabas de crear:',
     saveNote: 'Asegúrate de recordar tu contraseña.',
+    wrongPassword: 'Contraseña incorrecta, inténtelo de nuevo.',
     showPassword: 'Mostrar',
     hidePassword: 'Ocultar',
   },
@@ -144,6 +147,7 @@ const lobbyText = {
     broadcastTip2Pre: 'Или с любого устройства зайдите на megillah.app/live, переключитесь на вкладку «Трансляция» и введите код сессии',
     broadcastTip2Mid: 'и пароль, который вы только что создали:',
     saveNote: 'Обязательно запомните свой пароль.',
+    wrongPassword: 'Неверный пароль, попробуйте ещё раз.',
     showPassword: 'Показать',
     hidePassword: 'Скрыть',
   },
@@ -179,6 +183,7 @@ const lobbyText = {
     broadcastTip2Pre: 'Ou, depuis n\'importe quel appareil, allez sur megillah.app/live, passez à l\'onglet « Diffuser » et entrez le code de session',
     broadcastTip2Mid: 'et le mot de passe que vous venez de créer :',
     saveNote: 'N\'oubliez pas de retenir votre mot de passe.',
+    wrongPassword: 'Mot de passe incorrect, veuillez réessayer.',
     showPassword: 'Afficher',
     hidePassword: 'Masquer',
   },
@@ -214,6 +219,7 @@ const lobbyText = {
     broadcastTip2Pre: 'Ou, de qualquer dispositivo, acesse megillah.app/live, mude para a aba "Transmitir" e digite o código da sessão',
     broadcastTip2Mid: 'e a senha que você acabou de criar:',
     saveNote: 'Não se esqueça da sua senha.',
+    wrongPassword: 'Senha incorreta, tente novamente.',
     showPassword: 'Mostrar',
     hidePassword: 'Ocultar',
   },
@@ -249,6 +255,7 @@ const lobbyText = {
     broadcastTip2Pre: 'Oppure, da qualsiasi dispositivo, vai su megillah.app/live, passa alla scheda "Trasmetti" e inserisci il codice sessione',
     broadcastTip2Mid: 'e la password che hai appena creato:',
     saveNote: 'Assicurati di ricordare la tua password.',
+    wrongPassword: 'Password errata, riprova.',
     showPassword: 'Mostra',
     hidePassword: 'Nascondi',
   },
@@ -284,6 +291,7 @@ const lobbyText = {
     broadcastTip2Pre: 'Vagy bármilyen eszközről menjen a megillah.app/live oldalra, váltson a „Közvetítés" fülre és írja be a kódot',
     broadcastTip2Mid: 'és az imént létrehozott jelszót:',
     saveNote: 'Ne felejtse el a jelszavát.',
+    wrongPassword: 'Hibás jelszó, próbálja újra.',
     showPassword: 'Mutat',
     hidePassword: 'Elrejt',
   },
@@ -319,6 +327,7 @@ const lobbyText = {
     broadcastTip2Pre: 'Oder rufen Sie von einem beliebigen Gerät megillah.app/live auf, wechseln Sie zum Tab „Übertragen" und geben Sie den Sitzungscode ein',
     broadcastTip2Mid: 'und das gerade erstellte Passwort:',
     saveNote: 'Vergessen Sie Ihr Passwort nicht.',
+    wrongPassword: 'Falsches Passwort, bitte versuchen Sie es erneut.',
     showPassword: 'Anzeigen',
     hidePassword: 'Ausblenden',
   },
@@ -353,6 +362,7 @@ const lobbyText = {
     broadcastTip2Pre: 'Ή ανοίξτε megillah.app/live από οποιαδήποτε συσκευή, μεταβείτε στην καρτέλα «Μετάδοση» και εισάγετε τον κωδικό',
     broadcastTip2Mid: 'και τον κωδικό που μόλις δημιουργήσατε:',
     saveNote: 'Μην ξεχάσετε τον κωδικό σας.',
+    wrongPassword: 'Λάθος κωδικός, δοκιμάστε ξανά.',
     showPassword: 'Εμφάνιση',
     hidePassword: 'Απόκρυψη',
   },
@@ -492,12 +502,6 @@ export default function LiveSession() {
     setPendingSession(null);
   }, [pendingSession, joinSession]);
 
-  const handleSwitchRole = useCallback(async (password?: string) => {
-    if (!session) return;
-    // Leave current session, then rejoin with/without password
-    session.leave();
-    await joinSession(session.code, password);
-  }, [session, joinSession]);
 
   if (pendingSession && !session) {
     return <ShareScreen
@@ -524,7 +528,7 @@ export default function LiveSession() {
 
   return (
     <div class="live-session">
-      <MegillahReader standalone={true} session={session} remoteMinutes={remoteMinutes} activeWord={remoteWord} activeVerse={remoteActiveVerse} remoteSettings={remoteSettings} syncEnabled={syncEnabled} onSwitchRole={handleSwitchRole} onToggleSync={() => {
+      <MegillahReader standalone={true} session={session} remoteMinutes={remoteMinutes} activeWord={remoteWord} activeVerse={remoteActiveVerse} remoteSettings={remoteSettings} syncEnabled={syncEnabled} onToggleSync={() => {
         setSyncEnabled(v => {
           const next = !v;
           if (next && lastBroadcastVerse.current) {
@@ -904,7 +908,7 @@ function LobbyScreen({
   loading: boolean;
   error: string | null;
   onCreateSession: (password: string) => Promise<void>;
-  onJoinSession: (code: string, password?: string) => Promise<void>;
+  onJoinSession: (code: string, password?: string) => Promise<SessionRole | null>;
   lang: Lang;
   onLangChange: (l: Lang) => void;
 }) {
@@ -912,6 +916,7 @@ function LobbyScreen({
   const [broadcastMode, setBroadcastMode] = useState<'choose' | 'join' | 'create'>('choose');
   const [password, setPassword] = useState('');
   const [code, setCode] = useState('');
+  const [joinError, setJoinError] = useState('');
   const passwordRef = useRef<HTMLInputElement>(null);
   const t = lobbyText[lang];
   const dir = lang === 'he' ? 'rtl' : 'ltr';
@@ -985,9 +990,14 @@ function LobbyScreen({
         {tab === 'broadcast' && broadcastMode === 'join' && (
           <form
             class="lobby-form"
-            onSubmit={(e) => {
+            onSubmit={async (e) => {
               e.preventDefault();
-              if (code.trim()) onJoinSession(code.trim(), password.trim() || undefined);
+              if (!code.trim()) return;
+              setJoinError('');
+              const result = await onJoinSession(code.trim(), password.trim() || undefined);
+              if (result === 'follower') {
+                setJoinError(t.wrongPassword);
+              }
             }}
           >
             <label class="lobby-label">
@@ -1026,9 +1036,10 @@ function LobbyScreen({
                 enterKeyHint="go"
                 class="lobby-input"
                 value={password}
-                onInput={(e) => setPassword((e.target as HTMLInputElement).value)}
+                onInput={(e) => { setPassword((e.target as HTMLInputElement).value); setJoinError(''); }}
               />
             </label>
+            {joinError && <div class="lobby-error">{joinError}</div>}
             <button class="lobby-btn join" type="submit" disabled={loading}>
               {loading ? t.joining : t.joinSession}
             </button>

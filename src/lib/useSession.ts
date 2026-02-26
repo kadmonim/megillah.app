@@ -48,7 +48,7 @@ interface UseSessionReturn {
   loading: boolean;
   error: string | null;
   createSession: (password: string) => Promise<void>;
-  joinSession: (code: string, password?: string) => Promise<void>;
+  joinSession: (code: string, password?: string) => Promise<SessionRole | null>;
 }
 
 function generateCode(): string {
@@ -234,7 +234,7 @@ export function useSession(
   );
 
   const joinSession = useCallback(
-    async (code: string, password?: string) => {
+    async (code: string, password?: string): Promise<SessionRole | null> => {
       setLoading(true);
       setError(null);
       try {
@@ -247,13 +247,17 @@ export function useSession(
         if (fetchErr || !data) throw new Error('Session not found');
         const role: SessionRole =
           password && data.password === password ? 'admin' : 'follower';
+        // Wrong password — don't subscribe, just return the role so caller can show error
+        if (password && role === 'follower') return role;
         if (role === 'follower') {
           sb.from('session_joins').insert({ session_code: code }).then(() => {});
         }
         saveToStorage(code, password);
         subscribe(code, role, (data.settings as SessionSettings) || {});
+        return role;
       } catch (e: any) {
         setError(e.message || 'Failed to join session');
+        return null;
       } finally {
         setLoading(false);
       }
