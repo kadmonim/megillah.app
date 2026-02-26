@@ -4001,11 +4001,23 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
             ) : (
               <div class="onboarding-backdrop" onClick={dismissOnboarding} />
             )}
-            <div class="onboarding-tooltip" dir={lang === 'he' ? 'rtl' : 'ltr'} style={{
-              top: rect ? `${rect.bottom + 12}px` : '50%',
-              left: rect ? `${Math.max(16, Math.min(rect.left, window.innerWidth - 336))}px` : '50%',
-              ...(rect ? {} : { transform: 'translate(-50%, -50%)' }),
-            }}>
+            <div class="onboarding-tooltip" dir={lang === 'he' ? 'rtl' : 'ltr'} style={(() => {
+              if (!rect) return { top: '50%', left: '50%', transform: 'translate(-50%, -50%)' };
+              const spaceBelow = window.innerHeight - rect.bottom;
+              const placeAbove = spaceBelow < 200 && rect.top > 200;
+              // If target is in the top third of the screen, push tooltip to the middle
+              // so it doesn't cover the highlighted area
+              const topThird = rect.bottom < window.innerHeight * 0.33;
+              const tooltipTop = topThird
+                ? Math.max(rect.bottom + 12, window.innerHeight * 0.4)
+                : rect.bottom + 12;
+              return {
+                left: `${Math.max(16, Math.min(window.innerWidth / 2 - 160, window.innerWidth - 336))}px`,
+                ...(placeAbove
+                  ? { bottom: `${window.innerHeight - rect.top + 12}px` }
+                  : { top: `${tooltipTop}px` }),
+              };
+            })()}>
               <p class="onboarding-tooltip-title">{step.title}</p>
               <p class="onboarding-tooltip-text">{step.text}</p>
               <div class="onboarding-tooltip-actions">
