@@ -1059,8 +1059,8 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
       promotion: false,
       directionality: lang === 'he' ? 'rtl' as const : 'ltr' as const,
       plugins: 'link lists directionality',
-      toolbar: 'bold italic underline forecolor | link insertbutton | bullist numlist | alignleft aligncenter alignright | fontsize | ltr rtl | removeformat',
-      content_style: contentStyle || `body { font-family: Heebo, sans-serif; font-size: 14px; direction: ${lang === 'he' ? 'rtl' : 'ltr'}; background: #fdf6f0; color: #E8962E; text-align: center; } a { color: #E8962E; } p { margin: 4px 0; }`,
+      toolbar: 'bold italic underline forecolor | link insertbutton | bullist numlist | alignleft aligncenter alignright | fontsize | ltr rtl | removeformat | blocks',
+      content_style: contentStyle || `body { font-family: Heebo, sans-serif; font-size: 14px; direction: ${lang === 'he' ? 'rtl' : 'ltr'}; background: #fdf6f0; text-align: center; } p { margin: 4px 0; }`,
       setup: (editor: any) => {
         editor.ui.registry.addButton('insertbutton', {
           text: 'Button',
@@ -2773,12 +2773,10 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
         }
         .custom-hint {
           display: block;
-          color: var(--color-gold);
           font-size: 0.9rem;
           font-weight: 400;
         }
         .custom-hint p { margin: 4px 0; }
-        .custom-hint a { color: var(--color-gold); text-decoration: underline; }
         .custom-hint a[style] { color: #fff; text-decoration: none; }
         .whats-next-area {
           position: relative;
