@@ -4168,7 +4168,6 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           { target: '#menu-toggle-btn', title: t.onboardingFollowerOptions, text: t.onboardingFollowerOptionsText },
         ];
         const adminSteps = [
-          { target: '#session-code-btn', title: t.onboardingAdminInvite, text: t.onboardingAdminInviteText },
           { target: null, title: t.onboardingAdminHighlight, text: splitAtIcon(t.onboardingAdminHighlightText) },
           { target: '#tracking-mode-btn', title: t.onboardingAdminTracking, text: t.onboardingAdminTrackingText },
           { target: '#reading-time-btn', title: t.onboardingAdminTime, text: t.onboardingAdminTimeText },
