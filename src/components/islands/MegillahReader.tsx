@@ -3684,8 +3684,8 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
             target: '#menu-toggle-btn',
             title: isHe ? 'אפשרויות נוספות' : 'More Options',
             text: isHe
-              ? 'כאן תוכלו לשנות את גודל הגופן, להפעיל איורים, ועוד.'
-              : 'Here you can change the font size, enable illustrations, and more.',
+              ? 'כאן תוכלו להפעיל איורים, לשנות שפה, ועוד. גודל הגופן ניתן לשינוי בסרגל הכלים.'
+              : 'Here you can enable illustrations, change the language, and more. Font size can be adjusted in the toolbar.',
           },
         ];
         const adminSteps = [
