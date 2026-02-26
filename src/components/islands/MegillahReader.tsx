@@ -146,6 +146,7 @@ const translations = {
     switchToFollower: 'עבור למעקב',
     switchEnterPassword: 'הזינו את סיסמת המנהל',
     switchBtn: 'עבור',
+    wrongPassword: 'סיסמה שגויה, נסו שנית.',
     cancel: 'ביטול',
     joinLive: 'שידור חי',
     syncOn: 'עוקב אחרי השידור החי',
@@ -216,6 +217,7 @@ const translations = {
     switchToFollower: 'Switch to Follower',
     switchEnterPassword: 'Enter the broadcaster password',
     switchBtn: 'Switch',
+    wrongPassword: 'Wrong password, please try again.',
     cancel: 'Cancel',
     joinLive: 'Join Live',
     syncOn: 'Following the live broadcast',
@@ -286,6 +288,7 @@ const translations = {
     switchToFollower: 'Cambiar a seguidor',
     switchEnterPassword: 'Ingrese la contraseña del transmisor',
     switchBtn: 'Cambiar',
+    wrongPassword: 'Contraseña incorrecta, inténtelo de nuevo.',
     cancel: 'Cancelar',
     joinLive: 'En vivo',
     syncOn: 'Siguiendo la transmisión en vivo',
@@ -356,6 +359,7 @@ const translations = {
     switchToFollower: 'Переключиться на просмотр',
     switchEnterPassword: 'Введите пароль трансляции',
     switchBtn: 'Переключить',
+    wrongPassword: 'Неверный пароль, попробуйте ещё раз.',
     cancel: 'Отмена',
     joinLive: 'Эфир',
     syncOn: 'Следите за прямой трансляцией',
@@ -426,6 +430,7 @@ const translations = {
     switchToFollower: 'Passer en spectateur',
     switchEnterPassword: 'Entrez le mot de passe du diffuseur',
     switchBtn: 'Changer',
+    wrongPassword: 'Mot de passe incorrect, veuillez réessayer.',
     cancel: 'Annuler',
     joinLive: 'En direct',
     syncOn: 'Vous suivez la diffusion en direct',
@@ -496,6 +501,7 @@ const translations = {
     switchToFollower: 'Mudar para seguidor',
     switchEnterPassword: 'Digite a senha do transmissor',
     switchBtn: 'Mudar',
+    wrongPassword: 'Senha incorreta, tente novamente.',
     cancel: 'Cancelar',
     joinLive: 'Ao vivo',
     syncOn: 'Seguindo a transmissão ao vivo',
@@ -566,6 +572,7 @@ const translations = {
     switchToFollower: 'Passa a spettatore',
     switchEnterPassword: 'Inserisci la password del trasmettitore',
     switchBtn: 'Cambia',
+    wrongPassword: 'Password errata, riprova.',
     cancel: 'Annulla',
     joinLive: 'Dal vivo',
     syncOn: 'Stai seguendo la trasmissione in diretta',
@@ -636,6 +643,7 @@ const translations = {
     switchToFollower: 'Váltás követőre',
     switchEnterPassword: 'Adja meg a közvetítő jelszavát',
     switchBtn: 'Váltás',
+    wrongPassword: 'Hibás jelszó, próbálja újra.',
     cancel: 'Mégse',
     joinLive: 'Élő',
     syncOn: 'Követi az élő közvetítést',
@@ -706,6 +714,7 @@ const translations = {
     switchToFollower: 'Zum Zuschauer wechseln',
     switchEnterPassword: 'Geben Sie das Sender-Passwort ein',
     switchBtn: 'Wechseln',
+    wrongPassword: 'Falsches Passwort, bitte versuchen Sie es erneut.',
     cancel: 'Abbrechen',
     joinLive: 'Live',
     syncOn: 'Sie folgen der Live-Übertragung',
@@ -776,6 +785,7 @@ const translations = {
     switchToFollower: 'Εναλλαγή σε θεατή',
     switchEnterPassword: 'Εισάγετε τον κωδικό μετάδοσης',
     switchBtn: 'Εναλλαγή',
+    wrongPassword: 'Λάθος κωδικός, δοκιμάστε ξανά.',
     cancel: 'Ακύρωση',
     joinLive: 'Ζωντανά',
     syncOn: 'Ακολουθείτε τη ζωντανή μετάδοση',
@@ -1118,7 +1128,7 @@ function getInitialLang(): Lang {
   return 'en';
 }
 
-export default function MegillahReader({ standalone = false, showTitle = false, session, remoteMinutes, activeWord: remoteActiveWord, activeVerse: remoteActiveVerse, onWordTap, remoteSettings, syncEnabled = true, onToggleSync, onSwitchRole }: { standalone?: boolean; showTitle?: boolean; session?: Session; remoteMinutes?: number | null; activeWord?: string | null; activeVerse?: string | null; onWordTap?: (wordId: string) => void; remoteSettings?: Record<string, unknown>; syncEnabled?: boolean; onToggleSync?: () => void; onSwitchRole?: (password?: string) => void }) {
+export default function MegillahReader({ standalone = false, showTitle = false, session, remoteMinutes, activeWord: remoteActiveWord, activeVerse: remoteActiveVerse, onWordTap, remoteSettings, syncEnabled = true, onToggleSync, onSwitchRole }: { standalone?: boolean; showTitle?: boolean; session?: Session; remoteMinutes?: number | null; activeWord?: string | null; activeVerse?: string | null; onWordTap?: (wordId: string) => void; remoteSettings?: Record<string, unknown>; syncEnabled?: boolean; onToggleSync?: () => void; onSwitchRole?: (password?: string) => Promise<string | null> | void }) {
   const dragging = useRef(false);
   const lastBroadcastTime = useRef(0);
   const lastDragWord = useRef<string | null>(null);
@@ -1155,6 +1165,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
   const [showQR, setShowQR] = useState(false);
   const [showSwitchDialog, setShowSwitchDialog] = useState(false);
   const [switchPassword, setSwitchPassword] = useState('');
+  const [switchError, setSwitchError] = useState('');
   const [qrCopied, setQrCopied] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -1743,8 +1754,8 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
         confettiFired.current = true;
         spawnConfetti();
       }
-      // Admin: find topmost visible verse and broadcast it
-      if (sessionRef.current?.role === 'admin') {
+      // Admin: find topmost visible verse and broadcast it (only in scroll-only mode)
+      if (sessionRef.current?.role === 'admin' && trackingModeRef.current === 'off') {
         const verseEls = el.querySelectorAll('[data-verse]');
         let topVerse: string | null = null;
         for (const v of verseEls) {
@@ -1899,7 +1910,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           </button>
           <button
             class="session-role"
-            onClick={() => { if (onSwitchRole) { setShowSwitchDialog(true); setSwitchPassword(''); } }}
+            onClick={() => { if (onSwitchRole) { setShowSwitchDialog(true); setSwitchPassword(''); setSwitchError(''); } }}
             style={onSwitchRole ? { cursor: 'pointer' } : { cursor: 'default' }}
           >
             {session.role === 'admin' ? t.broadcasting : t.following}
@@ -2706,7 +2717,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
               {session.role === 'admin' ? t.switchToFollower : t.switchToBroadcaster}
             </p>
             {session.role === 'follower' && (
-              <form onSubmit={(e) => { e.preventDefault(); onSwitchRole(switchPassword.trim()); setShowSwitchDialog(false); }}>
+              <form onSubmit={async (e) => { e.preventDefault(); setSwitchError(''); const result = await onSwitchRole(switchPassword.trim()); if (result === 'follower') { setSwitchError(t.wrongPassword); } else { setShowSwitchDialog(false); } }}>
                 <label class="switch-dialog-label">
                   {t.switchEnterPassword}
                   <input
@@ -2718,6 +2729,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
                     required
                   />
                 </label>
+                {switchError && <p class="switch-dialog-error">{switchError}</p>}
                 <div class="switch-dialog-actions">
                   <button type="button" class="switch-dialog-cancel" onClick={() => setShowSwitchDialog(false)}>{t.cancel}</button>
                   <button type="submit" class="switch-dialog-btn">{t.switchBtn}</button>
@@ -3949,6 +3961,12 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
 
         .switch-dialog-btn:hover {
           background: var(--color-burgundy-light);
+        }
+
+        .switch-dialog-error {
+          color: var(--color-error, #c62828);
+          font-size: 0.85rem;
+          margin: 0 0 12px;
         }
 
         .session-leave {
