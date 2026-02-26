@@ -424,7 +424,11 @@ export default function LiveSession() {
   const { session, loading, error, joinSession } =
     useSession(handleRemoteScroll, handleRemoteTime, undefined, handleRemoteWord, handleRemoteSetting);
 
-  const [lang, setLang] = useState<Lang>(detectLang);
+  const [lang, setLangState] = useState<Lang>(detectLang);
+  const setLang = useCallback((l: Lang) => {
+    setLangState(l);
+    try { localStorage.setItem('megillah-lang', l); } catch {}
+  }, []);
 
   // Restore a previously created session from localStorage
   useEffect(() => {
@@ -463,6 +467,7 @@ export default function LiveSession() {
       code={pendingSession.code}
       password={pendingSession.password}
       lang={lang}
+      onLangChange={setLang}
       loading={loading}
       onStart={handleStartBroadcasting}
       onBack={() => { clearCreatedSession(); setPendingSession(null); }}
@@ -476,6 +481,7 @@ export default function LiveSession() {
       onCreateSession={handleCreate}
       onJoinSession={joinSession}
       lang={lang}
+      onLangChange={setLang}
     />;
   }
 
@@ -500,10 +506,67 @@ export default function LiveSession() {
   );
 }
 
+function LangToggle({ lang, onLangChange }: { lang: Lang; onLangChange: (l: Lang) => void }) {
+  return (
+    <div class="lang-toggle">
+      <button
+        type="button"
+        class={`lang-toggle-btn${lang === 'en' ? ' active' : ''}`}
+        onClick={() => onLangChange('en')}
+      >
+        English
+      </button>
+      <span class="lang-toggle-sep">|</span>
+      <button
+        type="button"
+        class={`lang-toggle-btn${lang === 'he' ? ' active' : ''}`}
+        onClick={() => onLangChange('he')}
+      >
+        עברית
+      </button>
+      <style>{`
+        .lang-toggle {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 6px;
+          margin-top: 18px;
+          padding-top: 14px;
+          border-top: 1px solid var(--color-cream-dark, #e8ddd0);
+        }
+        .lang-toggle-btn {
+          background: none;
+          border: none;
+          font-size: 0.78rem;
+          cursor: pointer;
+          padding: 2px 4px;
+          color: var(--color-text-light);
+          opacity: 0.55;
+          transition: opacity 0.2s, color 0.2s;
+        }
+        .lang-toggle-btn:hover {
+          opacity: 0.85;
+        }
+        .lang-toggle-btn.active {
+          color: var(--color-burgundy);
+          opacity: 1;
+          font-weight: 600;
+        }
+        .lang-toggle-sep {
+          font-size: 0.75rem;
+          color: var(--color-text-light);
+          opacity: 0.35;
+        }
+      `}</style>
+    </div>
+  );
+}
+
 function ShareScreen({
   code,
   password,
   lang,
+  onLangChange,
   loading,
   onStart,
   onBack,
@@ -511,6 +574,7 @@ function ShareScreen({
   code: string;
   password: string;
   lang: Lang;
+  onLangChange: (l: Lang) => void;
   loading: boolean;
   onStart: () => void;
   onBack: () => void;
@@ -592,6 +656,8 @@ function ShareScreen({
             </button>
           </div>
         </div>
+
+        <LangToggle lang={lang} onLangChange={onLangChange} />
       </div>
 
       <style>{`
@@ -796,12 +862,14 @@ function LobbyScreen({
   onCreateSession,
   onJoinSession,
   lang,
+  onLangChange,
 }: {
   loading: boolean;
   error: string | null;
   onCreateSession: (password: string) => Promise<void>;
   onJoinSession: (code: string, password?: string) => Promise<void>;
   lang: Lang;
+  onLangChange: (l: Lang) => void;
 }) {
   const [mode, setMode] = useState<'choose' | 'create' | 'join'>('choose');
   const [password, setPassword] = useState('');
@@ -931,6 +999,8 @@ function LobbyScreen({
             </button>
           </form>
         )}
+
+        <LangToggle lang={lang} onLangChange={onLangChange} />
       </div>
 
       <style>{`
