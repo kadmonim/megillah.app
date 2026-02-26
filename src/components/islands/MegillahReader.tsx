@@ -885,6 +885,35 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
   const scrollTextRef = useRef<HTMLDivElement>(null);
   const confettiFired = useRef(false);
 
+  const [onboardingStep, setOnboardingStep] = useState(-1); // -1 = not showing
+
+  // Show onboarding once per role
+  useEffect(() => {
+    if (!session?.role) return;
+    const key = `megillah-onboarding-${session.role}`;
+    try {
+      if (!localStorage.getItem(key)) {
+        // Small delay so toolbar is rendered
+        setTimeout(() => setOnboardingStep(0), 800);
+      }
+    } catch {}
+  }, [session?.role]);
+
+  const dismissOnboarding = () => {
+    setOnboardingStep(-1);
+    if (session?.role) {
+      try { localStorage.setItem(`megillah-onboarding-${session.role}`, '1'); } catch {}
+    }
+  };
+
+  const nextOnboardingStep = (totalSteps: number) => {
+    if (onboardingStep >= totalSteps - 1) {
+      dismissOnboarding();
+    } else {
+      setOnboardingStep(onboardingStep + 1);
+    }
+  };
+
   // Default to verse tracking when starting a broadcast
   useEffect(() => {
     if (session?.role === 'admin') setTrackingMode('verse');
@@ -1445,7 +1474,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           <span class="logo-sub">
             {customSubtitle ? (customSubtitle.url ? <a href={customSubtitle.url} target="_blank" rel="noopener noreferrer" class="header-link">{customSubtitle.text}</a> : customSubtitle.text) : t.headerSub}
             {session?.role === 'admin' && (
-              <button class="edit-subtitle-btn" onClick={() => { setShowSubtitleEdit(!showSubtitleEdit); setDraftSubText(customSubtitle?.text || ''); setDraftSubUrl(customSubtitle?.url || ''); }} title={t.editSubtitle}>
+              <button id="edit-subtitle-btn" class="edit-subtitle-btn" onClick={() => { setShowSubtitleEdit(!showSubtitleEdit); setDraftSubText(customSubtitle?.text || ''); setDraftSubUrl(customSubtitle?.url || ''); }} title={t.editSubtitle}>
                 <span class="material-icons" style="font-size:14px;vertical-align:middle;margin:0 4px">edit</span>
               </button>
             )}
@@ -1507,7 +1536,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
       {/* Session info bar */}
       {session && (
         <div class="session-bar">
-          <button class="session-code" onClick={() => setShowQR(true)}>
+          <button id="session-code-btn" class="session-code" onClick={() => setShowQR(true)}>
             <span class="material-icons" style="font-size:16px;vertical-align:middle;margin:0 4px">
               {session.role === 'admin' ? 'cast' : 'cast_connected'}
             </span>
@@ -1548,12 +1577,12 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           />
         </div>
         {lang === 'he' ? (
-          <div class="toolbar-translation-toggle">
+          <div id="translation-toggle" class="toolbar-translation-toggle">
             <button class={`toolbar-trans-btn${translationMode === 'hebrew' ? ' active' : ''}`} onClick={() => { setTranslationMode('hebrew'); try { localStorage.setItem('megillah-translation-mode', 'hebrew'); } catch {} if (session?.role === 'admin') session.broadcastSetting('translationMode', 'hebrew'); }}>{t.hebrewName}</button>
             <button class={`toolbar-trans-btn${translationMode === 'translation' ? ' active' : ''}`} onClick={() => { setTranslationMode('translation'); try { localStorage.setItem('megillah-translation-mode', 'translation'); } catch {} if (session?.role === 'admin') session.broadcastSetting('translationMode', 'translation'); }}>ביאור משולב</button>
           </div>
         ) : (
-          <div class="toolbar-translation-toggle">
+          <div id="translation-toggle" class="toolbar-translation-toggle">
             <button class={`toolbar-trans-btn${translationMode === 'translation' ? ' active' : ''}`} onClick={() => { setTranslationMode('translation'); try { localStorage.setItem('megillah-translation-mode', 'translation'); } catch {} if (session?.role === 'admin') session.broadcastSetting('translationMode', 'translation'); }}>{t.langName}</button>
             <button class={`toolbar-trans-btn${translationMode === 'both' ? ' active' : ''}`} onClick={() => { setTranslationMode('both'); try { localStorage.setItem('megillah-translation-mode', 'both'); } catch {} if (session?.role === 'admin') session.broadcastSetting('translationMode', 'both'); }}>{t.both}</button>
             <button class={`toolbar-trans-btn${translationMode === 'hebrew' ? ' active' : ''}`} onClick={() => { setTranslationMode('hebrew'); try { localStorage.setItem('megillah-translation-mode', 'hebrew'); } catch {} if (session?.role === 'admin') session.broadcastSetting('translationMode', 'hebrew'); }}>{t.hebrewName}</button>
@@ -1562,6 +1591,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
         <div class="toolbar-right">
           {session?.role === 'admin' && (
             <button
+              id="tracking-mode-btn"
               class={`toolbar-icon-btn${trackingMode !== 'off' ? ' tracking-active' : ''}`}
               onClick={() => { setShowTrackingMenu(!showTrackingMenu); setShowTimeEdit(false); setMenuOpen(false); }}
               title="Tracking mode"
@@ -1571,6 +1601,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           )}
           {session?.role === 'follower' && onToggleSync && (
             <button
+              id="sync-follow-btn"
               class={`toolbar-icon-btn${syncEnabled ? ' tracking-active' : ''}${syncPulse ? ' sync-pulse' : ''}`}
               onClick={() => {
                 onToggleSync();
@@ -1586,6 +1617,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           )}
           {!(session?.role === 'follower') && (
           <button
+            id="reading-time-btn"
             class="toolbar-icon-btn"
             onClick={() => { setShowTimeEdit(!showTimeEdit); setMenuOpen(false); setShowTrackingMenu(false); }}
             title={t.changeReadingTime}
@@ -1594,6 +1626,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           </button>
           )}
           <button
+            id="menu-toggle-btn"
             class="toolbar-icon-btn"
             onClick={() => { setMenuOpen(!menuOpen); setShowTimeEdit(false); setShowTrackingMenu(false); }}
             title="Settings"
@@ -1743,7 +1776,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           </p>
         )}
         {session?.role === 'admin' && (
-          <button class="edit-hint-btn" onClick={() => setShowTapHintEdit(!showTapHintEdit)} title={t.editTapHint}>
+          <button id="edit-hint-btn" class="edit-hint-btn" onClick={() => setShowTapHintEdit(!showTapHintEdit)} title={t.editTapHint}>
             <span class="material-icons" style={{ fontSize: '16px' }}>edit</span>
           </button>
         )}
@@ -3550,7 +3583,219 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
             padding: 36px 32px;
           }
         }
+
+        .onboarding-overlay {
+          position: fixed;
+          inset: 0;
+          z-index: 10000;
+          pointer-events: none;
+        }
+        .onboarding-backdrop {
+          position: absolute;
+          inset: 0;
+          background: rgba(0,0,0,0.6);
+          pointer-events: auto;
+        }
+        .onboarding-spotlight {
+          position: absolute;
+          border-radius: 8px;
+          box-shadow: 0 0 0 9999px rgba(0,0,0,0.6);
+          z-index: 1;
+          pointer-events: auto;
+        }
+        .onboarding-tooltip {
+          position: absolute;
+          z-index: 2;
+          background: #fff;
+          color: #333;
+          border-radius: 12px;
+          padding: 16px 20px;
+          max-width: 320px;
+          box-shadow: 0 4px 24px rgba(0,0,0,0.25);
+          pointer-events: auto;
+          font-size: 0.9rem;
+          line-height: 1.5;
+          direction: ltr;
+          text-align: left;
+        }
+        .onboarding-tooltip[dir="rtl"] {
+          direction: rtl;
+          text-align: right;
+        }
+        .onboarding-tooltip-title {
+          font-weight: 700;
+          font-size: 1rem;
+          margin: 0 0 6px;
+          color: var(--color-burgundy);
+        }
+        .onboarding-tooltip-text {
+          margin: 0 0 14px;
+        }
+        .onboarding-tooltip-actions {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 8px;
+        }
+        .onboarding-dots {
+          display: flex;
+          gap: 6px;
+        }
+        .onboarding-dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          background: #ccc;
+        }
+        .onboarding-dot.active {
+          background: var(--color-burgundy);
+        }
+        .onboarding-next-btn {
+          background: var(--color-burgundy);
+          color: #fff;
+          border: none;
+          border-radius: 8px;
+          padding: 8px 20px;
+          font-size: 0.85rem;
+          font-weight: 600;
+          cursor: pointer;
+        }
+        .onboarding-skip-btn {
+          background: none;
+          border: none;
+          color: #999;
+          font-size: 0.8rem;
+          cursor: pointer;
+          padding: 4px 8px;
+        }
       `}</style>
+
+      {onboardingStep >= 0 && session?.role && (() => {
+        const isHe = lang === 'he';
+        const followerSteps = [
+          {
+            target: '#sync-follow-btn',
+            title: isHe ? 'גלילה אוטומטית' : 'Auto-Scroll',
+            text: isHe
+              ? 'המגילה תתחיל לגלול מעצמה ברגע שהקורא מתחיל. אם זה מהר מדי, לחצו על הכפתור הזה כדי לעצור את הגלילה — לחצו שוב כדי לחזור לעקוב.'
+              : 'The Megillah will start scrolling automatically once the reader begins. If it\'s too fast, tap this button to pause auto-scroll — tap again to resume.',
+          },
+          {
+            target: '#menu-toggle-btn',
+            title: isHe ? 'אפשרויות נוספות' : 'More Options',
+            text: isHe
+              ? 'כאן תוכלו לשנות את גודל הגופן, להפעיל איורים, ועוד.'
+              : 'Here you can change the font size, enable illustrations, and more.',
+          },
+        ];
+        const adminSteps = [
+          {
+            target: '#session-code-btn',
+            title: isHe ? 'הזמנת אנשים' : 'Invite People',
+            text: isHe
+              ? 'לחצו על קוד השידור כדי להציג קוד QR וקישור הזמנה — שתפו אותם כדי שאנשים יצטרפו לשידור.'
+              : 'Tap the session code to see a QR code and invite link — share them so people can join your broadcast.',
+          },
+          {
+            target: null,
+            title: isHe ? 'הדגשת פסוקים' : 'Highlight Verses',
+            text: isHe
+              ? <>לחצו על פסוקים כדי להדגיש אותם עבור כל העוקבים. העוקבים יכולים ללחוץ על כפתור העקיבה <span class="material-icons" style="font-size:16px;vertical-align:middle">sensors</span> כדי לעצור את הגלילה האוטומטית אם הקריאה מהירה מדי — וללחוץ שוב כדי לחזור.</>
+              : <>Tap on verses to highlight them for everyone following along. Followers can tap the follow button <span class="material-icons" style="font-size:16px;vertical-align:middle">sensors</span> to pause auto-scroll if the reading is too fast — and tap again to resume.</>,
+          },
+          {
+            target: '#tracking-mode-btn',
+            title: isHe ? 'מצב מעקב' : 'Tracking Mode',
+            text: isHe
+              ? 'עברו בין מצב גלילה בלבד, הדגשת פסוקים, או מעקב מילה-אחר-מילה.'
+              : 'Switch between scrolling only, verse highlighting, or word-by-word tracking.',
+          },
+          {
+            target: '#reading-time-btn',
+            title: isHe ? 'זמן קריאה' : 'Reading Time',
+            text: isHe
+              ? 'הגדירו את זמן הקריאה המשוער. זה יציג לכל העוקבים כמה דקות נותרו.'
+              : 'Set the estimated reading time. This shows all followers how many minutes remain.',
+          },
+          {
+            target: '#menu-toggle-btn',
+            title: isHe ? 'הגדרות לכולם' : 'Settings for Everyone',
+            text: isHe
+              ? 'ההגדרות שתבחרו (שפה, הדגשת המנים, איורים, גודל גופן) יחולו על כל העוקבים.'
+              : 'The settings you choose (language, Haman highlighting, illustrations, font size) apply to all followers.',
+          },
+          {
+            target: '#translation-toggle',
+            title: isHe ? 'מצב קריאה' : 'Reading Mode',
+            text: isHe
+              ? 'מצב הקריאה שתבחרו יהיה ברירת המחדל לכל מי שמצטרף, אבל הם יכולים לשנות אותו אצלם.'
+              : 'The reading mode you choose becomes the default for everyone joining, but they can override it.',
+          },
+          {
+            target: '#edit-subtitle-btn',
+            title: isHe ? 'עריכת כותרת משנה' : 'Edit Subtitle',
+            text: isHe
+              ? 'לחצו כאן כדי לשנות את הכותרת מתחת לשם האפליקציה — לדוגמה, שם בית הכנסת או קישור.'
+              : 'Tap here to customize the subtitle below the app name — for example, your synagogue name or a link.',
+          },
+          {
+            target: '#edit-hint-btn',
+            title: isHe ? 'עריכת הודעות' : 'Edit Announcements',
+            text: isHe
+              ? 'לחצו כאן כדי להוסיף או לערוך הודעה שתוצג לכל העוקבים — למשל הוראות, קישורים, או כפתורי תרומה. יש גם אזור נוסף לעריכה בתחתית המגילה.'
+              : 'Tap here to add or edit an announcement shown to all followers — like instructions, links, or donation buttons. There\'s also another editable area at the bottom of the Megillah.',
+          },
+        ];
+        const steps = session.role === 'follower' ? followerSteps : session.role === 'admin' ? adminSteps : [];
+        if (onboardingStep >= steps.length || steps.length === 0) return null;
+
+        const step = steps[onboardingStep];
+        const targetEl = step.target ? document.querySelector(step.target) : null;
+        const rect = targetEl?.getBoundingClientRect();
+        const pad = 6;
+
+        return (
+          <div class="onboarding-overlay">
+            {rect ? (
+              <div class="onboarding-spotlight" onClick={dismissOnboarding} style={{
+                top: `${rect.top - pad}px`,
+                left: `${rect.left - pad}px`,
+                width: `${rect.width + pad * 2}px`,
+                height: `${rect.height + pad * 2}px`,
+              }} />
+            ) : (
+              <div class="onboarding-backdrop" onClick={dismissOnboarding} />
+            )}
+            <div class="onboarding-tooltip" dir={isHe ? 'rtl' : 'ltr'} style={{
+              top: rect ? `${rect.bottom + 12}px` : '50%',
+              left: rect ? `${Math.max(16, Math.min(rect.left, window.innerWidth - 336))}px` : '50%',
+              ...(rect ? {} : { transform: 'translate(-50%, -50%)' }),
+            }}>
+              <p class="onboarding-tooltip-title">{step.title}</p>
+              <p class="onboarding-tooltip-text">{step.text}</p>
+              <div class="onboarding-tooltip-actions">
+                <div class="onboarding-dots">
+                  {steps.map((_, i) => (
+                    <span class={`onboarding-dot${i === onboardingStep ? ' active' : ''}`} />
+                  ))}
+                </div>
+                <div>
+                  {onboardingStep < steps.length - 1 && (
+                    <button class="onboarding-skip-btn" onClick={dismissOnboarding}>
+                      {isHe ? 'דלג' : 'Skip'}
+                    </button>
+                  )}
+                  <button class="onboarding-next-btn" onClick={() => nextOnboardingStep(steps.length)}>
+                    {onboardingStep >= steps.length - 1
+                      ? (isHe ? 'הבנתי!' : 'Got it!')
+                      : (isHe ? 'הבא' : 'Next')}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 }
