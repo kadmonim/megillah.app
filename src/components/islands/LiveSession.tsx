@@ -902,7 +902,7 @@ function LobbyScreen({
   onLangChange: (l: Lang) => void;
 }) {
   const [tab, setTab] = useState<'follow' | 'broadcast'>('follow');
-  const [createMode, setCreateMode] = useState(false);
+  const [broadcastMode, setBroadcastMode] = useState<'choose' | 'join' | 'create'>('choose');
   const [password, setPassword] = useState('');
   const [code, setCode] = useState('');
   const passwordRef = useRef<HTMLInputElement>(null);
@@ -920,13 +920,13 @@ function LobbyScreen({
         <div class="lobby-tabs">
           <button
             class={`lobby-tab${tab === 'follow' ? ' active' : ''}`}
-            onClick={() => { setTab('follow'); setCreateMode(false); setPassword(''); }}
+            onClick={() => { setTab('follow'); setBroadcastMode('choose'); setPassword(''); }}
           >
             {t.tabFollow}
           </button>
           <button
             class={`lobby-tab${tab === 'broadcast' ? ' active' : ''}`}
-            onClick={() => { setTab('broadcast'); setCreateMode(false); }}
+            onClick={() => { setTab('broadcast'); setBroadcastMode('choose'); }}
           >
             {t.tabBroadcast}
           </button>
@@ -962,7 +962,20 @@ function LobbyScreen({
           </form>
         )}
 
-        {tab === 'broadcast' && !createMode && (
+        {tab === 'broadcast' && broadcastMode === 'choose' && (
+          <div class="lobby-choices">
+            <button class="lobby-btn create" onClick={() => setBroadcastMode('create')}>
+              <span class="material-icons">add_circle</span>
+              {t.createSession}
+            </button>
+            <button class="lobby-btn join" onClick={() => setBroadcastMode('join')}>
+              <span class="material-icons">login</span>
+              {t.joinSession}
+            </button>
+          </div>
+        )}
+
+        {tab === 'broadcast' && broadcastMode === 'join' && (
           <form
             class="lobby-form"
             onSubmit={(e) => {
@@ -1006,7 +1019,6 @@ function LobbyScreen({
                 enterKeyHint="go"
                 class="lobby-input"
                 value={password}
-                placeholder={t.optional}
                 onInput={(e) => setPassword((e.target as HTMLInputElement).value)}
               />
             </label>
@@ -1016,14 +1028,14 @@ function LobbyScreen({
             <button
               type="button"
               class="lobby-back"
-              onClick={() => setCreateMode(true)}
+              onClick={() => setBroadcastMode('choose')}
             >
-              {t.orCreateNew}
+              {t.back}
             </button>
           </form>
         )}
 
-        {tab === 'broadcast' && createMode && (
+        {tab === 'broadcast' && broadcastMode === 'create' && (
           <form
             class="lobby-form"
             onSubmit={(e) => {
@@ -1049,7 +1061,7 @@ function LobbyScreen({
             <button
               type="button"
               class="lobby-back"
-              onClick={() => setCreateMode(false)}
+              onClick={() => setBroadcastMode('choose')}
             >
               {t.back}
             </button>
@@ -1076,6 +1088,12 @@ function LobbyScreen({
           max-width: 380px;
           width: 100%;
           text-align: center;
+        }
+
+        .lobby-choices {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
         }
 
         .lobby-title {
