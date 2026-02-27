@@ -2358,8 +2358,8 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
                       {translationMode !== 'translation' && <>
                         <span class="haman-son">{splitText}</span>
                         {sonsVerses.map(sv => {
-                          const svText = !showCantillation ? stripCantillation(sv.text) : sv.text;
-                          const names = svText.split(/\s{2,}/).map(n => n.trim()).filter(Boolean);
+                          const names = sv.text.split(/\s{2,}/).map(n => n.trim()).filter(Boolean)
+                            .map(n => !showCantillation ? stripCantillation(n) : n);
                           return <span key={`sv-${sv.verse}`} class="haman-verse-group">
                             <sup class="verse-num">{lang === 'he' ? toHebrew(sv.verse) : sv.verse}</sup>
                             {names.map((name, i) => (
@@ -3552,7 +3552,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           font-size: 0.65em;
           font-weight: 700;
           color: var(--color-gold);
-          margin-bottom: 4px;
+          margin-top: 4px;
           line-height: 1;
         }
 
@@ -3581,9 +3581,8 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
         }
 
         .haman-son {
-          display: block;
+          display: inline;
           line-height: 2;
-          white-space: nowrap;
         }
 
         .haman-verse-group {
@@ -3593,7 +3592,6 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
         .haman-verse-group .haman-son {
           display: inline;
           margin-inline-end: 6px;
-          white-space: nowrap;
         }
 
         .verse-translation {
