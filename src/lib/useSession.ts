@@ -19,6 +19,7 @@ export interface SessionSettings {
   lang?: string;
   showTranslation?: boolean; // legacy, mapped to translationMode
   translationMode?: 'hebrew' | 'both' | 'translation';
+  customTitle?: string;
   customSubtitle?: { text: string; url: string };
   customTapHint?: string;
   customBottomHint?: string;

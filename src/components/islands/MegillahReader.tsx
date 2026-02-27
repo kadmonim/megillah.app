@@ -128,6 +128,8 @@ const translations = {
     headerTitle: 'מגילת אסתר',
     headerSub: <a href="https://chabadisrael.co.il/purim" target="_blank" rel="noopener noreferrer" class="header-link">למידע נוסף על מצוות החג לחץ כאן</a>,
     language: 'שפה',
+    editTitle: 'ערוך כותרת',
+    titleText: 'כותרת',
     editSubtitle: 'ערוך כותרת משנה',
     subtitleText: 'טקסט',
     subtitleUrl: 'קישור (אופציונלי)',
@@ -195,6 +197,8 @@ const translations = {
     headerTitle: 'The Megillah App',
     headerSub: <a href="https://www.chabad.org/purim" target="_blank" rel="noopener noreferrer" class="header-link">Learn more about Purim</a>,
     language: 'Language',
+    editTitle: 'Edit title',
+    titleText: 'Title',
     editSubtitle: 'Edit subtitle',
     subtitleText: 'Text',
     subtitleUrl: 'Link (optional)',
@@ -262,6 +266,8 @@ const translations = {
     headerTitle: 'La Meguilá',
     headerSub: 'Matraca incorporada y barra de progreso',
     language: 'Idioma',
+    editTitle: 'Editar título',
+    titleText: 'Título',
     editSubtitle: 'Editar subtítulo',
     subtitleText: 'Texto',
     subtitleUrl: 'Enlace (opcional)',
@@ -329,6 +335,8 @@ const translations = {
     headerTitle: 'Мегилат Эстер',
     headerSub: 'Встроенная трещотка и индикатор прогресса',
     language: 'Язык',
+    editTitle: 'Редактировать заголовок',
+    titleText: 'Заголовок',
     editSubtitle: 'Редактировать подзаголовок',
     subtitleText: 'Текст',
     subtitleUrl: 'Ссылка (необязательно)',
@@ -396,6 +404,8 @@ const translations = {
     headerTitle: 'La Méguila',
     headerSub: 'Crécelle intégrée et barre de progression',
     language: 'Langue',
+    editTitle: 'Modifier le titre',
+    titleText: 'Titre',
     editSubtitle: 'Modifier le sous-titre',
     subtitleText: 'Texte',
     subtitleUrl: 'Lien (facultatif)',
@@ -463,6 +473,8 @@ const translations = {
     headerTitle: 'A Meguilá',
     headerSub: 'Matraca embutida e barra de progresso',
     language: 'Idioma',
+    editTitle: 'Editar título',
+    titleText: 'Título',
     editSubtitle: 'Editar subtítulo',
     subtitleText: 'Texto',
     subtitleUrl: 'Link (opcional)',
@@ -530,6 +542,8 @@ const translations = {
     headerTitle: 'La Meghillà',
     headerSub: 'Raganella integrata e barra di avanzamento',
     language: 'Lingua',
+    editTitle: 'Modifica titolo',
+    titleText: 'Titolo',
     editSubtitle: 'Modifica sottotitolo',
     subtitleText: 'Testo',
     subtitleUrl: 'Link (facoltativo)',
@@ -597,6 +611,8 @@ const translations = {
     headerTitle: 'A Megilla',
     headerSub: 'Beépített kereplő és haladásjelző',
     language: 'Nyelv',
+    editTitle: 'Cím szerkesztése',
+    titleText: 'Cím',
     editSubtitle: 'Alcím szerkesztése',
     subtitleText: 'Szöveg',
     subtitleUrl: 'Link (opcionális)',
@@ -664,6 +680,8 @@ const translations = {
     headerTitle: 'Die Megilla',
     headerSub: 'Eingebaute Ratsche und Fortschrittsanzeige',
     language: 'Sprache',
+    editTitle: 'Titel bearbeiten',
+    titleText: 'Titel',
     editSubtitle: 'Untertitel bearbeiten',
     subtitleText: 'Text',
     subtitleUrl: 'Link (optional)',
@@ -731,6 +749,8 @@ const translations = {
     headerTitle: 'Η Μεγιλά',
     headerSub: 'Ενσωματωμένη ρατσέτα και παρακολούθηση προόδου',
     language: 'Γλώσσα',
+    editTitle: 'Επεξεργασία τίτλου',
+    titleText: 'Τίτλος',
     editSubtitle: 'Επεξεργασία υπότιτλου',
     subtitleText: 'Κείμενο',
     subtitleUrl: 'Σύνδεσμος (προαιρετικά)',
@@ -1112,6 +1132,9 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
   const [activeWord, setActiveWord] = useState<string | null>(null);
   const [activeVerse, setActiveVerse] = useState<string | null>(null);
   const [trackingMode, setTrackingMode] = useState<'off' | 'verse' | 'word'>('off');
+  const [customTitle, setCustomTitle] = useState<string | null>(null);
+  const [showTitleEdit, setShowTitleEdit] = useState(false);
+  const [draftTitle, setDraftTitle] = useState('');
   const [customSubtitle, setCustomSubtitle] = useState<{ text: string; url: string } | null>(null);
   const [showSubtitleEdit, setShowSubtitleEdit] = useState(false);
   const [draftSubText, setDraftSubText] = useState('');
@@ -1255,6 +1278,9 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
       setTranslationMode(s.translationMode);
     } else if (s.showTranslation || effectiveLang !== 'he') {
       setTranslationMode('both');
+    }
+    if (s.customTitle) {
+      setCustomTitle(s.customTitle);
     }
     if (s.customSubtitle) {
       setCustomSubtitle(s.customSubtitle);
@@ -1764,7 +1790,14 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
     <div class="megillah-reader" dir={lang === 'he' ? 'rtl' : 'ltr'} ref={(el: HTMLDivElement | null) => { if (el) { const expected = lang === 'he' ? 'rtl' : 'ltr'; if (el.dir !== expected) setTimeout(() => { el.dir = expected; el.querySelectorAll('[dir]').forEach(child => { (child as HTMLElement).dir = expected; }); }, 0); } }}>
       {standalone && (
         <header class={`reader-header${session ? ' has-session-bar' : ''}`}>
-          <span class="logo-main">{t.headerTitle}</span>
+          <span class="logo-main">
+            {customTitle || t.headerTitle}
+            {session?.role === 'admin' && (
+              <button class="edit-subtitle-btn" onClick={() => { setShowTitleEdit(!showTitleEdit); setDraftTitle(customTitle || ''); }} title={t.editTitle}>
+                <span class="material-icons" style="font-size:14px;vertical-align:middle;margin:0 4px">edit</span>
+              </button>
+            )}
+          </span>
           <span class="logo-sub">
             {customSubtitle ? (customSubtitle.url ? <a href={customSubtitle.url} target="_blank" rel="noopener noreferrer" class="header-link">{customSubtitle.text}</a> : customSubtitle.text) : t.headerSub}
             {session?.role === 'admin' && (
@@ -1783,7 +1816,7 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
       )}
       {showTitle && (
         <div class="page-title-block">
-          <h1 class="page-title">{t.headerTitle}</h1>
+          <h1 class="page-title">{customTitle || t.headerTitle}</h1>
           <p class="page-subtitle">
             {customSubtitle ? (customSubtitle.url ? <a href={customSubtitle.url} target="_blank" rel="noopener noreferrer" class="header-link">{customSubtitle.text}</a> : customSubtitle.text) : t.headerSub}
             {session?.role === 'admin' && (
@@ -1792,6 +1825,31 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
               </button>
             )}
           </p>
+        </div>
+      )}
+      {/* Title edit popover */}
+      {showTitleEdit && session?.role === 'admin' && (
+        <div class="time-popover subtitle-popover" dir={lang === 'he' ? 'rtl' : 'ltr'}>
+          <label class="subtitle-field">
+            {t.titleText}
+            <input
+              type="text"
+              value={draftTitle}
+              onInput={(e) => setDraftTitle((e.target as HTMLInputElement).value)}
+              placeholder={t.headerTitle}
+            />
+          </label>
+          <button
+            class="save-time-btn"
+            onClick={() => {
+              const val = draftTitle.trim() || null;
+              setCustomTitle(val);
+              session.broadcastSetting('customTitle', val);
+              setShowTitleEdit(false);
+            }}
+          >
+            {t.save}
+          </button>
         </div>
       )}
       {/* Subtitle edit popover */}
