@@ -78,6 +78,9 @@ const BNEI_HAMAN_SPLIT_VERSE = '9:6';
 const BNEI_HAMAN_SPLIT_RE = /(חֲמֵ[\u0591-\u05C7]*שׁ מֵא[\u0591-\u05C7]*וֹת אִ[\u0591-\u05C7]*י[\u0591-\u05C7]*שׁ׃)/;
 const DEFAULT_READING_MINUTES = 35;
 
+// Haman's name in all supported translation languages
+const HAMAN_TRANS_RE = /(Haman|Hamán|Hámán|Aman|Аман|Αμάν)/gi;
+
 // Precomputed: verses where Haman's name appears
 const HAMAN_VERSES = new Set([
   '3:1','3:2','3:4','3:5','3:6','3:7','3:8','3:10','3:11','3:12','3:15',
@@ -1032,9 +1035,9 @@ function renderVerse(
       lang === 'he'
         ? boldVowelized(translation)
         : (chabadMode ? HAMAN_TITLED_VERSES : HAMAN_VERSES).has(verseKey)
-          ? translation.split(/(Haman)/gi).map((seg, j, arr) =>
-              /^haman$/i.test(seg)
-                ? (chabadMode && !hasEnglishTitle(arr.slice(0, j).join(''), arr.slice(j + 1).join('')))
+          ? translation.split(HAMAN_TRANS_RE).map((seg, j, arr) =>
+              /^(Haman|Hamán|Hámán|Aman|Аман|Αμάν)$/i.test(seg)
+                ? (chabadMode && lang === 'en' && !hasEnglishTitle(arr.slice(0, j).join(''), arr.slice(j + 1).join('')))
                   ? seg
                   : <HamanWord key={`tr-${chapterNum}-${verseNum}-${j}`} text={seg} onTap={onHamanTap} />
                 : seg
