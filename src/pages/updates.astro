@@ -43,8 +43,8 @@ import '../styles/global.css';
           </section>
 
           <section class="update-section">
-            <h2>Font Size Synced to Followers</h2>
-            <p>The broadcaster's font size preference is now synced to followers when they join a session. Followers can still adjust their own font size after joining.</p>
+            <h2>Broadcaster Defaults for Followers</h2>
+            <p>When a broadcaster configures settings like font size, language, and translation mode, those preferences are saved as defaults for anyone who joins the session. Followers can still adjust their own settings after joining.</p>
           </section>
 
           <section class="update-section">
@@ -71,13 +71,12 @@ import '../styles/global.css';
             <h2>Live Session Broadcasting</h2>
             <p><em>Note: Several bugs with live sessions reported yesterday have been fixed. If you experienced issues, please try again.</em></p>
             <p>Readers can now create a <strong>live session</strong> and share a 6-digit code with their audience. Followers join with the code and see the reader's scroll position, highlighted verses, and word-by-word tracking in real time.</p>
-            <p>Several settings are controlled by the broadcaster and automatically apply to all followers:</p>
+            <p>The broadcaster's settings work in two ways:</p>
             <ul>
-              <li><strong>Reading time</strong> — the broadcaster sets an estimate of how long the reading will take (in minutes). Based on this and how far you've scrolled, a progress bar at the top shows viewers the estimated time remaining. Only the broadcaster can set or change this.</li>
-              <li><strong>Language</strong> — the default language that loads for followers is set by the broadcaster.</li>
-              <li><strong>Haman highlighting mode</strong> — whether all Hamans or only titled ones are highlighted is controlled by the broadcaster.</li>
-              <li><strong>Translation mode</strong> — the broadcaster's choice of Hebrew only / side-by-side / translation only applies to followers.</li>
-              <li><strong>Custom subtitle and announcement</strong> — any custom header text or announcement area content set by the broadcaster is shown to all followers.</li>
+              <li><strong>Reading time</strong> — the broadcaster sets an estimate of how long the reading will take (in minutes). Based on this and how far you've scrolled, a progress bar at the top shows viewers the estimated time remaining. Only the broadcaster can set or change this. This updates in real time.</li>
+              <li><strong>Haman highlighting mode</strong> — whether all Hamans or only titled ones are highlighted is controlled by the broadcaster and updates for followers in real time.</li>
+              <li><strong>Language, translation mode, font size</strong> — these are saved as defaults for new joiners. Followers who are already in the session are not affected and can set their own preferences.</li>
+              <li><strong>Custom subtitle and announcement</strong> — any custom header text or announcement area content set by the broadcaster is saved and shown to anyone who joins the session.</li>
             </ul>
             <div class="how-to">
               <h3>How to use</h3>
@@ -146,7 +145,7 @@ import '../styles/global.css';
             </div>
             <div class="how-to">
               <h3>How to use</h3>
-              <p>While broadcasting, click the <span class="material-icons" style="font-size:14px;vertical-align:middle">edit</span> pencil icon next to the subtitle. Enter your text and optional URL, then save. Followers will see your custom subtitle in real time.</p>
+              <p>While broadcasting, click the <span class="material-icons" style="font-size:14px;vertical-align:middle">edit</span> pencil icon next to the subtitle. Enter your text and optional URL, then save. Your custom subtitle will be shown to anyone who joins the session.</p>
             </div>
           </section>
 
@@ -163,7 +162,7 @@ import '../styles/global.css';
             </div>
             <div class="how-to">
               <h3>How to use</h3>
-              <p>While broadcasting, click the <span class="material-icons" style="font-size:14px;vertical-align:middle">edit</span> pencil icon next to the hint text. A rich text editor will open where you can format your announcement. Click Save to broadcast it to all followers, or Reset to restore the default message.</p>
+              <p>While broadcasting, click the <span class="material-icons" style="font-size:14px;vertical-align:middle">edit</span> pencil icon next to the hint text. A rich text editor will open where you can format your announcement. Click Save to apply it for anyone who joins the session, or Reset to restore the default message.</p>
             </div>
           </section>
 
@@ -220,8 +219,8 @@ import '../styles/global.css';
           </section>
 
           <section class="update-section">
-            <h2>סנכרון גודל גופן לעוקבים</h2>
-            <p>העדפת גודל הגופן של המשדר מסונכרנת כעת לעוקבים כשהם מצטרפים לשידור. העוקבים עדיין יכולים לשנות את גודל הגופן שלהם לאחר ההצטרפות.</p>
+            <h2>הגדרות ברירת מחדל של המשדר</h2>
+            <p>כשמשדר מגדיר העדפות כמו גודל גופן, שפה ומצב תרגום, הן נשמרות כברירת מחדל לכל מי שמצטרף לשידור. העוקבים עדיין יכולים לשנות את ההגדרות שלהם לאחר ההצטרפות.</p>
           </section>
 
           <section class="update-section">
@@ -248,13 +247,12 @@ import '../styles/global.css';
             <h2>שידור חי של קריאת המגילה</h2>
             <p><em>הערה: מספר באגים בשידורים חיים שדווחו אתמול תוקנו. אם נתקלתם בבעיות, נסו שוב.</em></p>
             <p>בעלי קריאה יכולים כעת ליצור <strong>שידור חי</strong> ולשתף קוד בן 6 ספרות עם הקהל. העוקבים מצטרפים עם הקוד ורואים את מיקום הגלילה, פסוקים מודגשים ומעקב מילה-אחר-מילה בזמן אמת.</p>
-            <p>מספר הגדרות נשלטות על ידי המשדר וחלות אוטומטית על כל העוקבים:</p>
+            <p>הגדרות המשדר עובדות בשתי דרכים:</p>
             <ul>
-              <li><strong>זמן קריאה</strong> — המשדר מגדיר הערכה של כמה זמן תימשך הקריאה (בדקות). על סמך זה וכמה התקדמתם בגלילה, סרגל ההתקדמות בראש העמוד מראה לצופים את הזמן המשוער שנותר. רק המשדר יכול להגדיר או לשנות את זה.</li>
-              <li><strong>שפה</strong> — שפת ברירת המחדל שנטענת לעוקבים נקבעת על ידי המשדר.</li>
-              <li><strong>מצב הדגשת המן</strong> — האם כל ההמנים מודגשים או רק אלה עם תואר נשלט על ידי המשדר.</li>
-              <li><strong>מצב תרגום</strong> — בחירת המשדר בין מקור בלבד / מקור וביאור / ביאור בלבד חלה על העוקבים.</li>
-              <li><strong>כותרת משנה והודעה מותאמת</strong> — כל טקסט כותרת או הודעה מותאמת שהמשדר מגדיר מוצגים לכל העוקבים.</li>
+              <li><strong>זמן קריאה</strong> — המשדר מגדיר הערכה של כמה זמן תימשך הקריאה (בדקות). על סמך זה וכמה התקדמתם בגלילה, סרגל ההתקדמות בראש העמוד מראה לצופים את הזמן המשוער שנותר. רק המשדר יכול להגדיר או לשנות את זה. זה מתעדכן בזמן אמת.</li>
+              <li><strong>מצב הדגשת המן</strong> — האם כל ההמנים מודגשים או רק אלה עם תואר נשלט על ידי המשדר ומתעדכן לעוקבים בזמן אמת.</li>
+              <li><strong>שפה, מצב תרגום, גודל גופן</strong> — אלה נשמרים כברירת מחדל למצטרפים חדשים. עוקבים שכבר בשידור לא מושפעים ויכולים לקבוע העדפות משלהם.</li>
+              <li><strong>כותרת משנה והודעה מותאמת</strong> — כל טקסט כותרת או הודעה מותאמת שהמשדר מגדיר נשמרים ומוצגים לכל מי שמצטרף לשידור.</li>
             </ul>
             <div class="how-to">
               <h3>איך להשתמש</h3>
@@ -323,7 +321,7 @@ import '../styles/global.css';
             </div>
             <div class="how-to">
               <h3>איך להשתמש</h3>
-              <p>בזמן שידור, לחצו על סמל העיפרון <span class="material-icons" style="font-size:14px;vertical-align:middle">edit</span> ליד כותרת המשנה. הזינו טקסט וקישור אופציונלי, ואז שמרו. העוקבים יראו את כותרת המשנה המותאמת בזמן אמת.</p>
+              <p>בזמן שידור, לחצו על סמל העיפרון <span class="material-icons" style="font-size:14px;vertical-align:middle">edit</span> ליד כותרת המשנה. הזינו טקסט וקישור אופציונלי, ואז שמרו. כותרת המשנה המותאמת תוצג לכל מי שמצטרף לשידור.</p>
             </div>
           </section>
 
@@ -340,7 +338,7 @@ import '../styles/global.css';
             </div>
             <div class="how-to">
               <h3>איך להשתמש</h3>
-              <p>בזמן שידור, לחצו על סמל העיפרון <span class="material-icons" style="font-size:14px;vertical-align:middle">edit</span> ליד טקסט הרמז. ייפתח עורך טקסט עשיר שבו תוכלו לעצב את ההודעה. לחצו על שמור כדי לשדר לכל העוקבים, או על איפוס כדי לשחזר את ההודעה המקורית.</p>
+              <p>בזמן שידור, לחצו על סמל העיפרון <span class="material-icons" style="font-size:14px;vertical-align:middle">edit</span> ליד טקסט הרמז. ייפתח עורך טקסט עשיר שבו תוכלו לעצב את ההודעה. לחצו על שמור כדי להחיל אותה לכל מי שמצטרף לשידור, או על איפוס כדי לשחזר את ההודעה המקורית.</p>
             </div>
           </section>
 
