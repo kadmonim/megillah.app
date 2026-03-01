@@ -6,11 +6,6 @@
   from = "/:code"
   to = "/live/join?code=:code"
   status = 302
-  conditions = {Path = ["/:code"]}
-  # Only match short alphanumeric codes (Netlify processes redirects top-down,
-  # and real pages like /live, /updates, /privacy, /debug are served first
-  # because Astro generates actual files for them — file-based routes take
-  # priority over redirect rules in Netlify.)
 
 [[edge_functions]]
   path = "/*"
