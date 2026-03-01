@@ -637,8 +637,9 @@ function ShareScreen({
   const [showPassword, setShowPassword] = useState(false);
   const t = lobbyText[lang];
   const dir = lang === 'he' ? 'rtl' : 'ltr';
-  const shareUrl = `https://megillah.app/live/join?code=${code}`;
-  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(shareUrl)}`;
+  const shareUrl = `https://megillah.app/${code}`;
+  const directUrl = `https://megillah.app/live/join?code=${code}`;
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(directUrl)}`;
 
   const handleCopy = useCallback(() => {
     navigator.clipboard.writeText(shareUrl).then(() => {

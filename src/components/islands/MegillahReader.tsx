@@ -2663,8 +2663,9 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
       )}
 
       {showQR && session && (() => {
-        const shareUrl = `https://megillah.app/live/join?code=${session.code}`;
-        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(shareUrl)}`;
+        const shareUrl = `https://megillah.app/${session.code}`;
+        const directUrl = `https://megillah.app/live/join?code=${session.code}`;
+        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(directUrl)}`;
         return (
           <div class="qr-overlay" onClick={() => setShowQR(false)}>
             <div class="qr-modal" dir="ltr" onClick={(e: Event) => e.stopPropagation()}>
