@@ -191,6 +191,10 @@ const translations = {
     changeReadingTime: 'Change reading time',
     chabadHint: 'Chabad custom — Haman highlighted only with a title',
     tapHint: <>Don't have a gragger?<br class="mobile-only"/> Just click Haman's name!</>,
+    listenTitle: 'How to Listen to the Megillah:',
+    listenStep1: 'Intend to fulfill your obligation by hearing the Megillah.',
+    listenStep2: 'Follow along quietly as it is being read.',
+    listenStep3: 'Put your phone on Do Not Disturb to avoid interruptions.',
     chapter: 'Chapter',
     loudLabel: 'Everyone reads this together:',
     bneiHamanLabel: 'In some communities, everyone says this together.',
@@ -2122,10 +2126,22 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
         {customTapHint ? (
           <div class="hint-text custom-hint" dangerouslySetInnerHTML={{ __html: customTapHint }} />
         ) : (
-          <p class="hint-text">
-            <span class="material-icons hint-icon">touch_app</span>
-            {t.tapHint}
-          </p>
+          <>
+            <p class="hint-text">
+              <span class="material-icons hint-icon">touch_app</span>
+              {t.tapHint}
+            </p>
+            {t.listenTitle && (
+              <div class="listen-instructions">
+                <p class="listen-title">{t.listenTitle}</p>
+                <ul>
+                  <li>{t.listenStep1}</li>
+                  <li>{t.listenStep2}</li>
+                  <li>{t.listenStep3}</li>
+                </ul>
+              </div>
+            )}
+          </>
         )}
         {session?.role === 'admin' && (
           <button id="edit-hint-btn" class="edit-hint-btn" onClick={() => setShowTapHintEdit(!showTapHintEdit)} title={t.editTapHint}>
@@ -3191,6 +3207,27 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
         }
         .custom-hint p { margin: 4px 0; }
         .custom-hint a[style] { color: #fff; text-decoration: none; }
+        .listen-instructions {
+          color: #222;
+          font-size: 0.85rem;
+          margin-top: 14px;
+          text-align: left;
+          width: 100%;
+          padding: 0 20px;
+          box-sizing: border-box;
+        }
+        .listen-title {
+          font-weight: 600;
+          margin: 0 0 6px 0;
+        }
+        .listen-instructions ul {
+          margin: 0;
+          padding-left: 22px;
+        }
+        .listen-instructions li {
+          margin: 3px 0;
+          line-height: 1.4;
+        }
         .whats-next-area {
           position: relative;
         }
