@@ -192,7 +192,7 @@ const translations = {
     chabadHint: 'Chabad custom — Haman highlighted only with a title',
     tapHint: <>Don't have a gragger?<br class="mobile-only"/> Just click Haman's name!</>,
     listenTitle: 'How to Listen to the Megillah:',
-    listenStep1: 'Intend to fulfill your obligation by hearing the Megillah.',
+    listenStep1: 'Intend to fulfill the Mitzvah of hearing the Megillah.',
     listenStep2: 'Follow along quietly as it is being read.',
     listenStep3: 'Put your phone on Do Not Disturb to avoid interruptions.',
     chapter: 'Chapter',
