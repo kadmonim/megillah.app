@@ -4072,22 +4072,8 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
         }
 
         .illustration {
-          float: right;
-          margin: 8px 0 8px 20px;
-          width: 45%;
-        }
-
-        .illustration.illustration-he {
-          float: left;
-          margin: 8px 20px 8px 0;
-        }
-
-        .side-by-side .illustration,
-        .side-by-side .illustration.illustration-he {
-          float: none;
-          width: 60%;
-          max-width: 400px;
-          margin: 16px auto;
+          width: 100%;
+          margin: 12px 0;
         }
 
         .illustration img {
