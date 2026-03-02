@@ -2120,6 +2120,11 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           </button>
         </div>
       </div>
+      {showIllustrations && (
+        <a href="https://torahapp.org" target="_blank" rel="noopener noreferrer" class="illustrations-banner">
+          Illustrations courtesy of torahapp.org
+        </a>
+      )}
       {/* Reading time popover */}
       {showTimeEdit && (
         <div class="time-popover" dir={lang === 'he' ? 'rtl' : 'ltr'}>
@@ -2554,7 +2559,6 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
                   verseResult.push(
                     <div class={`illustration${lang === 'he' ? ' illustration-he' : ''}`} key={`ill-${verseKey}`}>
                       <img src={illustration.src} alt={`Esther ${verseKey}`} loading="lazy" />
-                      <a href="https://torahapp.org" target="_blank" rel="noopener noreferrer" class="illustration-attribution">© torahapp.org</a>
                     </div>
                   );
                 }
@@ -4092,17 +4096,18 @@ export default function MegillahReader({ standalone = false, showTitle = false, 
           display: block;
         }
 
-        .illustration-attribution {
+        .illustrations-banner {
           display: block;
-          font-size: 0.65rem;
           text-align: center;
+          font-size: 0.7rem;
           color: var(--color-text-light);
-          margin-top: 3px;
-          opacity: 0.75;
+          background: var(--color-cream, #fdf6f0);
+          padding: 3px 0;
           text-decoration: none;
+          opacity: 0.8;
         }
 
-        .illustration-attribution:hover {
+        .illustrations-banner:hover {
           opacity: 1;
           text-decoration: underline;
         }
