@@ -195,7 +195,6 @@ const ILLUSTRATIONS = [
   { after: '8:13', src: '/illustrations/esther/esther.8.13_1_3x2.webp' },
   { after: '8:14', src: '/illustrations/esther/esther.8.14_1_3x2.webp' },
   { after: '8:15', src: '/illustrations/esther/esther.8.15_1_3x2.webp' },
-  { after: '8:16', src: '/illustrations/esther/esther.8.16_1_3x2.webp' },
   { after: '8:17', src: '/illustrations/esther/esther.8.17_1_3x2.webp' },
   { after: '9:1', src: '/illustrations/esther/esther.9.1_1_3x2.webp' },
   { after: '9:2', src: '/illustrations/esther/esther.9.2_1_3x2.webp' },
